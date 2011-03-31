@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<project name="jscombine" default="concatenate" basedir="..">
+
+  <!-- 
+    Javascript minifier and concatenator Ant build script
+    Author: Chris Batchelor, @FiregobyDesign
+    Credits: Based on code from HTML5Boilerplate, all glory goes
+        to Paul Irish and co with thanks, any bugs are probably me ;o)
+  -->
+
+  <target name="concatenate" depends="minify" description="Concatenate all js files">
+    <echo message="Deleting previous production.min.s file..."/>
+    <delete file="production.min.js"/>
+    <echo message="Concatenating javascripts into new production.min.js..."/>
+    <concat destfile="production.min.js">
+      <fileset dir="." includes="**/*.min.js">
+        <exclude name="libs/*.js"/>
+      </fileset>
+    </concat>
+    <echo message="Deleting temporary minified .js files..."/>
+    <delete>
+      <fileset dir="." includes="**/*.min.js">
+        <exclude name="production.min.js"/>
+        <exclude name="libs/*.min.js"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="minify">
+    <echo message="Minifying javascript files..."/>
+    <apply executable="java" parallel="false">
+      <fileset dir=".">
+        <include name="**/*.js"/>
+        <exclude name="libs/*.js"/>
+      </fileset>
+      <arg line="-jar"/>
+      <arg path="build/yuicompressor-2.4.2.jar"/>
+      <srcfile/>
+      <arg line="--line-break"/>
+      <arg line="4000"/>
+      <arg line="-o"/>
+      <mapper type="glob" from="*.js" to="../*.min.js"/>
+      <targetfile/>
+    </apply>
+  </target>
+
+</project>
