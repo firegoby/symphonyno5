@@ -1,11 +1,15 @@
 # Symphony No.5 #
 
-* Version 0.1
-* Date: 31s March 2011
+* Version 0.1.1
+* Date: 28th April 2011
 
 ## Overview
 
 Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS and Less CSS
+
+## Changelog
+* 0.1.1 - 28 Apr 11 - Updated to Symphony 2.2.1
+* 0.1.0 - 31 Mar 11 - Initial version 
 
 ## Features
 
