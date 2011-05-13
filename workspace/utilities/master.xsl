@@ -15,7 +15,7 @@
     <xsl:comment><![CDATA[[if lt IE 7 ]> <html class="no-js ie6" lang="en"><![endif]]]></xsl:comment>
     <xsl:comment><![CDATA[[if IE 7 ]> <html class="no-js ie7" lang="en"><![endif]]]></xsl:comment>
     <xsl:comment><![CDATA[[if IE 8 ]> <html class="no-js ie8" lang="en"><![endif]]]></xsl:comment>
-    <xsl:comment><![CDATA[[if (gte IE 9)|!(IE)]]]></xsl:comment> <html class="no-js" lang="en"><xsl:comment><![CDATA[[endif]]]></xsl:comment>
+    <xsl:comment><![CDATA[[if (gte IE 9)|!(IE)]><!]]></xsl:comment> <html class="no-js" lang="en"><xsl:comment><![CDATA[<![endif]]]></xsl:comment>
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title><xsl:call-template name="page-title"/></title>
