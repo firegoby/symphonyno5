@@ -26,7 +26,7 @@
     </delete>
   </target>
 
-  <target name="minify">
+  <target name="minify" depends="coffeescript">
     <echo message="Minifying javascript files..."/>
     <apply executable="java" parallel="false">
       <fileset dir=".">
@@ -38,9 +38,22 @@
       <srcfile/>
       <arg line="--line-break"/>
       <arg line="4000"/>
+      <arg line="--nomunge"/>
+      <arg line="--disable-optimizations"/>
       <arg line="-o"/>
       <mapper type="glob" from="*.js" to="../*.min.js"/>
       <targetfile/>
+    </apply>
+  </target>
+
+  <target name="coffeescript">
+    <echo message="Compiling Coffeescript..."/>
+    <apply executable="coffee" parallel="false">
+      <fileset dir=".">
+        <include name="**/*.coffee"/>
+      </fileset>
+      <arg line="-cl"/>
+      <srcfile/>
     </apply>
   </target>
 
