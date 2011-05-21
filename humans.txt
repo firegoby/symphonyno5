@@ -3,58 +3,20 @@
 
 
 /* TEAM */
-  Hobbit-in-Chief: Chris Batchelor
-  Site: http://firegoby.com/ 
-  Twitter: @FiregobyDesign
-  Location: sunny england-shire a.k.a hobbiton
+  Creator:
+  Site:
+  Twitter:
+  Location:
 
 /* THANKS */
-  Names (& URL): 
   /* Standing on the shoulder's of giants */
   HTML5Boilerplate http://html5boilerplate.com
   Less CSS http://lesscss.org
   JQuery http:/jquery.com
 
-  /* Information */
-  Linode Library http://linode.com
-
-  /* Inspiration */
-  Dan Cederholm http://simplebits.com
 
 /* SITE */
   Standards: HTML5, CSS3
-  Components: Modernizr, jQuery
-  Software: Symphony CMS, Less CSS, Nginx, PHP-FPM
-  Tools: Vim, Terminal & Photoshop
-  
-                                                            
-         -- Designed & hand-crafted in Britain --
-
-                             . ... .                        
-                           ,IO887,.                         
-                     MMMMMMMMMMMMMMMM8..                    
-              .  :MMMMMMMMMMMMMMMMMMMMMMM.. .               
-              .MMMMMMMMMMMMMMZIINMMMMMMMMMM .               
-            ..MMMMMMMMMI    ..   .  .IMMMMMM~               
-             MMMMMMMM  .                MMMMM~              
-          . MMMMMMM..                  .  :MMMM.            
-         . MMMMMMM .                    .  MNMMM            
-          ?MMMMMM.                         .?MMM            
-          MMMMMMO                          . MMMZ           
-         IMMMMMM .                         ..MMMM.          
-        .MMMMMM=                             7OMM           
-         MMMMMM                            . M?MM,          
-       . MMMMMM:                             MOMM:          
-        .MMMMMM~                           ...MMMI          
-        .MMMMMMZ                           ..=MMM.          
-         MMMMMMM                            :,MMM,          
-         ,MMMMMMM                       . ....MMM.          
-          MMMMMMMM.                       ..:,MMN           
-          .MMMMMMM7                      .$+7MMM.           
-            MMMMMMMMM. . .          ..   =MMMMM.            
-            .MMMMMMMMMMMMM?,        ..,~$MMMMM..            
-            ..MMMMMMMMMMMMMMM   .~?.=:+NMMMMM$ .            
-                MMMMMMMMMMMMM8,,+$MMMMMMMMMD                
-                  MMMMMMMMMMM.+?=ONMMMMMMM                  
-                   .. ...~... .  ?8$88: . ...               
-                                                   
+  Components: Modernizr, jQuery, Coffeescript
+  Software: Symphony CMS, Less CSS
+  Tools: 

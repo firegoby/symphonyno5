@@ -1,13 +1,14 @@
 # Symphony No.5 #
 
-* Version 0.1.5
-* Date: 20th May 2011
+* Version 0.1.6
+* Date: 21st May 2011
 
 ## Overview
 
 Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS and Less CSS
 
 ## Changelog
+* 0.1.6 - 21 May 11 - Stripped out personalisation of humans.txt
 * 0.1.5 - 20 May 11 - Updating to new .oldie class for IE compatibility (from HTML5Bolierplate)
 * 0.1.4 - 17 May 11 - Added Coffeescript support to the Ant build script (Coffeescript required)
 * 0.1.3 - 16 May 11 - Fixed bug in the JQuery local fallback script closing tag 
