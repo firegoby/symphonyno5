@@ -9,10 +9,12 @@
   Location:
 
 /* THANKS */
-  /* Standing on the shoulder's of giants */
+  /* Standing on the shoulders of giants */
   HTML5Boilerplate http://html5boilerplate.com
   Less CSS http://lesscss.org
   JQuery http:/jquery.com
+  Coffeescript http://jashkenas.github.com/coffee-script/
+  Modernizr http://modernizr.com
 
 
 /* SITE */

@@ -1,13 +1,22 @@
 # Symphony No.5 #
 
-* Version 0.1.6
-* Date: 21st May 2011
+* Version 0.1.7
+* Date: 10th June 2011
 
 ## Overview
 
 Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS and Less CSS
 
 ## Changelog
+
+* 0.1.7 - 10 Jun 11 - 
+  * Added installation gudie
+  * Upgraded to JQuery 1.6.1
+  * Upgraded to Modernizr 2.0
+  * Simpler closing script tag for fallback JQuery imported from HBP5
+  * Updated humans.txt
+  * Removed default home.xsl (unnecessary)
+  * Removed all known remaining personalisation
 * 0.1.6 - 21 May 11 - Stripped out personalisation of humans.txt
 * 0.1.5 - 20 May 11 - Updating to new .oldie class for IE compatibility (from HTML5Bolierplate)
 * 0.1.4 - 17 May 11 - Added Coffeescript support to the Ant build script (Coffeescript required)
@@ -25,8 +34,22 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS and Less 
 * A lot of the HTML5Boilerplate goodness!
 
 ## Non Symphony CMS Requirements
+
 * Less.app (or other LESS CSS compilation option)
 * Coffeescript (install via node.js & npm
+
+## Installation (unix command line)
+
+* `cd` to the directory of your choice and execute the following commands, replacing `projectname` with your own
+  git clone https://github.com/firegoby/symphonyno5.git projectname
+  cd projectname
+  git remote rename origin symphony
+  git submodule update --init
+  chmod 777 symphony .
+  chmod -R 777 workspace
+
+* Setup your MySQL database
+* Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
 
 ### Symphony CMS Overview
 
