@@ -5,7 +5,7 @@
 
 ## Overview
 
-Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS and Less CSS
+Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS & Coffeescript
 
 ## Changelog
 
@@ -41,13 +41,12 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS and Less 
 ## Installation (unix command line)
 
 * `cd` to the directory of your choice and execute the following commands, replacing `projectname` with your own
-  git clone https://github.com/firegoby/symphonyno5.git projectname
-  cd projectname
-  git remote rename origin symphony
-  git submodule update --init
-  chmod 777 symphony .
-  chmod -R 777 workspace
-
+  * `git clone https://github.com/firegoby/symphonyno5.git projectname`
+  * `cd projectname`
+  * `git remote rename origin symphony`
+  * `git submodule update --init`
+  * `chmod 777 symphony .`
+  * `chmod -R 777 workspace`
 * Setup your MySQL database
 * Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
 
