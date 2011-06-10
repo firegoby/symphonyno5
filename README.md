@@ -49,8 +49,14 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS
   * `chmod -R 777 workspace`
 * Setup your MySQL database
 * Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
+* After installation remember to tighten file permissions again: -
+  * `chmod 755 symphony .`
+  * `chmod -R 775 manifest`
+  * `chmod -R 775 workspace`
+* And delete the installation script
+  * `rm install.php`
 
-### Symphony CMS Overview
+## Symphony CMS Overview
 
 Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as
 its core technologies. 
@@ -58,7 +64,7 @@ its core technologies.
 * Visit the website at <http://symphony-cms.com/>
 * Github Repository: <http://github.com/symphonycms/symphony-2/>
 
-#### Symphony Server Requirements
+### Symphony Server Requirements
 
 - PHP 5.2 or above
 - PHP's LibXML module, with the XSLT extension enabled (--with-xsl)
