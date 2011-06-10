@@ -39,7 +39,7 @@
           </footer>
         </div><!-- eo #container -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/{$jQueryVersion}/jquery.js"></script>
-        <script><![CDATA[window.jQuery || document.write('<script src="/js/libs/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3c/script>')]]></script>
+        <script><![CDATA[window.jQuery || document.write('<script src="/js/libs/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
         <!-- scripts concatenated and minified via ant build script in js/build -->
         <script src="/js/plugins.js"></script>
         <script src="/js/script.js"></script>
