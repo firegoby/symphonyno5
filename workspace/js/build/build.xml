@@ -14,6 +14,7 @@
     <echo message="Concatenating javascripts into new production.min.js..."/>
     <concat destfile="production.min.js">
       <fileset dir="." includes="**/*.min.js">
+        <exclude name="production.min.js"/>
         <exclude name="libs/*.js"/>
       </fileset>
     </concat>
@@ -34,11 +35,11 @@
         <exclude name="libs/*.js"/>
       </fileset>
       <arg line="-jar"/>
-      <arg path="build/yuicompressor-2.4.2.jar"/>
+      <arg path="build/yuicompressor-2.4.5.jar"/>
       <srcfile/>
-      <arg line="--line-break"/>
-      <arg line="4000"/>
+      <arg line="--line-break 4000"/>
       <arg line="--nomunge"/>
+      <arg line="--preserve-semi"/>
       <arg line="--disable-optimizations"/>
       <arg line="-o"/>
       <mapper type="glob" from="*.js" to="../*.min.js"/>
