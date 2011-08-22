@@ -32,13 +32,13 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS
 * HTML5 master.xsl template
 * Ant build script to minify & concatenate javascripts in single production file
 * Ant build script compiles Coffeescript files 
-* Less CSS folder/file setup with HTML5 Reset and bootstrap.less (use with Less.app)
+* Less CSS folder/file setup with HTML5 Boilerplate style.css (use with Less.app)
 * A lot of the HTML5Boilerplate goodness!
 
 ## Non Symphony CMS Requirements
 
 * Less.app (or other LESS CSS compilation option)
-* Coffeescript (install via node.js & npm
+* Coffeescript (install via node.js & npm)
 
 ## Installation (unix command line)
 
