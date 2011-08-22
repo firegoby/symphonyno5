@@ -5,11 +5,22 @@
 (function($) {
 
 	/**
-	 * This plugin makes items orderable.
+	 * This plugin allows items to be orderable.
 	 *
-	 * @param {Object} custom_settings
-	 *  An object specifying the item to be ordered, their handles and 
-	 *  a initialization delay
+	 * @name $.symphonyOrderable
+	 * @class
+	 *
+	 * @param {Object} custom_settings An object specifying containing the attributes specified below
+	 * @param {String} [custom_settings.items='li'] Selector to find items to be orderable
+	 * @param {String} [custom_settings.handles='*'] Selector to find children that can be grabbed to re-order
+	 * @param {Boolean} [custom_settings.delay_initialize=false] Initialise plugin extensions before the orderable itself is initialised
+	 *
+	 *	@example
+
+			$('table').symphonyOrderable({
+				items: 'tr',
+				handles: 'td'
+			});
 	 */
 	$.fn.symphonyOrderable = function(custom_settings) {
 		var objects = this,
@@ -65,7 +76,9 @@
 						next = target.prev(settings.items);
 
 						if(next.length === 0 || top >= (state.min -= next.height())) {
-							item.insertBefore(target); break;
+							item.insertBefore(target);
+							object.trigger('orderchange', [state.item]);
+							break;
 						}
 
 						target = next;
@@ -81,14 +94,13 @@
 
 						if(next.length === 0 || top <= (state.max += next.height())) {
 							item.insertAfter(target); 
+							object.trigger('orderchange', [state.item]);
 							break;
 						}
 
 						target = next;
 					}
 				}
-
-				object.trigger('orderchange', [state.item]);
 
 				return false;
 			};

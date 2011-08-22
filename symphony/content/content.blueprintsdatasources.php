@@ -802,7 +802,8 @@
 					case 'version':
 						$fieldset = new XMLElement('fieldset');
 						$fieldset->appendChild(new XMLElement('legend', __('Version')));
-						$fieldset->appendChild(new XMLElement('p', $value . ', ' . __('released on') . ' ' . DateTimeObj::format($about['release-date'], __SYM_DATE_FORMAT__)));
+						if(preg_match('/^\d+(\.\d+)*$/', $value)) $fieldset->appendChild(new XMLElement('p', __('%s released on %s', array($value, DateTimeObj::format($about['release-date'], __SYM_DATE_FORMAT__)))));
+						else $fieldset->appendChild(new XMLElement('p', __('Created by %s at %s', array($value, DateTimeObj::format($about['release-date'], __SYM_DATE_FORMAT__)))));
 						break;
 
 					case 'description':
@@ -934,8 +935,11 @@
 			$classname = Lang::createHandle($fields['name'], NULL, '_', false, true, array('@^[^a-z]+@i' => '', '/[^\w-\.]/i' => ''));
 			$rootelement = str_replace('_', '-', $classname);
 
-			$file = DATASOURCES . '/data.' . $classname . '.php';
+			##Check to make sure the classname is not empty after handlisation.
+			if(empty($classname)) $this->_errors['name'] = __('Please ensure name contains at least one Latin-based alphabet.', array($classname));
 
+			$file = DATASOURCES . '/data.' . $classname . '.php';
+			
 			$isDuplicate = false;
 			$queueForDeletion = NULL;
 
@@ -959,7 +963,7 @@
 
 				$about = array(
 					'name' => $fields['name'],
-					'version' => '1.0',
+					'version' => 'Symphony ' . Symphony::Configuration()->get('version', 'symphony'),
 					'release date' => DateTimeObj::getGMT('c'),
 					'author name' => Administration::instance()->Author->getFullName(),
 					'author website' => URL,

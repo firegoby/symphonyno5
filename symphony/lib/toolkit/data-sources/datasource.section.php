@@ -50,7 +50,7 @@
 						if(isset($ds->dsParamPARAMOUTPUT) && $ds->dsParamPARAMOUTPUT == $fieldPool[$field_id]->get('element_name')){
 							if(!isset($param_pool[$key]) || !is_array($param_pool[$key])) $param_pool[$key] = array();
 
-							$param_pool_values = $fieldPool[$field_id]->getParameterPoolValue($values);
+							$param_pool_values = $fieldPool[$field_id]->getParameterPoolValue($values, $entry->get('id'));
 
 							if(is_array($param_pool_values)){
 								$param_pool[$key] = array_merge($param_pool_values, $param_pool[$key]);
@@ -72,7 +72,7 @@
 						if(is_array($ds->dsParamINCLUDEDELEMENTS) && in_array('system:date', $ds->dsParamINCLUDEDELEMENTS)){
 							$xEntry->appendChild(
 								General::createXMLDateObject(
-									DateTimeObj::get('U', $entry->creationDate),
+									DateTimeObj::get('U', $entry->creationDate), 
 									'system-date'
 								)
 							);
@@ -303,7 +303,7 @@
 						if(isset($this->dsParamPARAMOUTPUT) && $this->dsParamPARAMOUTPUT == $fieldPool[$field_id]->get('element_name')){
 							if(!isset($param_pool[$key]) || !is_array($param_pool[$key])) $param_pool[$key] = array();
 
-							$param_pool_values = $fieldPool[$field_id]->getParameterPoolValue($values);
+							$param_pool_values = $fieldPool[$field_id]->getParameterPoolValue($values, $entry->get('id'));
 
 							if(is_array($param_pool_values)){
 								$param_pool[$key] = array_merge($param_pool_values, $param_pool[$key]);
@@ -321,16 +321,18 @@
 						}
 					}
 
-					$result->appendChild($xEntry);
+					if($this->_param_output_only) continue;
 
-					if(!$this->_param_output_only && in_array('system:date', $this->dsParamINCLUDEDELEMENTS)){
+					if(in_array('system:date', $this->dsParamINCLUDEDELEMENTS)){
 						$xEntry->appendChild(
 							General::createXMLDateObject(
-								DateTimeObj::get('U', $entry->creationDate),
+								DateTimeObj::get('U', $entry->creationDate), 
 								'system-date'
 							)
 						);
 					}
+
+					$result->appendChild($xEntry);
 				}
 
 			endif;

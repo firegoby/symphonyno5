@@ -202,10 +202,12 @@
 		 *	 the data to toggle.
 		 * @param string $newState
 		 *	 the new value to set
+         * @param integer $entry_id (optional)
+		 *   an optional entry ID for more intelligent processing. defaults to null
 		 * @return array
 		 *	 the toggled data.
 		 */
-		public function toggleFieldData(Array $data, $newState){
+		public function toggleFieldData(Array $data, $newState, $entry_id=null){
 			return $data;
 		}
 
@@ -465,7 +467,7 @@
 
 		/**
 		 * Construct the html block to display a summary of this field, which is the field
-		 * Label and it's location within the section. Any error messages generated are 
+		 * Label and it's location within the section. Any error messages generated are
 		 * appended to the optional input error array. This function calls
 		 * `buildLocationSelect` once it is completed
 		 *
@@ -558,8 +560,8 @@
 		}
 
 		/**
-		 * Append a validator selector to a given XMLElement. Note that this 
-		 * function differs from the other two similarly named build functions in 
+		 * Append a validator selector to a given XMLElement. Note that this
+		 * function differs from the other two similarly named build functions in
 		 * that it takes an XMLElement to append the Validator to as a parameter,
 		 * and does not return anything.
 		 *
@@ -682,7 +684,7 @@
 		 * @param array $errors
 		 *	the array to populate with the errors found.
 		 * @param boolean $checkForDuplicates (optional)
-		 *	if set to true, duplicate Field name's in the same section will be flagged 
+		 *	if set to true, duplicate Field name's in the same section will be flagged
 		 *  as errors. Defaults to true.
 		 * @return integer
 		 *	returns the status of the checking. if errors has been populated with
@@ -692,6 +694,13 @@
 			$parent_section = $this->get('parent_section');
 			$element_name = $this->get('element_name');
 
+			if(Lang::isUnicodeCompiled()) {
+				$valid_name = preg_match('/^[\p{L}]([0-9\p{L}\.\-\_]+)?$/u', $this->get('element_name'));
+			}
+			else {
+				$valid_name = preg_match('/^[A-z]([\w\d-_\.]+)?$/i', $this->get('element_name'));
+			}
+
 			if ($this->get('label') == '') {
 				$errors['label'] = __('This is a required field.');
 			}
@@ -699,7 +708,7 @@
 			if ($this->get('element_name') == '') {
 				$errors['element_name'] = __('This is a required field.');
 			}
-			elseif (!preg_match('/^[A-z]([\w\d-_\.]+)?$/i', $this->get('element_name'))) {
+			elseif (!$valid_name) {
 				$errors['element_name'] = __('Invalid element name. Must be valid QName.');
 			}
 			elseif($checkForDuplicates) {
@@ -735,20 +744,22 @@
 		 * @param XMLElement $link (optional)
 		 *	an xml link structure to append the content of this to provided it is not
 		 *	null. it defaults to null.
+		 * @param integer $entry_id (optional)
+		 *  An option entry ID for more intelligent processing. defaults to null
 		 * @return string
 		 *	the formatted string summary of the values of this field instance.
 		 */
-		public function prepareTableValue($data, XMLElement $link = null) {
+		public function prepareTableValue($data, XMLElement $link = null, $entry_id = null) {
 			$max_length = Symphony::Configuration()->get('cell_truncation_length', 'symphony');
 			$max_length = ($max_length ? $max_length : 75);
 
 			$value = strip_tags($data['value']);
 
 			if(function_exists('mb_substr') && function_exists('mb_strlen')) {
-				$value = (mb_strlen($value, 'utf-8') <= $max_length ? $value : mb_substr($value, 0, $max_length, 'utf-8') . '...');
+				$value = (mb_strlen($value, 'utf-8') <= $max_length ? $value : mb_substr($value, 0, $max_length, 'utf-8') . '&hellip;');
 			}
 			else {
-				$value = (strlen($value) <= $max_length ? $value : substr($value, 0, $max_length) . '...');
+				$value = (strlen($value) <= $max_length ? $value : substr($value, 0, $max_length) . '&hellip;');
 			}
 
 			if (strlen($value) == 0) $value = __('None');
@@ -764,7 +775,7 @@
 
 		/**
 		 * Display the publish panel for this field. The display panel is the
-		 * interface shown to Authors that allow them to input data into this 
+		 * interface shown to Authors that allow them to input data into this
 		 * field for an Entry.
 		 *
 		 * @param XMLElement $wrapper
@@ -807,7 +818,9 @@
 		public function checkPostFieldData($data, &$message, $entry_id = null){
 			$message = NULL;
 
-			if ($this->get('required') == 'yes' && empty($data)){
+			$has_no_value = is_array($data) ? empty($data) : strlen(trim($data)) == 0;
+
+			if ($this->get('required') == 'yes' && $has_no_value) {
 				$message = __("'%s' is a required field.", array($this->get('label')));
 
 				return self::__MISSING_FIELDS__;
@@ -913,12 +926,14 @@
 				$this->_key++;
 
 				if (preg_match('/^regexp:/i', $data[0])) {
-					$pattern = preg_replace('/regexp:/i', null, $this->cleanValue($data[0]));
+					$pattern = preg_replace('/^regexp:\s*/i', null, $this->cleanValue($data[0]));
 					$regex = 'REGEXP';
 				} else {
-					$pattern = preg_replace('/not-?regexp:/i', null, $this->cleanValue($data[0]));
+					$pattern = preg_replace('/^not-?regexp:\s*/i', null, $this->cleanValue($data[0]));
 					$regex = 'NOT REGEXP';
 				}
+
+				if(strlen($pattern) == 0) return;
 
 				$joins .= "
 					LEFT JOIN
@@ -984,8 +999,13 @@
 		 *	is declared either 'random' or 'rand' then a random sort is applied.
 		 */
 		public function buildSortingSQL(&$joins, &$where, &$sort, $order='ASC'){
-			$joins .= "LEFT OUTER JOIN `tbl_entries_data_".$this->get('id')."` AS `ed` ON (`e`.`id` = `ed`.`entry_id`) ";
-			$sort = 'ORDER BY ' . (in_array(strtolower($order), array('random', 'rand')) ? 'RAND()' : "`ed`.`value` $order");
+			if(in_array(strtolower($order), array('random', 'rand'))) {
+				$sort = 'ORDER BY RAND()';
+			}
+			else {
+				$joins .= "LEFT OUTER JOIN `tbl_entries_data_".$this->get('id')."` AS `ed` ON (`e`.`id` = `ed`.`entry_id`) ";
+				$sort = 'ORDER BY `ed`.`value` ' . $order;
+			}
 		}
 
 		/**
@@ -1007,12 +1027,14 @@
 		 * output as a parameter in the XML
 		 *
 		 * @param array $data
-		 *	 The data for this field from it's `tbl_entry_data_{id}` table
+		 *  The data for this field from it's `tbl_entry_data_{id}` table
+		 * @param integer $entry_id
+		 *  The optional id of this field entry instance
 		 * @return string
-		 *	 The formatted value to be used as the parameter
+		 *  The formatted value to be used as the parameter
 		 */
-		public function getParameterPoolValue(Array $data){
-			return $this->prepareTableValue($data);
+		public function getParameterPoolValue(array $data, $entry_id=NULL){
+			return $this->prepareTableValue($data, null, $entry_id);
 		}
 
 		/**
@@ -1035,7 +1057,7 @@
 		 *	the identifier of this field entry instance. defaults to null.
 		 */
 		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null) {
-			$wrapper->appendChild(new XMLElement($this->get('element_name'), ($encode ? General::sanitize($this->prepareTableValue($data)) : $this->prepareTableValue($data))));
+			$wrapper->appendChild(new XMLElement($this->get('element_name'), ($encode ? General::sanitize($this->prepareTableValue($data, null, $entry_id)) : $this->prepareTableValue($data, null, $entry_id))));
 		}
 
 		/**
@@ -1045,7 +1067,7 @@
 		 * Frontend to save this field
 		 *
 		 * @return XMLElement
-		 *	a label widget containing the formatted field element name of this.
+		 *  a label widget containing the formatted field element name of this.
 		 */
 		public function getExampleFormMarkup(){
 			$label = Widget::Label($this->get('label'));
@@ -1059,7 +1081,7 @@
 		 * create an instance of this field in a section.
 		 *
 		 * @return boolean
-		 *	true if the commit was successful, false otherwise.
+		 *  true if the commit was successful, false otherwise.
 		 */
 		public function commit(){
 			$fields = array();
@@ -1111,16 +1133,20 @@
 		/**
 		 * Remove the entry data of this field from the database.
 		 *
-		 * @param integer $entry_id
-		 *	the id of the entry to delete.
+		 * @param integer|array $entry_id
+		 *	the ID of the entry, or an array of entry ID's to delete.
 		 * @param array $data (optional)
 		 *	The entry data provided for fields to do additional cleanup
 		 *  This is an optional argument and defaults to null.
 		 * @return boolean
-		 *	true if the cleanup was successful, false otherwise.
+		 *	Returns true after the cleanup has been completed
 		 */
 		public function entryDataCleanup($entry_id, $data=NULL){
-			Symphony::Database()->delete('tbl_entries_data_' . $this->get('id'), " `entry_id` = '$entry_id' ");
+			$where = is_array($entry_id)
+				? " `entry_id` IN (" . implode(',', $entry_id) . ") "
+				: " `entry_id` = '$entry_id' ";
+
+			Symphony::Database()->delete('tbl_entries_data_' . $this->get('id'), $where);
 
 			return true;
 		}
@@ -1135,10 +1161,10 @@
 		 * @param integer $parent_field_id (optional)
 		 *  The field ID of the linked field in the linked section
 		 * @param boolean $show_association (optional)
-		 *	Whether of not the link should be shown on the entries tableof the
-		 * linked section. This defaults to true.
+		 *  Whether of not the link should be shown on the entries table of the
+		 *  linked section. This defaults to true.
 		 * @return boolean
-		 *	true if the association was successfully made, false otherwise.
+		 *  true if the association was successfully made, false otherwise.
 		 */
 		public function createSectionAssociation($parent_section_id = null, $child_field_id = null, $parent_field_id = null, $show_association = true){
 
@@ -1169,7 +1195,7 @@
 		 * Permanently remove a section association for this field in the database.
 		 *
 		 * @param integer $child_field_id
-		 *	the field ID of the linked section's linked field.
+		 *  the field ID of the linked section's linked field.
 		 */
 		public function removeSectionAssociation($child_field_id){
 			Symphony::Database()->delete('tbl_sections_association', " `child_section_field_id` = '$child_field_id' ");
@@ -1177,44 +1203,46 @@
 
 		/**
 		 * Accessor to the associated entry search value for this field
-		 * instance. This default implementation simply returns the input
-		 * data argument.
+		 * instance. This default implementation simply returns `$data`
 		 *
 		 * @param array $data
-		 *	the data from which to construct the associated search entry value.
+		 *  the data from which to construct the associated search entry value, this is usually
+		 *  Entry with the `$parent_entry_id` value's data.
 		 * @param integer $field_id (optional)
-		 *	an optional id of the associated field? this defaults to null.
+		 *  the ID of the field that is the parent in the relationship
 		 * @param integer $parent_entry_id (optional)
-		 *	an optional parent identifier of the associated field entry? this defaults
-		 *	to null.
-		 * @return array
-		 *	the associated entry search value. this implementation returns the input
-		 *	data argument.
+		 *  the ID of the entry from the parent section in the relationship
+		 * @return array|string
+		 *  Defaults to returning `$data`, but overriding implementation should return
+		 *  a string
 		 */
 		public function fetchAssociatedEntrySearchValue($data, $field_id = null, $parent_entry_id = null){
 			return $data;
 		}
 
 		/**
-		 * Fetch the count of the associate entries for the input value. This default
-		 * implementation does nothing.
+		 * Fetch the count of the associated entries given a `$value`.
 		 *
+		 * @see toolkit.Field#fetchAssociatedEntrySearchValue()
 		 * @param mixed $value
-		 *	the value to find the associated entry count for.
+		 *  the value to find the associated entry count for, this usually comes from
+		 *  the `fetchAssociatedEntrySearchValue` function.
 		 * @return void|integer
-		 *	this default implementation returns void. overriding implementations should
-		 *	return a number.
+		 *  this default implementation returns void. overriding implementations should
+		 *  return an integer.
 		 */
 		public function fetchAssociatedEntryCount($value){}
 
 		/**
-		 * Accessor to the ids associated with this field instance.
+		 * Fetch the Entry ID's associated with this field instance given a `$value`,
+		 * where the `$value` can be anything. This function is unused by Symphony core
+		 * but should be implemented by Fields that maintain relationships.
 		 *
 		 * @param mixed $value
-		 *	the value to find the associated entry ids for.
+		 *  the value to find the associated entry ID's for.
 		 * @return void|array
-		 *	this default implementation returns void. overriding implementations should
-		 *	return an array of the associated entry ids.
+		 *  this default implementation returns void. overriding implementations should
+		 *  return an array of the associated entry ids.
 		 */
 		public function fetchAssociatedEntryIDs($value){}
 
@@ -1223,6 +1251,6 @@
 		 *  Symphony. The correct function is `$this->buildDSRetrievalSQL`.
 		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation = false) {
-			return $this->buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false);
+			return $this->buildDSRetrievalSQL($data, $joins, $where, $andOperation);
 		}
 	}

@@ -832,19 +832,22 @@
 		 *	required permissions set. false, otherwise.
 		 */
 		public static function writeFile($file, $data, $perm = 0644, $mode = 'w'){
-			if(is_null($perm)) $perm = 0644;
-
-			if(!$handle = @fopen($file, $mode)) {
+			if(!is_writable(dirname($file)) && (!is_readable($file) || !is_writable($file))) {
 				return false;
 			}
 
-			if(@fwrite($handle, $data, strlen($data)) === false) {
+			if(!$handle = fopen($file, $mode)) {
+				return false;
+			}
+
+			if(fwrite($handle, $data, strlen($data)) === false) {
 				return false;
 			}
 
 			fclose($handle);
 
 			try {
+				if(is_null($perm)) $perm = 0644;
 				chmod($file, intval($perm, 8));
 			}
 			catch(Exception $ex) {
@@ -1234,31 +1237,34 @@
 		 * Construct an XML fragment that reflects the structure of the input timestamp.
 		 *
 		 * @param integer $timestamp
-		 *	the timestamp to construct the XML element from.
+		 *  the timestamp to construct the XML element from.
 		 * @param string $element (optional)
-		 *	the name of the element to append to the namespace of the constructed XML.
-		 *	this defaults to "date".
+		 *  the name of the element to append to the namespace of the constructed XML.
+		 *  this defaults to "date".
+		 * @param string $date_format (optional)
+		 *  the format to apply to the date, defaults to `Y-m-d`
+		 * @param string $time_format (optional)
+		 *  the format to apply to the date, defaults to `H:i`
 		 * @param string $namespace (optional)
-		 *	the namespace in which the resulting XML entity will reside. this defaults
-		 *	to null.
+		 *  the namespace in which the resulting XML entity will reside. this defaults
+		 *  to null.
 		 * @return boolean|XMLElement
-		 *	false if there is no XMLElement class on the system, the constructed XML element
-		 *	otherwise.
+		 *  false if there is no XMLElement class on the system, the constructed XML element
+		 *  otherwise.
 		 */
-		public static function createXMLDateObject($timestamp, $element='date', $namespace=NULL){
+		public static function createXMLDateObject($timestamp, $element='date', $date_format = 'Y-m-d', $time_format = 'H:i', $namespace = null){
 			if(!class_exists('XMLElement')) return false;
 
 			$xDate = new XMLElement(
 				(!is_null($namespace) ? $namespace . ':' : '') . $element,
-				DateTimeObj::get('Y-m-d', $timestamp),
+				DateTimeObj::get($date_format, $timestamp),
 				array(
-						'time' => DateTimeObj::get('H:i', $timestamp),
-						'weekday' => DateTimeObj::get('N', $timestamp)
+					'time' => DateTimeObj::get($time_format, $timestamp),
+					'weekday' => DateTimeObj::get('N', $timestamp)
 				)
 			);
 
 			return $xDate;
-
 		}
 
 		/**

@@ -7,8 +7,28 @@
 	/**
 	 * This plugin creates a Symphony duplicator.
 	 *
-	 * @param {Object} custom_settings
-	 *  An object with custom duplicator settings
+	 * @name $.symphonyDuplicator
+	 * @class
+	 *
+	 * @param {Object} custom_settings An object specifying containing the attributes specified below
+	 * @param {String} [custom_settings.instances='> li:not(.template)'] Selector to find children to use as instances
+	 * @param {String} [custom_settings.templates='> li.template'] Selector to find children to use as templates
+	 * @param {String} [custom_settings.headers='> :first-child'] Selector to find the header part of each instance
+	 * @param {Boolean} [custom_settings.orderable=false] Can instances be ordered
+	 * @param {Boolean} [custom_settings.collapsible=false] Can instances be collapsed
+	 * @param {Boolean} [custom_settings.constructable=true] Allow construction of new instances
+	 * @param {Boolean} [custom_settings.destructable=true] Allow destruction of instances
+	 * @param {Integer} [custom_settings.minimum=0] Do not allow instances to be removed below this limit
+	 * @param {Integer} [custom_settings.maximum=1000] Do not allow instances to be added above this limit
+	 * @param {String} [custom_settings.speed='fast'] Animation speed
+	 * @param {Boolean} [custom_settings.delay_initialize=false] Initialise plugin extensions before the duplicator itself is initialised
+	 *
+	 *	@example
+
+			$('.duplicator').symphonyDuplicator({
+				orderable: true,
+				collapsible: true
+			});
 	 */
 	$.fn.symphonyDuplicator = function(custom_settings) {
 		var objects = this,
@@ -92,7 +112,7 @@
 
 				return instance;
 			};
-			
+
 			// Prepare an instance
 			var prepare = function(source) {
 				var instance = $(source).addClass('instance expanded'),
@@ -195,10 +215,13 @@
 				if(settings.collapsible) {
 					object.collapsible.initialize();
 				}
-				
+
 				// Orderable?
 				if(settings.orderable) {
 					object.orderable.initialize();
+					object.bind('orderstop', function(event) {
+						object.trigger('savestate');
+					});
 				}
 			};
 
@@ -206,7 +229,7 @@
 			var updateUniqueness = function() {
 				var instances = object.children('.instance'),
 					options = widgets.selector.find('option');
-				
+
 				options.attr('disabled', false);
 
 				instances.each(function(position) {
@@ -214,7 +237,7 @@
 
 					if (instance.hasClass('unique')) {
 						options.filter('[data-type=' + instance.attr('data-type') + ']').attr('disabled', 'disabled');
-						
+
 						if (options.not(':disabled').length === 0) {
 							widgets.selector.prepend('<option class="all-selected">' + Symphony.Language.get('All selected') + '</option>');
 							widgets.selector.attr('disabled', 'disabled');
@@ -223,7 +246,7 @@
 							widgets.selector.attr('disabled', false);
 							options.filter('.all-selected').remove();
 						};
-						
+
 						widgets.selector.find('option').not(':disabled').first().attr('selected', 'selected');
 					};
 				});
@@ -274,13 +297,21 @@
 					});
 
 					// Slide up on collapse:
-					object.bind('collapsestop.duplicator', function(event, item) {
-						item.find('> .content').show().slideUp(settings.speed);
+					object.bind('collapsestop.duplicator', function(event, item, instantly) {
+						if (instantly) {
+							item.find('> .content').hide();
+						} else {
+							item.find('> .content').show().slideUp(settings.speed);
+						}
 					});
 
 					// Slide down on expand:
-					object.bind('expandstop.duplicator', function(event, item) {
-						item.find('> .content').hide().slideDown(settings.speed);
+					object.bind('expandstop.duplicator', function(event, item, instantly) {
+						if (instantly) {
+							item.find('> .content').show();
+						} else {
+							item.find('> .content').hide().slideDown(settings.speed);
+						};
 					});
 
 					widgets.controls = object.append('<div class="controls" />').find('> .controls:last');
@@ -299,13 +330,11 @@
 						var template = $(this).clone(true),
 							header = template.find(settings.headers).addClass('header'),
 							option = widgets.selector.append('<option />').find('option:last'),
-							header_children = header.children();
-							
+							header_children = header.children(),
+							header_text = header.text();
+
 						if(header_children.length) {
 							header_text = header.get(0).childNodes[0].nodeValue + ' (' + header_children.filter(':eq(0)').text() + ')';
-						} 
-						else {
-							header_text = header.text();
 						}
 						option.text(header_text).val(position).attr('data-type', template.attr('data-type'));
 
@@ -392,12 +421,30 @@
 					refresh();
 					updateUniqueness();
 				},
-
+				
+				/**
+				 * Expand all closed items
+				 *
+				 * @name $.symphonyDuplicator#expandAll
+				 * @function
+				 * @requires $.symphonyCollapsible plugin
+				 * @requires constructor { collapsible: true }
+				 * @see $.symphonyCollapsible#expandAll
+				 */
 				expandAll: function() {
 					object.collapsible.expandAll();
 					toCollapseAll();
 				},
-
+				
+				/**
+				 * Collapse all open items
+				 *
+				 * @name $.symphonyDuplicator#collapseAll
+				 * @function
+				 * @requires $.symphonyCollapsible plugin
+				 * @requires constructor { collapsible: true }
+				 * @see $.symphonyCollapsible#collapseAll
+				 */
 				collapseAll: function() {
 					object.collapsible.collapseAll();
 					toExpandAll();

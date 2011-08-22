@@ -226,33 +226,95 @@
 		}
 
 		/**
-		 * Given an Entry object, or an array of Entry objects delete all
+		 * Given an Entry ID, or an array of Entry ID's, delete all
 		 * data associated with this Entry using a Field's `entryDataCleanup()`
-		 * function, and then remove this Entry from `tbl_entries`.
+		 * function, and then remove this Entry from `tbl_entries`. If the `$entries`
+		 * all belong to the same section, passing `$section_id` will improve
+		 * performance
 		 *
-		 * @param array|Entry $entries
-		 *  An Entry object, or an array of Entry objects to delete
-		 * @param boolean
+		 * @param array|integer $entries
+		 *  An entry_id, or an array of entry id's to delete
+		 * @param integer $section_id (optional)
+		 *  If possible, the `$section_id` of the the `$entries`. This parameter
+		 *  should be left as null if the `$entries` array contains entry_id's for
+		 *  multiple sections.
+		 * @return boolean
 		 */
-		public function delete($entries){
+		public function delete($entries, $section_id = null){
+			$needs_data = true;
 
 			if(!is_array($entries)) {
 				$entries = array($entries);
 			}
 
-			foreach($entries as $id){
-				$e = $this->fetch($id);
-
-				if(!is_object($e[0])) continue;
-
-				foreach($e[0]->getData() as $field_id => $data){
-					$field = $this->fieldManager->fetch($field_id);
-					$field->entryDataCleanup($id, $data);
+			// Get the section's schema
+			if(!is_null($section_id)) {
+				$section = $this->sectionManager->fetch($section_id);
+				if($section instanceof Section) {
+					$fields = $section->fetchFields();
+					$data = array();
+					foreach($fields as $field) {
+						$reflection = new ReflectionClass($field);
+						// This field overrides the default implementation, so pass it data.
+						$data[$field->get('element_name')] = $reflection->getMethod('entryDataCleanup')->class == 'Field' ? false : true;
+					}
+					$data = array_filter($data);
+					if(empty($data)) {
+						$needs_data = false;
+					}
 				}
 			}
 
-			$entry_list = implode("', '", $entries);
-			Symphony::Database()->delete('tbl_entries', " `id` IN ('$entry_list') ");
+			// We'll split $entries into blocks of 2500 (random number)
+			// and process the deletion in chunks.
+			$chunks = array_chunk($entries, 2500);
+			foreach($chunks as $chunk) {
+				$entry_list = implode("', '", $chunk);
+
+				// If we weren't given a `section_id` we'll have to process individually
+				// If we don't need data for any field, we can process the whole chunk
+				// without building Entry objects, otherwise we'll need to build
+				// Entry objects with data
+				if(is_null($section_id) || !$needs_data) {
+					$entries = $chunk;
+				}
+				else if($needs_data) {
+					$entries = $this->fetch($chunk, $section_id);
+				}
+
+				if($needs_data) {
+					foreach($entries as $id) {
+						// Handles the case where `section_id` was not provided
+						if(is_null($section_id)) {
+							$e = $this->fetch($id);
+							$e = current($e);
+							if(!$e instanceof Entry) continue;
+						}
+						// If we needed data, whole Entry objects will exist
+						else if($needs_data) {
+							$e = $id;
+							$id = $e->get('id');
+						}
+
+						// Time to loop over it and send it to the fields.
+						// Note we can't rely on the `$fields` array as we may
+						// also be dealing with the case where `section_id` hasn't
+						// been provided
+						$entry_data = $e->getData();
+						foreach($entry_data as $field_id => $data){
+							$field = $this->fieldManager->fetch($field_id);
+							$field->entryDataCleanup($id, $data);
+						}
+					}
+				}
+				else {
+					foreach($fields as $field) {
+						$field->entryDataCleanup($chunk);
+					}
+				}
+
+				Symphony::Database()->delete('tbl_entries', " `id` IN ('$entry_list') ");
+			}
 
 			return true;
 		}
@@ -287,8 +349,13 @@
 		 *  Choose whether to get data from a subset of fields or all fields in a section,
 		 *  by providing an array of field names. Defaults to null, which will load data
 		 *  from all fields in a section.
+		 * @param boolean $enable_sort
+		 *  Defaults to true, if false this function will not apply any sorting
+		 * @return array
+		 *  If `$buildentries` is true, this function will return an array of Entry objects,
+		 *  otherwise it will return an associative array of Entry data from `tbl_entries`
 		 */
-		public function fetch($entry_id = null, $section_id = null, $limit = null, $start = null, $where = null, $joins = null, $group = false, $buildentries = true, $element_names = null){
+		public function fetch($entry_id = null, $section_id = null, $limit = null, $start = null, $where = null, $joins = null, $group = false, $buildentries = true, $element_names = null, $enable_sort = true){
 			$sort = null;
 
 			if (!$entry_id && !$section_id) return false;
@@ -300,8 +367,8 @@
 			if (!is_object($section)) return false;
 
 			## SORTING
-			// A single $entry_id doesn't need to be sorted on
-			if (!is_array($entry_id) && !is_null($entry_id) && is_int($entry_id)) {
+			// A single $entry_id doesn't need to be sorted on, or if it's explicitly disabled
+			if ((!is_array($entry_id) && !is_null($entry_id) && is_int($entry_id)) || !$enable_sort) {
 				$sort = null;
 			}
 			// Check for RAND first, since this works independently of any specific field
@@ -341,7 +408,7 @@
 				$joins
 				WHERE 1
 				".($entry_id ? "AND `e`.`id` IN ('".implode("', '", $entry_id)."') " : '')."
-				".($section_id && !is_null($sort) ? "AND `e`.`section_id` = '$section_id' " : '')."
+				".($section_id ? "AND `e`.`section_id` = '$section_id' " : '')."
 				$where
 				$sort
 				".($limit ? 'LIMIT ' . intval($start) . ', ' . intval($limit) : '');
@@ -349,7 +416,6 @@
 			$rows = Symphony::Database()->fetch($sql);
 
 			return ($buildentries && (is_array($rows) && !empty($rows)) ? $this->__buildEntries($rows, $section_id, $element_names) : $rows);
-
 		}
 
 		/**
@@ -369,6 +435,7 @@
 		 *  by providing an array of field names. Defaults to null, which will load data
 		 *  from all fields in a section.
 		 * @return array
+		 *  An array of Entry objects
 		 */
 		public function __buildEntries(Array $rows, $section_id, $element_names = null){
 			$entries = array();
@@ -440,14 +507,28 @@
 
 					else {
 						foreach (array_keys($r) as $key) {
-							if (isset($raw[$entry_id]['fields'][$field_id][$key]) && !is_array($raw[$entry_id]['fields'][$field_id][$key])) {
-								$raw[$entry_id]['fields'][$field_id][$key] = array($raw[$entry_id]['fields'][$field_id][$key], $r[$key]);
+							// If this field already has been set, we need to take the existing
+							// value and make it array, adding the current value to it as well
+							// There is a special check incase the the field's value has been
+							// purposely set to NULL in the database.
+							if(
+								(
+									isset($raw[$entry_id]['fields'][$field_id][$key])
+									|| is_null($raw[$entry_id]['fields'][$field_id][$key])
+								)
+								&& !is_array($raw[$entry_id]['fields'][$field_id][$key])
+							) {
+								$raw[$entry_id]['fields'][$field_id][$key] = array(
+									$raw[$entry_id]['fields'][$field_id][$key],
+									$r[$key]
+								);
 							}
-
+							// This key/value hasn't been set previously, so set it
 							else if (!isset($raw[$entry_id]['fields'][$field_id][$key])) {
 								$raw[$entry_id]['fields'][$field_id] = array($r[$key]);
 							}
-
+							// This key has been set and it's an array, so just append
+							// this value onto the array
 							else {
 								$raw[$entry_id]['fields'][$field_id][$key][] = $r[$key];
 							}

@@ -11,8 +11,6 @@
 	 * use XSLT. The Administration is only accessible by logged in Authors
 	 */
 	require_once(CORE . '/class.symphony.php');
-	require_once(TOOLKIT . '/class.lang.php');
-	require_once(TOOLKIT . '/class.manager.php');
 	require_once(TOOLKIT . '/class.htmlpage.php');
 	require_once(TOOLKIT . '/class.ajaxpage.php');
 
@@ -151,7 +149,16 @@
 
 					if(is_null($default_area)) {
 						if($this->Author->isDeveloper()) {
-							redirect(SYMPHONY_URL . '/blueprints/sections/');
+							$section_handle = Symphony::Database()->fetchVar('handle', 0, "SELECT `handle` FROM `tbl_sections` ORDER BY `sortorder` LIMIT 1");
+
+							if(!is_null($section_handle)) {
+								// If there are sections created, redirect to the first one (sortorder)
+								redirect(SYMPHONY_URL . "/publish/{$section_handle}/");
+							}
+							else {
+								// If there are no sections created, default to the Section page
+								redirect(SYMPHONY_URL . '/blueprints/sections/');
+							}
 						}
 						else {
 							redirect(SYMPHONY_URL . "/system/authors/edit/".$this->Author->get('id')."/");
@@ -207,9 +214,10 @@
 				}
 
 				// Do any extensions need updating?
-				$extensions = Symphony::ExtensionManager()->listAll();
+				$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 				if(is_array($extensions) && !empty($extensions) && $this->__canAccessAlerts()) {
-					foreach($extensions as $handle => $about) {
+					foreach($extensions as $name) {
+						$about = Symphony::ExtensionManager()->about($name);
 						if($about['status'] == EXTENSION_REQUIRES_UPDATE) {
 							$this->Page->pageAlert(
 								__('An extension requires updating. <a href="%s">View Extensions</a>', array(SYMPHONY_URL . '/system/extensions/'))

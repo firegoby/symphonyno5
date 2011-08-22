@@ -34,13 +34,6 @@
 		private static $_registered = false;
 
 		/**
-		 * An instance of the Cacheable class
-		 *
-		 * @var Cacheable
-		 */
-		private static $_cache = null;
-
-		/**
 		 * Starts a Session object, only if one doesn't already exist. This function maps
 		 * the Session Handler functions to this classes methods by reading the default
 		 * information from the PHP ini file.
@@ -70,7 +63,7 @@
 					ini_set('session.save_handler', 'user');
 					ini_set('session.gc_maxlifetime', $lifetime);
 					ini_set('session.gc_probability', '1');
-					ini_set('session.gc_divisor', '10');
+					ini_set('session.gc_divisor', Symphony::Configuration()->get('session_gc_divisor', 'symphony'));
 				}
 
 				session_set_save_handler(

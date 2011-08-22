@@ -154,15 +154,42 @@
 				$this->Form->appendChild($fieldset);
 			endif;
 
-			if($isEditing):
+			if($readonly) {
+				// Author
+				if(isset($about['author']['website'])) {
+					$link = Widget::Anchor($about['author']['name'], General::validateURL($about['author']['website']));
+				}
+				else if(isset($about['author']['email'])) {
+					$link = Widget::Anchor($about['author']['name'], 'mailto:' . $about['author']['email']);
+				}
+				else {
+					$link = $about['author']['name'];
+				}
+
+				$fieldset = new XMLElement('fieldset');
+				$fieldset->setAttribute('class', 'settings');
+				$fieldset->appendChild(new XMLElement('legend', __('Author')));
+				$fieldset->appendChild(new XMLElement('p', $link->generate(false)));
+				$this->Form->appendChild($fieldset);
+
+				// Version
+				$fieldset = new XMLElement('fieldset');
+				$fieldset->setAttribute('class', 'settings');
+				$fieldset->appendChild(new XMLElement('legend', __('Version')));
+				if(preg_match('/^\d+(\.\d+)*$/', $about['version'])) $fieldset->appendChild(new XMLElement('p', __('%s released on %s', array($about['version'], DateTimeObj::format($about['release-date'], __SYM_DATE_FORMAT__)))));
+				else $fieldset->appendChild(new XMLElement('p', __('Created by %s at %s', array($about['version'], DateTimeObj::format($about['release-date'], __SYM_DATE_FORMAT__)))));
+				$this->Form->appendChild($fieldset);
+			}
+
+			if($isEditing) {
+				// Description
 				$fieldset = new XMLElement('fieldset');
 				$fieldset->setAttribute('class', 'settings');
 
 				$doc = $existing->documentation();
 				$fieldset->setValue('<legend>' . __('Description') . '</legend>' . self::CRLF . General::tabsToSpaces((is_object($doc) ? $doc->generate(true) : $doc), 2));
-
 				$this->Form->appendChild($fieldset);
-			endif;
+			}
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'actions');
@@ -237,6 +264,9 @@
 			$classname = Lang::createHandle($fields['name'], NULL, '_', false, true, array('@^[^a-z]+@i' => '', '/[^\w-\.]/i' => ''));
 			$rootelement = str_replace('_', '-', $classname);
 
+			##Check to make sure the classname is not empty after handlisation.
+			if(empty($classname)) $this->_errors['name'] = __('Please ensure name contains at least one Latin-based alphabet.', array($classname));
+
 			$file = EVENTS . '/event.' . $classname . '.php';
 
 			$isDuplicate = false;
@@ -260,7 +290,7 @@
 
 				$about = array(
 					'name' => $fields['name'],
-					'version' => '1.0',
+					'version' => 'Symphony ' . Symphony::Configuration()->get('version', 'symphony'),
 					'release date' => DateTimeObj::getGMT('c'),
 					'author name' => Administration::instance()->Author->getFullName(),
 					'author website' => URL,
@@ -341,7 +371,7 @@
 
 				$documentation_parts[] = new XMLElement('p', __('This is an example of the form markup you can use on your frontend:'));
 				$container = new XMLElement('form', NULL, array('method' => 'post', 'action' => '', 'enctype' => 'multipart/form-data'));
-				$container->appendChild(Widget::Input('MAX_FILE_SIZE', Symphony::Configuration()->get('max_upload_size', 'admin'), 'hidden'));
+				$container->appendChild(Widget::Input('MAX_FILE_SIZE', min(ini_size_to_bytes(ini_get('upload_max_filesize')), Symphony::Configuration()->get('max_upload_size', 'admin')), 'hidden'));
 
 				$sectionManager = new SectionManager($this->_Parent);
 				$section = $sectionManager->fetch($fields['source']);
