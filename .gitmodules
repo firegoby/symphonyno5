@@ -30,7 +30,3 @@
 	path = extensions/xssfilter
 	url = git://github.com/symphonycms/xssfilter.git
   ignore = dirty
-[submodule "less/bootstrap"]
-	path = less/bootstrap
-	url = https://github.com/markdotto/Bootstrap.less.git
-  ignore = dirty
