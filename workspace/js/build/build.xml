@@ -9,9 +9,7 @@
   -->
 
   <target name="concatenate" depends="minify" description="Concatenate all js files">
-    <echo message="Deleting previous production.min.s file..."/>
-    <delete file="production.min.js"/>
-    <echo message="Concatenating javascripts into new production.min.js..."/>
+    <echo message="Concatenating javascripts into production.min.js..."/>
     <concat destfile="production.min.js">
       <fileset dir="." includes="**/*.min.js">
         <exclude name="production.min.js"/>
@@ -28,6 +26,12 @@
   </target>
 
   <target name="minify" depends="coffeescript">
+    <echo message="Deleting old minified .js files..."/>
+    <delete>
+      <fileset dir="." includes="**/*.min.js">
+        <exclude name="libs/*.min.js"/>
+      </fileset>
+    </delete>
     <echo message="Minifying javascript files..."/>
     <apply executable="java" parallel="false">
       <fileset dir=".">
@@ -35,7 +39,7 @@
         <exclude name="libs/*.js"/>
       </fileset>
       <arg line="-jar"/>
-      <arg path="build/yuicompressor-2.4.5.jar"/>
+      <arg path="build/yuicompressor-2.4.6.jar"/>
       <srcfile/>
       <arg line="--line-break 4000"/>
       <arg line="--nomunge"/>
