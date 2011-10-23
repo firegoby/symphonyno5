@@ -1,7 +1,7 @@
 # Symphony No.5 #
 
-* Version 0.2.0
-* Date: 22nd August 2011
+* Version 0.2.1
+* Date: 23rd October 2011
 
 ## Overview
 
@@ -9,6 +9,7 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS
 
 ## Changelog
 
+* 0.2.1 - 23 Oct 11 - Updated to Symphony 2.2.4
 * 0.2.0 - 22 Aug 11 - Updating to H5BP 2.0, fix for build script & misc bug fixes
 * 0.1.8 - 10 Jun 11 - Reverting closing tag of fallback JQuery, XSLT doesn't like it
 * 0.1.7 - 10 Jun 11 - 
