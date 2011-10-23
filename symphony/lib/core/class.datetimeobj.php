@@ -6,10 +6,87 @@
 
 	 /**
 	  * The DateTimeObj provides static functions regarding dates in Symphony.
-	  * Symphony will set the default timezone of the system using it's configuration
-	  * values.
+	  * Symphony will set the default timezone of the system using the value from
+	  * the Configuration values. Alternatively a new settings can be set using the
+	  * `setSettings` function. Symphony parses all input dates against the Configuration
+	  * date formats by default for better support with non English dates.
 	  */
 	Class DateTimeObj {
+
+		/**
+		 * Holds the various settings for the formats that the `DateTimeObj` should
+		 * use when parsing input dates.
+		 *
+		 * @since Symphony 2.2.4
+		 * @var array
+		 */
+		private static $settings = array();
+
+		/**
+		 * This function takes an array of settings for `DateTimeObj` to use when parsing
+		 * input dates. The following settings are supported, `time_format`, `date_format`,
+		 * `datetime_separator` and `timezone`. This equates to Symphony's default `region`
+		 * group set in the `Configuration` class. If any of these values are not provided
+		 * the class will fallback to existing `self::$settings` values
+		 *
+		 * @since Symphony 2.2.4
+		 * @param array $settings
+		 *  An associative array of formats for this class to use to format
+		 *  dates
+		 */
+		public static function setSettings(array $settings = array()) {
+			// Date format
+			if(isset($settings['date_format'])) {
+				self::$settings['date_format'] = $settings['date_format'];
+			}
+
+			// Time format
+			if(isset($settings['time_format'])) {
+				self::$settings['time_format'] = $settings['time_format'];
+			}
+
+			// Datetime separator
+			if(isset($settings['datetime_separator'])) {
+				self::$settings['datetime_separator'] = $settings['datetime_separator'];
+			}
+			else if (!isset(self::$settings['datetime_separator'])) {
+				self::$settings['datetime_separator'] = ' ';
+			}
+
+			// Datetime format
+			if(isset($settings['datetime_format'])) {
+				self::$settings['datetime_format'] = $settings['datetime_format'];
+			}
+			else {
+				self::$settings['datetime_format'] = self::$settings['date_format'] . self::$settings['datetime_separator'] . self::$settings['time_format'];
+			}
+
+			// Timezone
+			if(isset($settings['timezone'])) {
+				self::setDefaultTimezone($settings['timezone']);
+			}
+		}
+
+		/**
+		 * Accessor function for the settings of the DateTimeObj. Currently
+		 * the available settings are `time_format`, `date_format`,
+		 * `datetime_format` and `datetime_separator`. If `$name` is not
+		 * provided, the entire `$settings` array is returned.
+		 *
+		 * @since Symphony 2.2.4
+		 * @param string $name
+		 * @return array|string|null
+		 *  If `$name` is omitted this function returns array.
+		 *  If `$name` is not set, this fucntion returns `null`
+		 *  If `$name` is set, this function returns string
+		 */
+		public static function getSetting($name = null) {
+			if(is_null($name)) return self::$settings;
+
+			if(isset(self::$settings[$name])) return self::$settings[$name];
+
+			return null;
+		}
 
 		/**
 		 * Uses PHP's date_default_timezone_set function to set the system
@@ -34,10 +111,15 @@
 		 *	Returns true for valid dates, otherwise false
 		 */
 		public static function validate($string) {
-			$string = trim($string);
+			try {
+				$date = new DateTime(Lang::standardizeDate($string));
+			}
+			catch(Exception $ex) {
+				return false;
+			}
 
-			// String is empty or not a valid date string
-			if(empty($string) || !strtotime(Lang::standardizeDate($string))) {
+			// String is empty or not a valid date
+			if(empty($string) || $date === false) {
 				return false;
 			}
 
@@ -66,8 +148,8 @@
 		 *  result in the current time being used
 		 * @param string $timezone (optional)
 		 *  The timezone associated with the timestamp
-		 * @return string
-		 *  The formatted date
+		 * @return string|boolean
+		 *  The formatted date, of if the date could not be parsed, false.
 		 */
 		public static function get($format, $timestamp = 'now', $timezone = null) {
 			return self::format($timestamp, $format, false, $timezone);
@@ -77,6 +159,8 @@
 		 * Formats the given date and time `$string` based on the given `$format`.
 		 * Optionally the result will be localized and respect a timezone differing
 		 * from the system default. The default output is ISO 8601.
+		 * Please note that for best compatibility with European dates it is recommended
+		 * that your site be in a PHP5.3 environment.
 		 *
 		 * @since Symphony 2.2.1
 		 * @param string $string (optional)
@@ -87,8 +171,8 @@
 		 *  Localizes the output, if true, defaults to true
 		 * @param string $timezone (optional)
 		 *  The timezone associated with the timestamp
-		 * @return string
-		 *  The formatted date
+		 * @return string|boolean
+		 *  The formatted date, of if the date could not be parsed, false.
 		 */
 		public static function format($string = 'now', $format = DateTime::ISO8601, $localize = true, $timezone = null) {
 
@@ -99,13 +183,13 @@
 
 			// Timestamp
 			elseif(is_numeric($string)) {
-				$date = new DateTime(date(DateTime::ISO8601, $string));
+				$date = new DateTime('@' . $string);
 			}
 
 			// Attempt to parse the date provided against the Symphony configuration setting
 			// in an effort to better support multilingual date formats. Should this fail
-			// this block will fallback to using `strtotime`, which will parse the date assuming
-			// it's in an English format
+			// this block will fallback to just passing the date to DateTime constructor,
+			// which will parse the date assuming it's in an English format.
 			else {
 				// Standardize date
 				// Convert date string to English
@@ -113,33 +197,40 @@
 
 				// PHP 5.3: Apply Symphony date format using `createFromFormat`
 				if(method_exists('DateTime', 'createFromFormat')) {
-					$date = DateTime::createFromFormat(__SYM_DATETIME_FORMAT__, $string);
+					$date = DateTime::createFromFormat(self::$settings['datetime_format'], $string);
 					if($date === false) {
-						$date = DateTime::createFromFormat(__SYM_DATE_FORMAT__, $string);
+						$date = DateTime::createFromFormat(self::$settings['date_format'], $string);
+					}
+
+					// Handle dates that are in a different format to Symphony's config
+					// DateTime is much the same as `strtotime` and will handle relative
+					// dates.
+					if($date === false) {
+						try {
+							$date = new DateTime($string);
+						}
+						catch(Exception $ex) {
+							// Invalid date, it can't be parsed
+							return false;
+						}
 					}
 				}
 
-				// PHP 5.2: Fallback to `strptime`
+				// PHP 5.2: Fallback to DateTime parsing.
+				// Note that this parsing will not respect European dates.
 				else {
-					$date = strptime($string, DateTimeObj::dateFormatToStrftime(__SYM_DATETIME_FORMAT__));
-					if($date === false) {
-						$date = strptime($string, DateTimeObj::dateFormatToStrftime(__SYM_DATE_FORMAT__));
+					try {
+						$date = new DateTime($string);
 					}
-
-					if(is_array($date)) {
-						$date = date(DateTime::ISO8601, mktime(
-							// Time
-							$date['tm_hour'], $date['tm_min'], $date['tm_sec'],
-							// Date (Months since Jan / Years since 1900)
-							$date['tm_mon'] + 1, $date['tm_mday'], 1900 + $date['tm_year']
-						));
-						$date = new DateTime($date);
+					catch(Exception $ex) {
+						// Invalid date, it can't be parsed
+						return false;
 					}
 				}
 
-				// Handle non-standard dates (ie. relative dates, tomorrow etc.)
+				// If the date is still invalid, just return false.
 				if($date === false) {
-					$date = new DateTime($string);
+					return false;
 				}
 			}
 
@@ -159,39 +250,6 @@
 
 			// Return custom formatted date, use ISO 8601 date by default
 			return $date;
-		}
-
-		/**
-		 * Convert a date format to a `strftime` format
-		 * Timezone conversion is done for unix. Windows users must exchange %z and %Z.
-		 *
-		 * Unsupported `date` formats : S, n, t, L, B, G, u, e, I, P, Z, c, r
-		 * Unsupported `strftime` formats : %U, %W, %C, %g, %r, %R, %T, %X, %c, %D, %F, %x
-		 *
-		 * @since Symphony 2.2.1
-		 * @link http://www.php.net/manual/en/function.strftime.php#96424
-		 * @param string $dateFormat a date format
-		 * @return string
-		 */
-		public static function dateFormatToStrftime($dateFormat) {
-			$caracs = array(
-				// Day - no strf eq : S
-				'd' => '%d', 'D' => '%a', 'j' => '%e', 'l' => '%A', 'N' => '%u', 'w' => '%w', 'z' => '%j',
-				// Week - no date eq : %U, %W
-				'W' => '%V',
-				// Month - no strf eq : n, t
-				'F' => '%B', 'm' => '%m', 'M' => '%b',
-				// Year - no strf eq : L; no date eq : %C, %g
-				'o' => '%G', 'Y' => '%Y', 'y' => '%y',
-				// Time - no strf eq : B, G, u; no date eq : %r, %R, %T, %X
-				'a' => '%P', 'A' => '%p', 'g' => '%l', 'h' => '%I', 'H' => '%H', 'i' => '%M', 's' => '%S',
-				// Timezone - no strf eq : e, I, P, Z
-				'O' => '%z', 'T' => '%Z',
-				// Full Date / Time - no strf eq : c, r; no date eq : %c, %D, %F, %x
-				'U' => '%s'
-			);
-
-			return strtr((string)$dateFormat, $caracs);
 		}
 
 		/**
