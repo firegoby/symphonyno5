@@ -9,14 +9,14 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ## Features
 
-* HTML5 master.xsl template based on HTML5Boilerplate
-* Ant build script to minify & concatenate javascripts into a single production file
-* Ant build script compiles any Coffeescript files before concatenation 
-* Sensible defaults Less CSS folder/file setup with: -
-  * HTML5 Boilerplate styles
-  * Bootstrap from Twitter
-  * Basic separation of responsibilities: files for mixins, variables, main & responsive
-  * All Less stylesheets compile into a single (minified) styles.css file for production
+* **HTML5** master.xsl template based on HTML5Boilerplate
+* Ant build script to **minify & concatenate javascripts** into a single production file
+* Ant build script compiles any **Coffeescript** files before concatenation 
+* **Less CSS** - Sensible defaults folder/file setup with: -
+  * **HTML5 Boilerplate** styles, including normalize.css
+  * **Bootstrap** from Twitter
+  * Basic separation of responsibilities: files for **mixins**, **variables**, **main** & **responsive**
+  * All Less **stylesheets compile into a single (minified) styles.css** file for production
 
 ## Changelog
 
@@ -63,13 +63,14 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 8. Setup your MySQL database
 9. Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
 
-Once installed tighten file/dir permissions (IMPORTANT: Please make sure you understand what is happening here and don't just blindly cut-n-paste. Refer to the [Symphony CMS Forum](http://symphony-cms.com/discuss/) for more information and help).
-10. `find . -type d -exec chmod 755 {} \;`
-11. `find . -type f -exec chmod 644 {} \;`
-12. `rm install.php install.sql workspace/install.sql update.php install-log.txt`
-13. Create!
+### File Permissions
+Once installed tighten up the file/dir permissions (**IMPORTANT**: Please make sure you *understand* what is happening here and don't just blindly cut-n-paste. Refer to the [Symphony CMS Forum](http://symphony-cms.com/discuss/) for more information and help).
 
-### Symphony CMS Overview
+1. `find . -type d -exec chmod 755 {} \;`
+2. `find . -type f -exec chmod 644 {} \;`
+3. `rm install.php install.sql workspace/install.sql update.php install-log.txt`
+
+## Symphony CMS Overview
 
 Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as
 its core technologies. 
@@ -77,7 +78,7 @@ its core technologies.
 * Visit the website at <http://symphony-cms.com/>
 * Github Repository: <http://github.com/symphonycms/symphony-2/>
 
-#### Symphony Server Requirements
+### Symphony Server Requirements
 
 - PHP 5.2 or above
 - PHP's LibXML module, with the XSLT extension enabled (--with-xsl)
@@ -85,6 +86,6 @@ its core technologies.
 - An Apache or Litespeed webserver
 - Apache's mod_rewrite module or equivalent
 
-### Licenses
+## Licenses
 
 Please refer to the LICENSE.* files in the root directory.
