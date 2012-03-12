@@ -5,7 +5,7 @@
   <xsl:include href="page-title.xsl"/>
   <xsl:include href="navigation.xsl"/>
 
-  <xsl:variable name="jQueryVersion" select="'1.6.2'"/>
+  <xsl:variable name="jQueryVersion" select="'1.7.1'"/>
 
   <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes" indent="no" media-type="text/html" />
 
@@ -20,12 +20,13 @@
         <title><xsl:call-template name="page-title"/></title>
         <meta name="description" content=""/>
         <meta name="author" content=""/>
+        <meta name="viewport" content="width=device-width"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="stylesheet" href="/workspace/css/style.css"/>
-        <script src="/workspace/js/libs/modernizr-2.0.6.min.js"></script>
+        <link rel="stylesheet" href="/workspace/css/styles.css"/>
+        <script src="/workspace/js/libs/modernizr-2.5.3.min.js"></script>
       </head>
       <body class="{$current-page}">
+        <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
         <div id="container">
           <header>
             <h1><xsl:value-of select="$website-name"/></h1>
