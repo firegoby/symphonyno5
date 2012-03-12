@@ -1,14 +1,31 @@
 # Symphony No.5 #
 
-* Version 0.2.2
-* Date: 16th November 2011
+* Version 0.3.0
+* Date: 12th March 2012
 
 ## Overview
 
-Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS & Coffeescript
+Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for use with [Symphony CMS](http://symphony-cms.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/). It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
+
+## Features
+
+* HTML5 master.xsl template based on HTML5Boilerplate
+* Ant build script to minify & concatenate javascripts into a single production file
+* Ant build script compiles any Coffeescript files before concatenation 
+* Sensible defaults Less CSS folder/file setup with: -
+  * HTML5 Boilerplate styles
+  * Bootstrap from Twitter
+  * Basic separation of responsibilities: files for mixins, variables, main & responsive
+  * All Less stylesheets compile into a single (minified) styles.css file for production
 
 ## Changelog
 
+* 0.3.0 - 12 Mar 12 -
+  * Updated to HTML5Boilerplate 3.0
+  * Added Bootstrap, from Twitter (2.0.1)
+  * Added default script.coffee to js/ dir
+  * Added sensible default files structure to less/ dir
+  * Improved Symphony CMS installation instructions re: file permissions
 * 0.2.2 - 16 Nov 11 - Updated to Symphony 2.2.5
 * 0.2.1 - 23 Oct 11 - Updated to Symphony 2.2.4
 * 0.2.0 - 22 Aug 11 - Updating to H5BP 2.0, fix for build script & misc bug fixes
@@ -29,14 +46,6 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS
 * 0.1.1 - 28 Apr 11 - Updated to Symphony 2.2.1
 * 0.1.0 - 31 Mar 11 - Initial version 
 
-## Features
-
-* HTML5 master.xsl template
-* Ant build script to minify & concatenate javascripts in single production file
-* Ant build script compiles Coffeescript files 
-* Less CSS folder/file setup with HTML5 Boilerplate style.css (use with Less.app)
-* A lot of the HTML5Boilerplate goodness!
-
 ## Non Symphony CMS Requirements
 
 * Less.app (or other LESS CSS compilation option)
@@ -44,15 +53,21 @@ Symphony No.5 is an adapted HTML5Boilerplate for use with Symphony CMS, Less CSS
 
 ## Installation (unix command line)
 
-* `cd` to the directory of your choice and execute the following commands, replacing `projectname` with your own
-  * `git clone https://github.com/firegoby/symphonyno5.git projectname`
-  * `cd projectname`
-  * `git remote rename origin symphony`
-  * `git submodule update --init`
-  * `chmod 777 symphony .`
-  * `chmod -R 777 workspace`
-* Setup your MySQL database
-* Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
+1. `cd` to the directory of your choice and execute the following commands, replacing `projectname` with your own
+2. `git clone https://github.com/firegoby/symphonyno5.git projectname`
+3. `cd projectname`
+4. `git remote rename origin symphony`
+5. `git submodule update --init`
+6. `chmod 777 symphony .`
+7. `chmod -R 777 workspace`
+8. Setup your MySQL database
+9. Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
+
+Once installed tighten file/dir permissions (IMPORTANT: Please make sure you understand what is happening here and don't just blindly cut-n-paste. Refer to the [Symphony CMS Forum](http://symphony-cms.com/discuss/) for more information and help).
+10. `find . -type d -exec chmod 755 {} \;`
+11. `find . -type f -exec chmod 644 {} \;`
+12. `rm install.php install.sql workspace/install.sql update.php install-log.txt`
+13. Create!
 
 ### Symphony CMS Overview
 
@@ -70,3 +85,6 @@ its core technologies.
 - An Apache or Litespeed webserver
 - Apache's mod_rewrite module or equivalent
 
+### Licenses
+
+Please refer to the LICENSE.* files in the root directory.
