@@ -1,0 +1,99 @@
+/* Firegoby Less Mixins
+---------------------------------------------- */
+
+// highlight debug
+.debug() {
+  background: rgba(240,30,30,0.2);
+}
+
+// highlight debug border
+.debugb() {
+  border: 1px solid red;
+}
+
+// image replacement
+.image-replace(@image, @width, @height) {
+  width: @width * 1px;
+  height: @height * 1px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  background: url(@image) no-repeat top left;
+  text-indent: 100%;
+}
+
+// sexy ampersands - also remember opensourceampersands.com
+// nb:- export as a genuine CSS class .amp for use with formatted HTML
+// with <span class="amp"> automatically wrapped around ampersands
+.amp {
+  font-family: 'Warnock Pro', 'Goudy Old Style', Palatino, 'Book Antiqua', serif;
+  font-size: 1.1em;
+  line-height: 0.91em;
+  font-style: italic;
+}
+
+// quick letterpress effect
+.letterpress() {
+  text-shadow: 1px 1px 1px rgba(255,255,255,1.0);
+}
+
+// drop and vignette together
+.vignette(@drop: 4px, @inset: 40px) {
+  -moz-box-shadow: 0 1px @drop rgba(0, 0, 0, 0.2), 0 0 @inset rgba(0, 0, 0, 0.06) inset;
+  -webkit-box-shadow: 0 1px @drop rgba(0, 0, 0, 0.2), 0 0 @inset rgba(0, 0, 0, 0.06) inset;
+  -box-shadow: 0 1px @drop rgba(0, 0, 0, 0.2), 0 0 @inset rgba(0, 0, 0, 0.06) inset;
+}
+
+// cameron moll's CSS page curls
+// see: http://dribbble.com/shots/88003-CSS-page-curls
+.page-curls() {
+  list-style-type: none;
+  margin: 0 30px 30px 0;
+  padding: 0;
+  width: 204px;
+  height: 113px;
+  position: relative;
+  float: left;
+  background: #ffffff; /* old browsers */
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
+
+  &:after {
+    z-index: -1;
+    position: absolute;
+    background: transparent;
+    width: 70%;
+    height: 55%;
+    content: '';
+    right: 10px;
+    bottom: 10px;
+    -moz-transform: skew(15deg) rotate(6deg);
+    -ms-transform: skew(15deg) rotate(6deg);
+    -o-transform: skew(15deg) rotate(6deg);
+    -webkit-transform: skew(15deg) rotate(6deg);
+    transform: skew(15deg) rotate(6deg);
+    -moz-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  &:before {
+    z-index: -2;
+    position: absolute;
+    background: transparent;
+    width: 70%;
+    height: 55%;
+    content: '';
+    left: 10px;
+    bottom: 10px;
+    -moz-transform: skew(-15deg) rotate(-6deg);
+    -ms-transform: skew(-15deg) rotate(-6deg);
+    -o-transform: skew(-15deg) rotate(-6deg);
+    -webkit-transform: skew(-15deg) rotate(-6deg);
+    transform: skew(-15deg) rotate(-6deg);
+    -moz-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+}
