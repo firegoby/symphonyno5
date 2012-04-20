@@ -11,9 +11,8 @@
 
   <xsl:template match="/">
     <xsl:text disable-output-escaping="yes"><![CDATA[<!doctype html>]]></xsl:text>
-    <xsl:comment><![CDATA[[if IE 6 ]><html class="no-js ie6 oldie" lang="en"><![endif]]]></xsl:comment>
-    <xsl:comment><![CDATA[[if IE 7 ]><html class="no-js ie7 oldie" lang="en"><![endif]]]></xsl:comment>
-    <xsl:comment><![CDATA[[if IE 8 ]><html class="no-js ie8 oldie" lang="en"><![endif]]]></xsl:comment>
+    <xsl:comment><![CDATA[[if lt IE 8 ]><html class="no-js oldie" lang="en"><![endif]]]></xsl:comment>
+    <xsl:comment><![CDATA[[if IE 8 ]><html class="no-js ie8" lang="en"><![endif]]]></xsl:comment>
     <xsl:comment><![CDATA[[if gt IE 8 ]><!]]></xsl:comment><html class="no-js" lang="en"><xsl:comment><![CDATA[<![endif]]]></xsl:comment>
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -26,13 +25,13 @@
         <script src="/workspace/js/libs/modernizr-2.5.3.min.js"></script>
       </head>
       <body class="{$current-page}">
-        <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-        <div id="container">
-          <header>
+        <!--[if lt IE 8]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+        <div class="container">
+          <header class="masthead">
             <h1><xsl:value-of select="$website-name"/></h1>
             <xsl:apply-templates select="data/navigation"/>
           </header>
-          <div id="main" role="main">
+          <div class="main" role="main">
             <xsl:apply-templates/>
           </div>
           <footer>
