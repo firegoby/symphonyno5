@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Symphony No. 5 by firegoby</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Symphony No. 5</h1>
+        <p>An adapted HTML5Boilerplate and 320andup for use with Symphony CMS, Less CSS &amp; Coffeescript and including Twitter's Bootstrap</p>
+        <p class="view"><a href="https://github.com/firegoby/symphonyno5">View the Project on GitHub <small>firegoby/symphonyno5</small></a></p>
+        <ul>
+          <li><a href="https://github.com/firegoby/symphonyno5/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/firegoby/symphonyno5/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/firegoby/symphonyno5">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Symphony No.5</h1>
+
+<ul>
+<li>Version 0.3.1</li>
+<li>Date: 7th May 2012</li>
+</ul><h2>Overview</h2>
+
+<p>Symphony No.5 is an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> and <a href="http://github.com/malarkey/320andup">320andup</a> for use with <a href="http://symphony-cms.com/">Symphony CMS</a>, <a href="http://lesscss.org/">Less CSS</a> &amp; <a href="http://coffeescript.org/">Coffeescript</a> and featuring <a href="http://twitter.github.com/bootstrap/">Bootstrap, from Twitter</a>. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>
+<strong>HTML5</strong> master.xsl template based on HTML5Boilerplate &amp; 320andup</li>
+<li>
+<strong>Less CSS</strong> styles based on <strong>320andup</strong>, with optional (off-by-default): -
+
+<ul>
+<li>
+<strong>HTML5 Boilerplate</strong> styles, including normalize.css</li>
+<li>
+<strong>Bootstrap</strong> from Twitter</li>
+</ul>
+</li>
+<li>Ant build script to <strong>minify &amp; concatenate javascripts</strong> into a single production file</li>
+<li>Ant build script compiles any <strong>Coffeescript</strong> files before concatenation </li>
+<li>All Less <strong>stylesheets compile into a single (minified) styles.css</strong> file for production</li>
+</ul><h2>Changelog</h2>
+
+<ul>
+<li>0.3.1 - 7 May 12 -
+
+<ul>
+<li>Incorporated much of Andy Clarke's <a href="http://github.com/malarkey/320andup"><strong>320andup</strong></a>, including: -</li>
+<li>Font-based icons from <a href="http://fortawesome.github.com/Font-Awesome">Font Awesome</a>
+</li>
+<li><a href="http://selectivizr.com/">Selectivizr</a></li>
+<li>Responsive design tester</li>
+<li>LESS file setup, mixins and variables</li>
+<li>Reference page</li>
+<li>Merged all Less and CSS files under a single styles/ directory</li>
+<li>Changed <code>js/</code> -&gt; <code>scripts/</code>
+</li>
+<li>Changed <code>js/libs/</code> -&gt; <code>scripts/vendor/</code> (H5BP)</li>
+<li>Changed <code>js/script.js</code> -&gt; <code>scripts/main.js</code> (H5BP)</li>
+<li>Changed <code>js/script.coffee</code> -&gt; <code>scripts/main.coffee</code>
+</li>
+<li>Upgraded JQuery 1.7.1 -&gt; 1.7.2</li>
+<li>Replaced favicon and apple touch icon with custom default</li>
+<li>Moved multiple resolution apple touch icons to <code>workspace/images/icons/</code>
+</li>
+<li>Added <code>.gitignore</code> files to force empty dirs for <code>data-sources/</code>, <code>events/</code> &amp; <code>pages/</code>
+</li>
+<li>Dropped support for IE less than 8</li>
+<li>Changed all default element IDs to classes in <code>master.xsl</code>
+</li>
+<li>Added <code>role="navigation"</code> to default <code>nav</code> element in <code>navigation.xsl</code>
+</li>
+</ul>
+</li>
+<li>0.3.0 - 12 Mar 12 -
+
+<ul>
+<li>Updated to HTML5Boilerplate 3.0</li>
+<li>Added Bootstrap, from Twitter (2.0.1)</li>
+<li>Added default script.coffee to js/ dir</li>
+<li>Added sensible default files structure to less/ dir</li>
+<li>Improved Symphony CMS installation instructions re: file permissions</li>
+</ul>
+</li>
+<li>0.2.2 - 16 Nov 11 - Updated to Symphony 2.2.5</li>
+<li>0.2.1 - 23 Oct 11 - Updated to Symphony 2.2.4</li>
+<li>0.2.0 - 22 Aug 11 - Updating to H5BP 2.0, fix for build script &amp; misc bug fixes</li>
+<li>0.1.8 - 10 Jun 11 - Reverting closing tag of fallback JQuery, XSLT doesn't like it</li>
+<li>0.1.7 - 10 Jun 11 - 
+
+<ul>
+<li>Added installation gudie</li>
+<li>Upgraded to JQuery 1.6.1</li>
+<li>Upgraded to Modernizr 2.0</li>
+<li>Simpler closing script tag for fallback JQuery imported from HBP5</li>
+<li>Updated humans.txt</li>
+<li>Removed default home.xsl (unnecessary)</li>
+<li>Removed all known remaining personalisation</li>
+</ul>
+</li>
+<li>0.1.6 - 21 May 11 - Stripped out personalisation of humans.txt</li>
+<li>0.1.5 - 20 May 11 - Updating to new .oldie class for IE compatibility (from HTML5Bolierplate)</li>
+<li>0.1.4 - 17 May 11 - Added Coffeescript support to the Ant build script (Coffeescript required)</li>
+<li>0.1.3 - 16 May 11 - Fixed bug in the JQuery local fallback script closing tag </li>
+<li>0.1.2 - 13 May 11 - Fixed bug in the IE9/non-IE conditional comment CDATA</li>
+<li>0.1.1 - 28 Apr 11 - Updated to Symphony 2.2.1</li>
+<li>0.1.0 - 31 Mar 11 - Initial version </li>
+</ul><h2>Non Symphony CMS Requirements</h2>
+
+<ul>
+<li>Less.app (or other LESS CSS compilation option)</li>
+<li>Coffeescript (install via node.js &amp; npm)</li>
+</ul><h2>Installation (unix command line)</h2>
+
+<ol>
+<li>
+<code>cd</code> to the directory of your choice and execute the following commands, replacing <code>projectname</code> with your own</li>
+<li><code>git clone https://github.com/firegoby/symphonyno5.git projectname</code></li>
+<li><code>cd projectname</code></li>
+<li><code>git remote rename origin symphony</code></li>
+<li><code>git submodule update --init</code></li>
+<li><code>chmod 777 symphony .</code></li>
+<li><code>chmod -R 777 workspace</code></li>
+<li>Setup your MySQL database</li>
+<li>Open <code>http://yourproject.domain/install.php</code> (yourproject.domain depends on your local development setup)</li>
+</ol><h3>File Permissions</h3>
+
+<p>Once installed tighten up the file/dir permissions (<strong>IMPORTANT</strong>: Please make sure you <em>understand</em> what is happening here and don't just blindly cut-n-paste. Refer to the <a href="http://symphony-cms.com/discuss/">Symphony CMS Forum</a> for more information and help).</p>
+
+<ol>
+<li><code>find . -type d -exec chmod 755 {} \;</code></li>
+<li><code>find . -type f -exec chmod 644 {} \;</code></li>
+<li><code>rm install.php install.sql workspace/install.sql update.php install-log.txt</code></li>
+</ol><h2>Symphony CMS Overview</h2>
+
+<p>Symphony is a <code>PHP</code> &amp; <code>MySQL</code> based CMS that utilises <code>XML</code> and <code>XSLT</code> as
+its core technologies. </p>
+
+<ul>
+<li>Visit the website at <a href="http://symphony-cms.com/">http://symphony-cms.com/</a>
+</li>
+<li>Github Repository: <a href="http://github.com/symphonycms/symphony-2/">http://github.com/symphonycms/symphony-2/</a>
+</li>
+</ul><h3>Symphony Server Requirements</h3>
+
+<ul>
+<li>PHP 5.2 or above</li>
+<li>PHP's LibXML module, with the XSLT extension enabled (--with-xsl)</li>
+<li>MySQL 4.1 or above</li>
+<li>An Apache or Litespeed webserver</li>
+<li>Apache's mod_rewrite module or equivalent</li>
+</ul><h2>Licenses</h2>
+
+<p>Please refer to the LICENSE.* files in the root directory.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/firegoby">firegoby</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
