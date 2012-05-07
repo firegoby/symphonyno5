@@ -21,14 +21,14 @@
         <meta name="author" content=""/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="MobileOptimized" content="320"/>
-        <meta http-equiv="cleartype" content="on">
+        <meta http-equiv="cleartype" content="on"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
         <link rel="stylesheet" href="/workspace/styles/styles.css"/>
         <link rel="apple-touch-icon-precomposed" href="/workspace/images/icons/apple-touch-icon.png"/>
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/workspace/images/icons/apple-touch-icon.png"/>
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/workspace/images/icons/apple-touch-icon-114x114-precomposed.png"/>
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/workspace/images/icons/apple-touch-icon-144x144-precomposed.png"/>
-        <link rel="shortcut icon" href="/workspace/images/icons/apple-touch-icon.png">
+        <link rel="shortcut icon" href="/workspace/images/icons/apple-touch-icon.png"/>
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
         <script src="/workspace/scripts/vendor/modernizr-2.5.3.min.js"></script>
       </head>

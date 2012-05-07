@@ -21,11 +21,11 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) and
 
 * 0.3.1 - 7 May 12 -
   * Incorporated much of Andy Clarke's [**320andup**](http://github.com/malarkey/320andup), including: -
-    * Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
-    * [Selectivizr](http://selectivizr.com/)
-    * Responsive design tester
-    * LESS file setup, mixins and variables
-    * Reference page
+    - Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
+    - [Selectivizr](http://selectivizr.com/)
+    - Responsive design tester
+    - LESS file setup, mixins and variables
+    - Reference page
   * Merged all Less and CSS files under a single styles/ directory
   * Changed `js/` -> `scripts/`
   * Changed `js/libs/` -> `scripts/vendor/` (H5BP)
