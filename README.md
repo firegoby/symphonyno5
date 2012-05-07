@@ -1,25 +1,43 @@
 # Symphony No.5 #
 
-* Version 0.3.0
-* Date: 12th March 2012
+* Version 0.3.1
+* Date: 7th May 2012
 
 ## Overview
 
-Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for use with [Symphony CMS](http://symphony-cms.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/). It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
+Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) and [320andup](http://github.com/malarkey/320andup) for use with [Symphony CMS](http://symphony-cms.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/). It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
 
 ## Features
 
-* **HTML5** master.xsl template based on HTML5Boilerplate
-* Ant build script to **minify & concatenate javascripts** into a single production file
-* Ant build script compiles any **Coffeescript** files before concatenation 
-* **Less CSS** - Sensible defaults folder/file setup with: -
+* **HTML5** master.xsl template based on HTML5Boilerplate & 320andup
+* **Less CSS** styles based on **320andup**, with optional (off-by-default): -
   * **HTML5 Boilerplate** styles, including normalize.css
   * **Bootstrap** from Twitter
-  * Basic separation of responsibilities: files for **mixins**, **variables**, **main** & **responsive**
-  * All Less **stylesheets compile into a single (minified) styles.css** file for production
+* Ant build script to **minify & concatenate javascripts** into a single production file
+* Ant build script compiles any **Coffeescript** files before concatenation 
+* All Less **stylesheets compile into a single (minified) styles.css** file for production
 
 ## Changelog
 
+* 0.3.1 - 7 May 12 -
+  * Incorporated much of Andy Clarke's [**320andup**](http://github.com/malarkey/320andup), including: -
+    * Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
+    * [Selectivizr](http://selectivizr.com/)
+    * Responsive design tester
+    * LESS file setup, mixins and variables
+    * Reference page
+  * Merged all Less and CSS files under a single styles/ directory
+  * Changed `js/` -> `scripts/`
+  * Changed `js/libs/` -> `scripts/vendor/` (H5BP)
+  * Changed `js/script.js` -> `scripts/main.js` (H5BP)
+  * Changed `js/script.coffee` -> `scripts/main.coffee`
+  * Upgraded JQuery 1.7.1 -> 1.7.2
+  * Replaced favicon and apple touch icon with custom default
+  * Moved multiple resolution apple touch icons to `workspace/images/icons/`
+  * Added `.gitignore` files to force empty dirs for `data-sources/`, `events/` & `pages/`
+  * Dropped support for IE less than 8
+  * Changed all default element IDs to classes in `master.xsl`
+  * Added `role="navigation"` to default `nav` element in `navigation.xsl`
 * 0.3.0 - 12 Mar 12 -
   * Updated to HTML5Boilerplate 3.0
   * Added Bootstrap, from Twitter (2.0.1)
