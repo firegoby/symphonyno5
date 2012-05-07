@@ -13,14 +13,14 @@
     <concat destfile="production.min.js">
       <fileset dir="." includes="**/*.min.js">
         <exclude name="production.min.js"/>
-        <exclude name="libs/*.js"/>
+        <exclude name="vendor/*.js"/>
       </fileset>
     </concat>
     <echo message="Deleting temporary minified .js files..."/>
     <delete>
       <fileset dir="." includes="**/*.min.js">
         <exclude name="production.min.js"/>
-        <exclude name="libs/*.min.js"/>
+        <exclude name="vendor/*.min.js"/>
       </fileset>
     </delete>
   </target>
@@ -29,14 +29,14 @@
     <echo message="Deleting old minified .js files..."/>
     <delete>
       <fileset dir="." includes="**/*.min.js">
-        <exclude name="libs/*.min.js"/>
+        <exclude name="vendor/*.min.js"/>
       </fileset>
     </delete>
     <echo message="Minifying javascript files..."/>
     <apply executable="java" parallel="false">
       <fileset dir=".">
         <include name="**/*.js"/>
-        <exclude name="libs/*.js"/>
+        <exclude name="vendor/*.js"/>
       </fileset>
       <arg line="-jar"/>
       <arg path="build/yuicompressor-2.4.6.jar"/>
