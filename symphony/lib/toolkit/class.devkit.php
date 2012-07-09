@@ -73,7 +73,7 @@
 					'content'		=> 'text/html; charset=UTF-8'
 				)
 			));
-			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/devkit.css', 'screen');
+			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/css/devkit.css', 'screen');
 		}
 
 		/**
@@ -84,9 +84,9 @@
 			$this->setTitle(__(
 				'%1$s &ndash; %2$s &ndash; %3$s',
 				array(
-					__('Symphony'),
+					$this->_pagedata['title'],
 					__($this->_title),
-					$this->_pagedata['title']
+					__('Symphony')
 				)
 			));
 

@@ -14,12 +14,20 @@
 		}
 
 		public function view(){
-			$strings = $_GET;
+			$strings = $_GET['strings'];
+			$namespace = (empty($_GET['namespace']) ? null : General::sanitize($_GET['namespace']));
+
 			$new = array();
-			foreach($strings as $id => $string) {
-				if($id == 'mode' || $id == 'symphony-page') continue;
-				$string = urldecode($string);
-				$new[$string] = __($string);
+			foreach($strings as $key => $value) {
+				// Check value
+				if(empty($value) || $value = 'false') {
+					$value = $key;
+				}
+
+				$value = General::sanitize($value);
+
+				// Translate
+				$new[$value] = Lang::translate(urldecode($value), null, $namespace);
 			}
 			$this->_Result = json_encode($new);
 		}
