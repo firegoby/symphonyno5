@@ -28,3 +28,6 @@
 [submodule "extensions/selectbox_link_field"]
 	path = extensions/selectbox_link_field
 	url = git://github.com/symphonycms/selectbox_link_field.git
+[submodule "workspace/bootstrap"]
+	path = workspace/bootstrap
+	url = git://github.com/twitter/bootstrap.git
