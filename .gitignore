@@ -3,9 +3,5 @@
 .DS_Store
 *config.php
 manifest/
-*.esproj
-*~
-*.geany
 install-log.txt
-_docs/
-symphony-2.wiki/
+install/logs/

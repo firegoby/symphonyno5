@@ -36,40 +36,27 @@
 		const STATUS_UNAUTHORISED = 401;
 
 		/**
-		 * An instance of the Administration class
-		 * @var Administration
-		 * @see core.Administration
-		 */
-		protected $_Parent;
-
-		/**
 		 * The root node for the response of the AJAXPage
 		 * @var XMLElement
 		 */
 		protected $_Result;
 
 		/**
-		 * The HTTP status code of the page using the AJAXPage constants
+		 * The HTTP status code of the page using the `AJAXPage` constants
 		 * `STATUS_OK`, `STATUS_BAD`, `STATUS_ERROR` or `STATUS_UNAUTHORISED`
 		 * @var integer
 		 */
 		protected $_status;
 
 		/**
-		 * The constructor for AJAXPage. This sets the page status to `STATUS_OK`,
-		 * the default content type to text/xml and initialises `$this->_Result`
-		 * with an XMLElement. The constructor also starts the Profiler for this
+		 * The constructor for `AJAXPage`. This sets the page status to `STATUS_OK`,
+		 * the default content type to `text/xml` and initialises `$this->_Result`
+		 * with an `XMLElement`. The constructor also starts the Profiler for this
 		 * page template.
 		 *
 		 * @see toolkit.Profiler
-		 * @param Administration $parent
-		 *  The Administration object that this page has been created from
-		 *  passed by reference
 		 */
-		public function __construct(&$parent){
-
-			$this->_Parent = $parent;
-
+		public function __construct() {
 			$this->_Result = new XMLElement('result');
 			$this->_Result->setIncludeHeader(true);
 
@@ -77,7 +64,7 @@
 
 			$this->addHeaderToPage('Content-Type', 'text/xml');
 
-			Administration::instance()->Profiler->sample('Page template created', PROFILE_LAP);
+			Symphony::Profiler()->sample('Page template created', PROFILE_LAP);
 		}
 
 		/**
@@ -105,32 +92,32 @@
 
 		/**
 		 * The generate functions outputs the correct headers for
-		 * this AJAXPage, adds `$this->_status` code to the root attribute
+		 * this `AJAXPage`, adds `$this->_status` code to the root attribute
 		 * before calling the parent generate function and generating
 		 * the `$this->_Result` XMLElement
 		 *
 		 * @return string
 		 */
 		public function generate(){
-
 			switch($this->_status){
-
 				case self::STATUS_OK:
 					$status_message = '200 OK';
+					$code = 200;
 					break;
 
 				case self::STATUS_BAD:
 				case self::STATUS_ERROR:
 					$status_message = '400 Bad Request';
+					$code = 400;
 					break;
 
 				case self::STATUS_UNAUTHORISED:
 					$status_message = '401 Unauthorized';
+					$code = 401;
 					break;
-
 			}
 
-			$this->addHeaderToPage('HTTP/1.0 ' . $status_message);
+			$this->addHeaderToPage('Status', $status_message, $code);
 			$this->_Result->setAttribute('status', $this->_status);
 
 			parent::generate();
@@ -138,7 +125,7 @@
 		}
 
 		/**
-		 * All classes that extend the AJAXPage class must define a view method
+		 * All classes that extend the `AJAXPage` class must define a view method
 		 * which contains the logic for the content of this page. The resulting HTML
 		 * is append to `$this->_Result` where it is generated on build
 		 *

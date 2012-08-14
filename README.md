@@ -1,31 +1,43 @@
-# Symphony No.5 #
+# Symphony No.5
 
-* Version 0.3.1
-* Date: 7th May 2012
+* Version 0.4.0
+* Date: 14th August 2012
 
 ## Overview
 
-Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) and [320andup](http://github.com/malarkey/320andup) for use with [Symphony CMS](http://symphony-cms.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/). It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
+Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for use with [Symphony CMS](http://symphony-cms.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/) and some components from [320andup](http://github.com/malarkey/320andup). It also includes an Ant build script to compile, concatenate & minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
 
 ## Features
 
-* **HTML5** master.xsl template based on HTML5Boilerplate & 320andup
-* **Less CSS** styles based on **320andup**, with optional (off-by-default): -
-  * **HTML5 Boilerplate** styles, including normalize.css
+* **HTML5** master.xsl XSLT template based on HTML5Boilerplate
+* **Less CSS** styles with: -
   * **Bootstrap** from Twitter
+  * **FontAwesome** 
+  * Sensible default layout of stylesheets
+* All Less **stylesheets compile into a single (minified) styles.css** file for production
 * Ant build script to **minify & concatenate javascripts** into a single production file
 * Ant build script compiles any **Coffeescript** files before concatenation 
-* All Less **stylesheets compile into a single (minified) styles.css** file for production
+* Ant build script works from a explicit filelist to enable order-dependent concatenation
 
 ## Changelog
-
+* 0.4.0 - 14 Aug 12 -
+  * Removed 320andup stylesheets
+  * Refactored Bootstrap to run as git submodule, eases upgrading
+  * Improved Ant build script to use explicit filelist to allow order-dependent concatenation
+  * Added format-date.xsl XSLT to utilities (more options than date-time.xsl)
+  * Added Google Analytics code from H5BP back into master.xsl
+  * Merged helper.js into plugins.js
+  * Added more .main classes to master.xsl
+  * Removed Apple icons meta tags from head in master.xsl
+  * Upgraded JQuery 1.7.2 -> 1.8.0
+  * Upgraded Modernizr 2.5.3 -> 2.6.1
 * 0.3.1 - 7 May 12 -
   * Incorporated much of Andy Clarke's [**320andup**](http://github.com/malarkey/320andup), including: -
-    - Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
-    - [Selectivizr](http://selectivizr.com/)
-    - Responsive design tester
-    - LESS file setup, mixins and variables
-    - Reference page
+    * Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
+    * [Selectivizr](http://selectivizr.com/)
+    * Responsive design tester
+    * LESS file setup, mixins and variables
+    * Reference page
   * Merged all Less and CSS files under a single styles/ directory
   * Changed `js/` -> `scripts/`
   * Changed `js/libs/` -> `scripts/vendor/` (H5BP)
@@ -68,25 +80,7 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) and
 
 * Less.app (or other LESS CSS compilation option)
 * Coffeescript (install via node.js & npm)
-
-## Installation (unix command line)
-
-1. `cd` to the directory of your choice and execute the following commands, replacing `projectname` with your own
-2. `git clone https://github.com/firegoby/symphonyno5.git projectname`
-3. `cd projectname`
-4. `git remote rename origin symphony`
-5. `git submodule update --init`
-6. `chmod 777 symphony .`
-7. `chmod -R 777 workspace`
-8. Setup your MySQL database
-9. Open `http://yourproject.domain/install.php` (yourproject.domain depends on your local development setup)
-
-### File Permissions
-Once installed tighten up the file/dir permissions (**IMPORTANT**: Please make sure you *understand* what is happening here and don't just blindly cut-n-paste. Refer to the [Symphony CMS Forum](http://symphony-cms.com/discuss/) for more information and help).
-
-1. `find . -type d -exec chmod 755 {} \;`
-2. `find . -type f -exec chmod 644 {} \;`
-3. `rm install.php install.sql workspace/install.sql update.php install-log.txt`
+* Apache Ant (for using the build script)
 
 ## Symphony CMS Overview
 
