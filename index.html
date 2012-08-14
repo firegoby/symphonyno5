@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -15,46 +16,69 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Symphony No. 5</h1>
-        <p>An adapted HTML5Boilerplate and 320andup for use with Symphony CMS, Less CSS &amp; Coffeescript and including Twitter's Bootstrap</p>
-        <p class="view"><a href="https://github.com/firegoby/symphonyno5">View the Project on GitHub <small>firegoby/symphonyno5</small></a></p>
+        <h1 class="header">Symphony No. 5</h1>
+        <p class="header">An adapted HTML5Boilerplate and 320andup for use with Symphony CMS, Less CSS &amp; Coffeescript and including Twitter's Bootstrap</p>
+
         <ul>
-          <li><a href="https://github.com/firegoby/symphonyno5/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/firegoby/symphonyno5/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/firegoby/symphonyno5">View On <strong>GitHub</strong></a></li>
+          <li class="download"><a class="buttons" href="https://github.com/firegoby/symphonyno5/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/firegoby/symphonyno5/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/firegoby/symphonyno5">View On GitHub</a></li>
         </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/firegoby">firegoby</a></p>
+
+
       </header>
       <section>
         <h1>Symphony No.5</h1>
 
 <ul>
-<li>Version 0.3.1</li>
-<li>Date: 7th May 2012</li>
+<li>Version 0.4.0</li>
+<li>Date: 14th August 2012</li>
 </ul><h2>Overview</h2>
 
-<p>Symphony No.5 is an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> and <a href="http://github.com/malarkey/320andup">320andup</a> for use with <a href="http://symphony-cms.com/">Symphony CMS</a>, <a href="http://lesscss.org/">Less CSS</a> &amp; <a href="http://coffeescript.org/">Coffeescript</a> and featuring <a href="http://twitter.github.com/bootstrap/">Bootstrap, from Twitter</a>. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.</p>
+<p>Symphony No.5 is an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> for use with <a href="http://symphony-cms.com/">Symphony CMS</a>, <a href="http://lesscss.org/">Less CSS</a> &amp; <a href="http://coffeescript.org/">Coffeescript</a> and featuring <a href="http://twitter.github.com/bootstrap/">Bootstrap, from Twitter</a> and some components from <a href="http://github.com/malarkey/320andup">320andup</a>. It also includes an Ant build script to compile, concatenate &amp; minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.</p>
 
 <h2>Features</h2>
 
 <ul>
 <li>
-<strong>HTML5</strong> master.xsl template based on HTML5Boilerplate &amp; 320andup</li>
+<strong>HTML5</strong> master.xsl XSLT template based on HTML5Boilerplate</li>
 <li>
-<strong>Less CSS</strong> styles based on <strong>320andup</strong>, with optional (off-by-default): -
+<strong>Less CSS</strong> styles with: -
 
 <ul>
 <li>
-<strong>HTML5 Boilerplate</strong> styles, including normalize.css</li>
-<li>
 <strong>Bootstrap</strong> from Twitter</li>
+<li>
+<strong>FontAwesome</strong> </li>
+<li>Sensible default layout of stylesheets</li>
 </ul>
 </li>
+<li>All Less <strong>stylesheets compile into a single (minified) styles.css</strong> file for production</li>
 <li>Ant build script to <strong>minify &amp; concatenate javascripts</strong> into a single production file</li>
 <li>Ant build script compiles any <strong>Coffeescript</strong> files before concatenation </li>
-<li>All Less <strong>stylesheets compile into a single (minified) styles.css</strong> file for production</li>
+<li>Ant build script works from a explicit filelist to enable order-dependent concatenation</li>
 </ul><h2>Changelog</h2>
 
 <ul>
+<li>0.4.0 - 14 Aug 12 -
+
+<ul>
+<li>Upgraded to Symphony CMS 2.3</li>
+<li>Removed 320andup stylesheets</li>
+<li>Refactored Bootstrap to run as git submodule, eases upgrading</li>
+<li>Improved Ant build script to use explicit filelist to allow order-dependent concatenation</li>
+<li>Improved responsive tester with more sizes and allowing javascript to run</li>
+<li>Added format-date.xsl XSLT to utilities (more options than date-time.xsl)</li>
+<li>Added Google Analytics code from H5BP back into master.xsl</li>
+<li>Merged helper.js into plugins.js</li>
+<li>Added more .main classes to master.xsl</li>
+<li>Removed Apple icons meta tags from head in master.xsl</li>
+<li>Upgraded JQuery 1.7.2 -&gt; 1.8.0</li>
+<li>Upgraded Modernizr 2.5.3 -&gt; 2.6.1</li>
+</ul>
+</li>
 <li>0.3.1 - 7 May 12 -
 
 <ul>
@@ -123,28 +147,8 @@
 <ul>
 <li>Less.app (or other LESS CSS compilation option)</li>
 <li>Coffeescript (install via node.js &amp; npm)</li>
-</ul><h2>Installation (unix command line)</h2>
-
-<ol>
-<li>
-<code>cd</code> to the directory of your choice and execute the following commands, replacing <code>projectname</code> with your own</li>
-<li><code>git clone https://github.com/firegoby/symphonyno5.git projectname</code></li>
-<li><code>cd projectname</code></li>
-<li><code>git remote rename origin symphony</code></li>
-<li><code>git submodule update --init</code></li>
-<li><code>chmod 777 symphony .</code></li>
-<li><code>chmod -R 777 workspace</code></li>
-<li>Setup your MySQL database</li>
-<li>Open <code>http://yourproject.domain/install.php</code> (yourproject.domain depends on your local development setup)</li>
-</ol><h3>File Permissions</h3>
-
-<p>Once installed tighten up the file/dir permissions (<strong>IMPORTANT</strong>: Please make sure you <em>understand</em> what is happening here and don't just blindly cut-n-paste. Refer to the <a href="http://symphony-cms.com/discuss/">Symphony CMS Forum</a> for more information and help).</p>
-
-<ol>
-<li><code>find . -type d -exec chmod 755 {} \;</code></li>
-<li><code>find . -type f -exec chmod 644 {} \;</code></li>
-<li><code>rm install.php install.sql workspace/install.sql update.php install-log.txt</code></li>
-</ol><h2>Symphony CMS Overview</h2>
+<li>Apache Ant (for using the build script)</li>
+</ul><h2>Symphony CMS Overview</h2>
 
 <p>Symphony is a <code>PHP</code> &amp; <code>MySQL</code> based CMS that utilises <code>XML</code> and <code>XSLT</code> as
 its core technologies. </p>
@@ -167,11 +171,10 @@ its core technologies. </p>
 <p>Please refer to the LICENSE.* files in the root directory.</p>
       </section>
       <footer>
-        <p>This project is maintained by <a href="https://github.com/firegoby">firegoby</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
   </body>
 </html>
