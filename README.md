@@ -21,9 +21,11 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ## Changelog
 * 0.4.0 - 14 Aug 12 -
+  * Upgraded to Symphony CMS 2.3
   * Removed 320andup stylesheets
   * Refactored Bootstrap to run as git submodule, eases upgrading
   * Improved Ant build script to use explicit filelist to allow order-dependent concatenation
+  * Improved responsive tester with more sizes and allowing javascript to run
   * Added format-date.xsl XSLT to utilities (more options than date-time.xsl)
   * Added Google Analytics code from H5BP back into master.xsl
   * Merged helper.js into plugins.js
