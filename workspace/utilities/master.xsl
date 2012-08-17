@@ -27,26 +27,38 @@
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
         <script src="/workspace/scripts/vendor/modernizr-2.6.1.min.js"></script>
       </head>
-      <body class="body-{$current-page}">
+      <body class="{$current-page}">
         <xsl:comment><![CDATA[[if lt IE 8 ]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]]]></xsl:comment>
-        <div class="container">
-          <header class="masthead" role="banner">
+        <div class="wrapper">
+          <header class="main masthead" role="banner">
             <h1><a href="/"><xsl:value-of select="$website-name"/></a></h1>
             <xsl:apply-templates select="data/navigation"/>
           </header>
-          <div class="main" role="main">
+          <div class="main content" role="main">
             <xsl:apply-templates/>
           </div>
           <footer class="main" role="contentinfo">
             <!-- footer content -->
           </footer>
-        </div><!-- eo div.container -->
+        </div><!-- eo div.wrapper -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/{$jQueryVersion}/jquery.min.js"></script>
         <script><![CDATA[window.jQuery || document.write('<script src="/workspace/scripts/vendor/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
         <!-- scripts concatenated and minified via ant build script in scripts/build -->
+        <script src="/workspace/bootstrap/js/bootstrap-transition.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-alert.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-modal.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-dropdown.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-scrollspy.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-tab.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-tooltip.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-popover.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-button.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-collapse.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-carousel.js"></script>
+        <script src="/workspace/bootstrap/js/bootstrap-typeahead.js"></script>
         <script src="/workspace/scripts/plugins.js"></script>
         <script src="/workspace/scripts/main.js"></script>
-        <!-- replace 2 lines above with single line below in production -->
+        <!-- replace lines above with single line below in production -->
         <!--<script src="/workspace/scripts/production.min.js"></script>-->
         <!-- end concatenated and minified scripts-->
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
