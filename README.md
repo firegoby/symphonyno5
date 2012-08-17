@@ -5,7 +5,7 @@
 
 ## Overview
 
-Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for use with [Symphony CMS](http://symphony-cms.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/) and some components from [320andup](http://github.com/malarkey/320andup). It also includes an Ant build script to compile, concatenate & minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
+Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for use with [Symphony CMS](http://getsymphony.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/) and some components from [320andup](http://github.com/malarkey/320andup). It also includes an Ant build script to compile, concatenate & minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
 
 ## Features
 
@@ -45,11 +45,11 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
   * Upgraded Modernizr 2.5.3 -> 2.6.1
 * 0.3.1 - 7 May 12 -
   * Incorporated much of Andy Clarke's [**320andup**](http://github.com/malarkey/320andup), including: -
-    * Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
-    * [Selectivizr](http://selectivizr.com/)
-    * Responsive design tester
-    * LESS file setup, mixins and variables
-    * Reference page
+    * - Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
+    * - [Selectivizr](http://selectivizr.com/)
+    * - Responsive design tester
+    * - LESS file setup, mixins and variables
+    * - Reference page
   * Merged all Less and CSS files under a single styles/ directory
   * Changed `js/` -> `scripts/`
   * Changed `js/libs/` -> `scripts/vendor/` (H5BP)
@@ -108,42 +108,79 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
   * PHP 5.2 or above (PHP 5.3 recommended)
   * PHP's LibXML module, with the XSLT extension enabled (--with-xsl)
   * Apache's mod_rewrite module or equivalent - see .htaccess for details
+
 2. Setup your MySQL database, recommend charset=`utf8`, collate=`utf8_unicode_ci`
+
 3. Setup a MySQL user for database, take note of connection details
+
 4. Clone Symphony No.5 repository
+
     `git clone git://github.com/firegoby/symphonyno5.git projectname`  
+
 5. cd to the project root
+
     `cd projectname`
+
 6. init and update the git submodules
+
     `git submodule update --init`
+
 7. Temporarily loosen file permissions for install
+
     `chmod -R 777 .`
+
 8. Visit the install directory on the project domain with browser
+
     `open http://projectname.com/install`
+
 9. Login to Symphony CMS Admin
+
     `open http://projectname.com/symphony`
+
 10. Agree to deletion of installation files (no longer needed)
+
 11. Set all directories under project root dir to 770 (user & group all, public none)
+
     `find . -type d -exec chmod 770 {} \;`
-    The exact permissions needed will depend on your server configuration, possibly `755` (owner all, group & public read and execute)
+
+    **The exact permissions needed will depend on your server configuration**, possibly `755` (owner all, group & public read and execute)
+
 12. Set all files to 660 (user & group read-write, public none)
+
     `find . -type f -exec chmod 660 {} \;`
+
     Files don't need the executable flag set, alternative permissions could be `644` (owner read/write, group & public read)
+
 13. Switch to bootstrap submodule dir
+
     `cd workspace/bootstrap`
+
 14. Discard any changes made by above commands
+
     `git checkout -- .`
+
 15. Checkout the bootstrap version to use (e.g. 2.1.0-wip)
+
     `git checkout 2.1.0-wip`
+
 16. Commit bootstrap version to git
+
     `cd ../..`
+
     `git add workspace/bootstrap`
+
     `git commit -m "Setting Bootstrap to 2.1.0.-wip"`
+
 17. Post installation cleanup (`git status` should show installation files deleted)
+
     `git add -u .`
+
     `git commit -m "Removing installation files"`
+
 18. Remove Symphony No.5 git remote, no longer needed
+
     `git remote rm origin`
+
 
 ## Usage
 
@@ -161,14 +198,14 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 #### Notes
 
-The un-minified concatenated `production.js` file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in .htaccess
+The un-minified concatenated `production.js` file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in `.htaccess`
 
 ## Symphony CMS Overview
 
 Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as
 its core technologies. 
 
-* Visit the website at <http://symphony-cms.com/>
+* Visit the website at <http://getsymphony.com/>
 * Github Repository: <http://github.com/symphonycms/symphony-2/>
 
 ### Symphony Server Requirements
