@@ -2,9 +2,11 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
   <xsl:template match="navigation">
-    <nav class="main" role="navigation"><ul>
+    <nav class="main" role="navigation">
+      <ul>
         <xsl:apply-templates select="page[not(types/type='hidden')]"/>
-    </ul></nav>
+      </ul>
+    </nav>
   </xsl:template>
 
   <xsl:template match="navigation/page">
