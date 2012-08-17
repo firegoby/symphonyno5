@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.4.0
-* Date: 14th August 2012
+* Version 0.4.1
+* Date: 17th August 2012
 
 ## Overview
 
@@ -12,7 +12,7 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * **HTML5** master.xsl XSLT template based on HTML5Boilerplate
 * **Less CSS** styles with: -
   * **Bootstrap** from Twitter
-  * **FontAwesome** 
+  * **Font Awesome** 
   * Sensible default layout of stylesheets
 * All Less **stylesheets compile into a single (minified) styles.css** file for production
 * Ant build script to **minify & concatenate javascripts** into a single production file
@@ -20,6 +20,16 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * Ant build script works from a explicit filelist to enable order-dependent concatenation
 
 ## Changelog
+* 0.4.1 - 17 Aug 12 -
+  * Detailed example installation instructions
+  * Less CSS usage instruction
+  * Ant build script usage instructions
+  * Added Bootstrap javascripts files as active defaults to `master.xsl` and Ant build script
+  * Enabled Bootstrap's Responsive features by default in `styles.less`
+  * Changed div.container to div.wrapper - compatibility with Bootstrap
+  * Removed 'body-' prefix to body.page class, redundant
+  * Added 'main' class to each top-level section element
+  * Added 'content' class to main page content div
 * 0.4.0 - 14 Aug 12 -
   * Upgraded to Symphony CMS 2.3
   * Removed 320andup stylesheets
@@ -83,6 +93,75 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * Less.app (or other LESS CSS compilation option)
 * Coffeescript (install via node.js & npm)
 * Apache Ant (for using the build script)
+
+## Installation
+
+### Basic Installation Instructions
+
+1. Setup Apache & MySQL
+2. Clone Symphony No.5 repository
+3. Install Symphony CMS
+
+### Detailed Installation Instructions
+
+1. Setup Apache to serve your domain
+  * PHP 5.2 or above (PHP 5.3 recommended)
+  * PHP's LibXML module, with the XSLT extension enabled (--with-xsl)
+  * Apache's mod_rewrite module or equivalent - see .htaccess for details
+2. Setup your MySQL database, recommend charset=`utf8`, collate=`utf8_unicode_ci`
+3. Setup a MySQL user for database, take note of connection details
+4. Clone Symphony No.5 repository
+    `git clone git://github.com/firegoby/symphonyno5.git projectname`  
+5. cd to the project root
+    `cd projectname`
+6. init and update the git submodules
+    `git submodule update --init`
+7. Temporarily loosen file permissions for install
+    `chmod -R 777 .`
+8. Visit the install directory on the project domain with browser
+    `open http://projectname.com/install`
+9. Login to Symphony CMS Admin
+    `open http://projectname.com/symphony`
+10. Agree to deletion of installation files (no longer needed)
+11. Set all directories under project root dir to 770 (user & group all, public none)
+    `find . -type d -exec chmod 770 {} \;`
+    The exact permissions needed will depend on your server configuration, possibly `755` (owner all, group & public read and execute)
+12. Set all files to 660 (user & group read-write, public none)
+    `find . -type f -exec chmod 660 {} \;`
+    Files don't need the executable flag set, alternative permissions could be `644` (owner read/write, group & public read)
+13. Switch to bootstrap submodule dir
+    `cd workspace/bootstrap`
+14. Discard any changes made by above commands
+    `git checkout -- .`
+15. Checkout the bootstrap version to use (e.g. 2.1.0-wip)
+    `git checkout 2.1.0-wip`
+16. Commit bootstrap version to git
+    `cd ../..`
+    `git add workspace/bootstrap`
+    `git commit -m "Setting Bootstrap to 2.1.0.-wip"`
+17. Post installation cleanup (`git status` should show installation files deleted)
+    `git add -u .`
+    `git commit -m "Removing installation files"`
+18. Remove Symphony No.5 git remote, no longer needed
+    `git remote rm origin`
+
+## Usage
+
+### Less CSS Compilation
+
+`workspace/styles/styles.less` is the master stylesheet. Add all other stylesheets as `@import` directives within that files for easy concatenation of all stylesheets into a single production file. If you want to minify the resulting CSS file do so in your LESS compiler, or from the command line (using the official `lessc` compiler available via NPM)
+    `lessc --compress workspace/styles/styles.less > workspace/styles/style.css`
+
+### Ant Build Script - Concatenate & Minify Javascript for Production
+
+1. Add all javascripts files (in-order) to `workspace/scripts/build.xml`. If using CoffeeScript add the filename with a `.js` extension, all CoffeeScript files will be compiled before minification and concatenation.
+2. `cd workspace/scripts/build`
+3. `ant`
+4. Alter `master.xsl` to point to the production file `/workspace/scripts/production.min.js`.
+
+#### Notes
+
+The un-minified concatenated `production.js` file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in .htaccess
 
 ## Symphony CMS Overview
 
