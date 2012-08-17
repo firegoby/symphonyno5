@@ -33,11 +33,11 @@
         <h1>Symphony No.5</h1>
 
 <ul>
-<li>Version 0.4.0</li>
-<li>Date: 14th August 2012</li>
+<li>Version 0.4.1</li>
+<li>Date: 17th August 2012</li>
 </ul><h2>Overview</h2>
 
-<p>Symphony No.5 is an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> for use with <a href="http://symphony-cms.com/">Symphony CMS</a>, <a href="http://lesscss.org/">Less CSS</a> &amp; <a href="http://coffeescript.org/">Coffeescript</a> and featuring <a href="http://twitter.github.com/bootstrap/">Bootstrap, from Twitter</a> and some components from <a href="http://github.com/malarkey/320andup">320andup</a>. It also includes an Ant build script to compile, concatenate &amp; minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.</p>
+<p>Symphony No.5 is an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> for use with <a href="http://getsymphony.com/">Symphony CMS</a>, <a href="http://lesscss.org/">Less CSS</a> &amp; <a href="http://coffeescript.org/">Coffeescript</a> and featuring <a href="http://twitter.github.com/bootstrap/">Bootstrap, from Twitter</a> and some components from <a href="http://github.com/malarkey/320andup">320andup</a>. It also includes an Ant build script to compile, concatenate &amp; minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.</p>
 
 <h2>Features</h2>
 
@@ -51,7 +51,7 @@
 <li>
 <strong>Bootstrap</strong> from Twitter</li>
 <li>
-<strong>FontAwesome</strong> </li>
+<strong>Font Awesome</strong> </li>
 <li>Sensible default layout of stylesheets</li>
 </ul>
 </li>
@@ -62,6 +62,21 @@
 </ul><h2>Changelog</h2>
 
 <ul>
+<li>0.4.1 - 17 Aug 12 -
+
+<ul>
+<li>Detailed example installation instructions</li>
+<li>Less CSS usage instruction</li>
+<li>Ant build script usage instructions</li>
+<li>Added Bootstrap javascripts files as active defaults to <code>master.xsl</code> and Ant build script</li>
+<li>Enabled Bootstrap's Responsive features by default in <code>styles.less</code>
+</li>
+<li>Changed div.container to div.wrapper - compatibility with Bootstrap</li>
+<li>Removed 'body-' prefix to body.page class, redundant</li>
+<li>Added 'main' class to each top-level section element</li>
+<li>Added 'content' class to main page content div</li>
+</ul>
+</li>
 <li>0.4.0 - 14 Aug 12 -
 
 <ul>
@@ -83,12 +98,13 @@
 
 <ul>
 <li>Incorporated much of Andy Clarke's <a href="http://github.com/malarkey/320andup"><strong>320andup</strong></a>, including: -</li>
-<li>Font-based icons from <a href="http://fortawesome.github.com/Font-Awesome">Font Awesome</a>
+<li>- Font-based icons from <a href="http://fortawesome.github.com/Font-Awesome">Font Awesome</a>
 </li>
-<li><a href="http://selectivizr.com/">Selectivizr</a></li>
-<li>Responsive design tester</li>
-<li>LESS file setup, mixins and variables</li>
-<li>Reference page</li>
+<li>- <a href="http://selectivizr.com/">Selectivizr</a>
+</li>
+<li>- Responsive design tester</li>
+<li>- LESS file setup, mixins and variables</li>
+<li>- Reference page</li>
 <li>Merged all Less and CSS files under a single styles/ directory</li>
 <li>Changed <code>js/</code> -&gt; <code>scripts/</code>
 </li>
@@ -148,13 +164,134 @@
 <li>Less.app (or other LESS CSS compilation option)</li>
 <li>Coffeescript (install via node.js &amp; npm)</li>
 <li>Apache Ant (for using the build script)</li>
-</ul><h2>Symphony CMS Overview</h2>
+</ul><h2>Installation</h2>
+
+<h3>Basic Installation Instructions</h3>
+
+<ol>
+<li>Setup Apache &amp; MySQL</li>
+<li>Clone Symphony No.5 repository</li>
+<li>Install Symphony CMS</li>
+</ol><h3>Detailed Installation Instructions</h3>
+
+<ol>
+<li>
+<p>Setup Apache to serve your domain</p>
+
+<ul>
+<li>PHP 5.2 or above (PHP 5.3 recommended)</li>
+<li>PHP's LibXML module, with the XSLT extension enabled (--with-xsl)</li>
+<li>Apache's mod_rewrite module or equivalent - see .htaccess for details</li>
+</ul>
+</li>
+<li><p>Setup your MySQL database, recommend charset=<code>utf8</code>, collate=<code>utf8_unicode_ci</code></p></li>
+<li><p>Setup a MySQL user for database, take note of connection details</p></li>
+<li>
+<p>Clone Symphony No.5 repository</p>
+
+<p><code>git clone git://github.com/firegoby/symphonyno5.git projectname</code>  </p>
+</li>
+<li>
+<p>cd to the project root</p>
+
+<p><code>cd projectname</code></p>
+</li>
+<li>
+<p>init and update the git submodules</p>
+
+<p><code>git submodule update --init</code></p>
+</li>
+<li>
+<p>Temporarily loosen file permissions for install</p>
+
+<p><code>chmod -R 777 .</code></p>
+</li>
+<li>
+<p>Visit the install directory on the project domain with browser</p>
+
+<p><code>open http://projectname.com/install</code></p>
+</li>
+<li>
+<p>Login to Symphony CMS Admin</p>
+
+<p><code>open http://projectname.com/symphony</code></p>
+</li>
+<li><p>Agree to deletion of installation files (no longer needed)</p></li>
+<li>
+<p>Set all directories under project root dir to 770 (user &amp; group all, public none)</p>
+
+<p><code>find . -type d -exec chmod 770 {} \;</code></p>
+
+<p><strong>The exact permissions needed will depend on your server configuration</strong>, possibly <code>755</code> (owner all, group &amp; public read and execute)</p>
+</li>
+<li>
+<p>Set all files to 660 (user &amp; group read-write, public none)</p>
+
+<p><code>find . -type f -exec chmod 660 {} \;</code></p>
+
+<p>Files don't need the executable flag set, alternative permissions could be <code>644</code> (owner read/write, group &amp; public read)</p>
+</li>
+<li>
+<p>Switch to bootstrap submodule dir</p>
+
+<p><code>cd workspace/bootstrap</code></p>
+</li>
+<li>
+<p>Discard any changes made by above commands</p>
+
+<p><code>git checkout -- .</code></p>
+</li>
+<li>
+<p>Checkout the bootstrap version to use (e.g. 2.1.0-wip)</p>
+
+<p><code>git checkout 2.1.0-wip</code></p>
+</li>
+<li>
+<p>Commit bootstrap version to git</p>
+
+<p><code>cd ../..</code></p>
+
+<p><code>git add workspace/bootstrap</code></p>
+
+<p><code>git commit -m "Setting Bootstrap to 2.1.0.-wip"</code></p>
+</li>
+<li>
+<p>Post installation cleanup (<code>git status</code> should show installation files deleted)</p>
+
+<p><code>git add -u .</code></p>
+
+<p><code>git commit -m "Removing installation files"</code></p>
+</li>
+<li>
+<p>Remove Symphony No.5 git remote, no longer needed</p>
+
+<p><code>git remote rm origin</code></p>
+</li>
+</ol><h2>Usage</h2>
+
+<h3>Less CSS Compilation</h3>
+
+<p><code>workspace/styles/styles.less</code> is the master stylesheet. Add all other stylesheets as <code>@import</code> directives within that files for easy concatenation of all stylesheets into a single production file. If you want to minify the resulting CSS file do so in your LESS compiler, or from the command line (using the official <code>lessc</code> compiler available via NPM)
+    <code>lessc --compress workspace/styles/styles.less &gt; workspace/styles/style.css</code></p>
+
+<h3>Ant Build Script - Concatenate &amp; Minify Javascript for Production</h3>
+
+<ol>
+<li>Add all javascripts files (in-order) to <code>workspace/scripts/build.xml</code>. If using CoffeeScript add the filename with a <code>.js</code> extension, all CoffeeScript files will be compiled before minification and concatenation.</li>
+<li><code>cd workspace/scripts/build</code></li>
+<li><code>ant</code></li>
+<li>Alter <code>master.xsl</code> to point to the production file <code>/workspace/scripts/production.min.js</code>.</li>
+</ol><h4>Notes</h4>
+
+<p>The un-minified concatenated <code>production.js</code> file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in <code>.htaccess</code></p>
+
+<h2>Symphony CMS Overview</h2>
 
 <p>Symphony is a <code>PHP</code> &amp; <code>MySQL</code> based CMS that utilises <code>XML</code> and <code>XSLT</code> as
 its core technologies. </p>
 
 <ul>
-<li>Visit the website at <a href="http://symphony-cms.com/">http://symphony-cms.com/</a>
+<li>Visit the website at <a href="http://getsymphony.com/">http://getsymphony.com/</a>
 </li>
 <li>Github Repository: <a href="http://github.com/symphonycms/symphony-2/">http://github.com/symphonycms/symphony-2/</a>
 </li>
