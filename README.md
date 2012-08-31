@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.5.0
-* Date: 21st August 2012
+* Version 0.5.1
+* Date: 31st August 2012
 
 ## Overview
 
@@ -20,6 +20,8 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * Ant build script works from a explicit filelist to enable order-dependent concatenation
 
 ## Changelog
+* 0.5.1 - 31 Aug 12 -
+  * Minor updates from HTML5Boilerplate 4.0.0
 * 0.5.0 - 21 Aug 12 -
   * Upgraded to Bootstrap v2.1.0
   * Start adhereing to Semantic Versioning for Symphony No.5 releases
