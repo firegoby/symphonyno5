@@ -5,7 +5,7 @@
   <xsl:include href="page-title.xsl"/>
   <xsl:include href="navigation.xsl"/>
 
-  <xsl:variable name="jQueryVersion" select="'1.8.0'"/>
+  <xsl:variable name="jQueryVersion" select="'1.8.3'"/>
 
   <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes" indent="no" media-type="text/html" />
 
