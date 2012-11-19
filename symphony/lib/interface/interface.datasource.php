@@ -20,15 +20,6 @@
 		public static function getName();
 
 		/**
-		 * Returns the `__CLASS__` on the provided datasource, this is often
-		 * used as a way to namespace settings in forms and provide a unique
-		 * handle for this datasource type
-		 *
-		 * @return string
-		 */
-		public static function getClass();
-
-		/**
 		 * Returns the absolute path to the template that this template will
 		 * use to save instances of this datasource in the `DATASOURCES` folder.
 		 *
@@ -37,9 +28,9 @@
 		public static function getTemplate();
 
 		/**
-		 * This function return the source of this datasource. It's an artifact
-		 * of old core objects and for the moment purposes it should return
-		 * the same value as `getClass`.
+		 * This function return the source of this datasource. It's an artefact
+		 * of old core objects and for the moment it should return the same
+		 * value as `getClass`.
 		 *
 		 * @return string
 		 */
@@ -96,8 +87,8 @@
 		public static function validate(array &$settings, array &$errors);
 
 		/**
-		 * Given the settings and any existing datasource parameters, return the contents
-		 * of this datasource that can be saved to the filesystem.
+		 * Given the settings and any existing datasource parameters, return
+		 * the contents of this datasource so that can be saved to the file system.
 		 *
 		 * @param array $settings
 		 *  An associative array of settings for this datasource, where the key
@@ -115,9 +106,9 @@
 		public static function prepare(array $fields, array $parameters, $template);
 
 		/**
-		 * This function is responsible for returning an `XMLElement` that the
-		 * `FrontendPage` class can add to a page. It is executed and passed the
-		 * current `$param_pool` array.
+		 * This function is responsible for returning an `XMLElement` so that the
+		 * `FrontendPage` class can add to a page's XML. It is executed and passed
+		 * the current `$param_pool` array.
 		 *
 		 * @param array $param_pool
 		 *  An associative array of parameters that have been evaluated prior to
@@ -125,6 +116,6 @@
 		 * @return XMLElement
 		 *  This Datasource should return an `XMLElement` object.
 		 */
-		public function grab(array &$param_pool=NULL);
+		public function execute(array &$param_pool=NULL);
 
 	}

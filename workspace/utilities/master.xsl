@@ -5,7 +5,7 @@
   <xsl:include href="page-title.xsl"/>
   <xsl:include href="navigation.xsl"/>
 
-  <xsl:variable name="jQueryVersion" select="'1.8.0'"/>
+  <xsl:variable name="jQueryVersion" select="'1.8.3'"/>
 
   <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes" indent="no" media-type="text/html" />
 
@@ -23,7 +23,7 @@
         <meta name="MobileOptimized" content="320"/>
         <meta http-equiv="cleartype" content="on"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
-        <link rel="stylesheet" href="/workspace/styles/styles.css"/>
+        <link rel="stylesheet" href="/workspace/styles/main.css"/>
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
         <script src="/workspace/scripts/vendor/modernizr-2.6.1.min.js"></script>
       </head>
@@ -44,18 +44,18 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/{$jQueryVersion}/jquery.min.js"></script>
         <script><![CDATA[window.jQuery || document.write('<script src="/workspace/scripts/vendor/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
         <!-- scripts concatenated and minified via ant build script in scripts/build -->
-        <script src="/workspace/bootstrap/js/bootstrap-transition.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-alert.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-modal.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-dropdown.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-scrollspy.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-tab.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-tooltip.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-popover.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-button.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-collapse.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-carousel.js"></script>
-        <script src="/workspace/bootstrap/js/bootstrap-typeahead.js"></script>
+        <!--<script src="/workspace/bootstrap/js/bootstrap-transition.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-alert.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-modal.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-dropdown.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-scrollspy.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-tab.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-tooltip.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-popover.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-button.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-collapse.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-carousel.js"></script>-->
+        <!--<script src="/workspace/bootstrap/js/bootstrap-typeahead.js"></script>-->
         <script src="/workspace/scripts/plugins.js"></script>
         <script src="/workspace/scripts/main.js"></script>
         <!-- replace lines above with single line below in production -->

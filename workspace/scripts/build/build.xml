@@ -16,21 +16,22 @@
     All .coffee files are compiled first, see target#coffescript
 
     To include Bootstrap JS files, reference the bootstrap folder
+    relative to workspace/scripts/
       e.g. <file name="../bootstrap/js/bootstrap-alert.js"/>
   -->
   <filelist id="filelist" dir=".">
-    <file name="../bootstrap/js/bootstrap-transition.js"/>
-    <file name="../bootstrap/js/bootstrap-alert.js"/>
-    <file name="../bootstrap/js/bootstrap-modal.js"/>
-    <file name="../bootstrap/js/bootstrap-dropdown.js"/>
-    <file name="../bootstrap/js/bootstrap-scrollspy.js"/>
-    <file name="../bootstrap/js/bootstrap-tab.js"/>
-    <file name="../bootstrap/js/bootstrap-tooltip.js"/>
-    <file name="../bootstrap/js/bootstrap-popover.js"/>
-    <file name="../bootstrap/js/bootstrap-button.js"/>
-    <file name="../bootstrap/js/bootstrap-collapse.js"/>
-    <file name="../bootstrap/js/bootstrap-carousel.js"/>
-    <file name="../bootstrap/js/bootstrap-typeahead.js"/>
+    <!--<file name="../bootstrap/js/bootstrap-transition.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-alert.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-modal.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-dropdown.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-scrollspy.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-tab.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-tooltip.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-popover.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-button.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-collapse.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-carousel.js"/>-->
+    <!--<file name="../bootstrap/js/bootstrap-typeahead.js"/>-->
     <file name="plugins.js" />
     <file name="main.js" />
   </filelist>

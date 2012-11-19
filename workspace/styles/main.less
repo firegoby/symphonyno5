@@ -1,0 +1,34 @@
+/*
+ * Master stylesheet for example.com
+ * Author:
+ */
+
+// LIBRARIES, FRAMEWORKS & IMPORTS ==================================
+
+// Bootstrap from Twitter
+//@import "../bootstrap/less/bootstrap.less"; // uncomment to enable, enable JS in master.xsl and build.xml
+//@import "../bootstrap/less/responsive.less"; // uncomment to enable responsive features
+
+// Font Awesome icon fonts
+@import "vendor/font-awesome.less"; // comment out to disable
+
+// Reset Stylesheet
+@import "vendor/reset.less";
+
+// H5BP Print Styles
+@import "vendor/print.less";
+
+// SITE SPECIFIC ====================================================
+
+// Mixins collection, add yours here
+@import "mixins.less";
+
+// Define all LESS variables here
+@import "variables.less";
+
+// ...create...
+
+body {
+  background: @bodycolor;
+  color: @textcolor;
+}
