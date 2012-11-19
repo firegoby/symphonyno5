@@ -1,4 +1,4 @@
-/* Firegoby Less Mixins
+/* Less Mixins
 ---------------------------------------------- */
 
 // highlight debug
@@ -9,6 +9,22 @@
 // highlight debug border
 .debugb() {
   border: 1px solid red;
+}
+
+// clearfix
+.clearfix() {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
 }
 
 // image replacement
@@ -44,56 +60,3 @@
   -box-shadow: 0 1px @drop rgba(0, 0, 0, 0.2), 0 0 @inset rgba(0, 0, 0, 0.06) inset;
 }
 
-// cameron moll's CSS page curls
-// see: http://dribbble.com/shots/88003-CSS-page-curls
-.page-curls() {
-  list-style-type: none;
-  margin: 0 30px 30px 0;
-  padding: 0;
-  width: 204px;
-  height: 113px;
-  position: relative;
-  float: left;
-  background: #ffffff; /* old browsers */
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
-
-  &:after {
-    z-index: -1;
-    position: absolute;
-    background: transparent;
-    width: 70%;
-    height: 55%;
-    content: '';
-    right: 10px;
-    bottom: 10px;
-    -moz-transform: skew(15deg) rotate(6deg);
-    -ms-transform: skew(15deg) rotate(6deg);
-    -o-transform: skew(15deg) rotate(6deg);
-    -webkit-transform: skew(15deg) rotate(6deg);
-    transform: skew(15deg) rotate(6deg);
-    -moz-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  &:before {
-    z-index: -2;
-    position: absolute;
-    background: transparent;
-    width: 70%;
-    height: 55%;
-    content: '';
-    left: 10px;
-    bottom: 10px;
-    -moz-transform: skew(-15deg) rotate(-6deg);
-    -ms-transform: skew(-15deg) rotate(-6deg);
-    -o-transform: skew(-15deg) rotate(-6deg);
-    -webkit-transform: skew(-15deg) rotate(-6deg);
-    transform: skew(-15deg) rotate(-6deg);
-    -moz-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  }
-}

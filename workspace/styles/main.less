@@ -10,7 +10,13 @@
 //@import "../bootstrap/less/responsive.less"; // enable responsive features
 
 // Font Awesome icon fonts
-@import "font-awesome.less"; // comment out to disable
+@import "vendor/font-awesome.less"; // comment out to disable
+
+// Reset Stylesheet
+@import "vendor/reset.less";
+
+// H5BP Print Styles
+@import "vendor/print.less";
 
 // SITE SPECIFIC ====================================================
 
@@ -21,3 +27,8 @@
 @import "variables.less";
 
 // ...create...
+
+body {
+  background: @bodycolor;
+  color: @textcolor;
+}
