@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.5.1
-* Date: 31st August 2012
+* Version 0.5.2
+* Date: 19th November 2012
 
 ## Overview
 
@@ -20,11 +20,20 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * Ant build script works from a explicit filelist to enable order-dependent concatenation
 
 ## Changelog
+
+* 0.5.2 - 19 Nov 12 -
+  * Upgraded to Symphony v2.3.1
+  * Upgraded to JQuery v1.8.3
+  * Upgraded to Bootstrap v2.2.1
+  * Updated Documentation, added FAQ and more Usage instructions
+  * Disabled Bootstrap by default - uncomment in main.less, master.xsl & build.xml to selectivly enable features
+  * Standardised styles/scripts naming - main.ext and vendor/
+  * Moved 3rd party styles to styles/vendor/
 * 0.5.1 - 31 Aug 12 -
   * Minor updates from HTML5Boilerplate 4.0.0
 * 0.5.0 - 21 Aug 12 -
   * Upgraded to Bootstrap v2.1.0
-  * Start adhereing to Semantic Versioning for Symphony No.5 releases
+  * Start adhering to Semantic Versioning for Symphony No.5 releases
 * 0.4.1 - 17 Aug 12 -
   * Detailed example installation instructions
   * Less CSS usage instruction
@@ -189,26 +198,44 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ## Usage
 
+### Frequently Asked Questions
+
+1. How do I enable Bootstrap?
+
+> Uncomment the @import line(s) in `workspace/styles/main.less` and also any javascript imports you need in the end of `workspace/utilities/master.xsl`. If you're using the Ant build script to produce concatenated and minified javascript for production you'll also want to uncomment the relevant javascripts in the build script `workspace/scripts/build/build.xml`.
+
+2. I don't want Bootstrap! What do I do?
+
+> As of version 0.5.2 Bootstrap is disabled by default so you don't need to do anything. If you want to remove all the Bootstrap files then remove the `workspace/bootstrap` git submodule, and delete the references to the javascripts in `workspace/utilities/master.xsl` and in the Ant build script `workspace/scripts/build/build.xml`.
+
+3. I don't want to use Coffeescript! What do I do?
+
+> Simply delete `workspace/scripts/main.coffee` and write your javascript in `workspace/scripts/main.js` instead. The Ant build script (`workspace/scripts/build`) will continue to work fine.
+
+4. I don't want to use Less CSS! What do I do?
+
+> Just delete the .less files (or all the files in `workspace/styles`) and replace with your plain CSS, SASS, Stylus or whatever stylesheets instead.
+
+
 ### Less CSS Compilation
 
-`workspace/styles/styles.less` is the master stylesheet. Add all other stylesheets as `@import` directives within that files for easy concatenation of all stylesheets into a single production file. If you want to minify the resulting CSS file do so in your LESS compiler, or from the command line (using the official `lessc` compiler available via NPM)
-    `lessc --compress workspace/styles/styles.less > workspace/styles/style.css`
+`workspace/styles/main.less` is the master stylesheet. Add all other stylesheets as `@import` directives within that files for easy concatenation of all stylesheets into a single production file. If you want to minify the resulting CSS file do so in your LESS compiler, or from the command line (using the official `lessc` compiler available via NPM)
+    `lessc --compress workspace/styles/main.less > workspace/styles/main.css`
 
 ### Ant Build Script - Concatenate & Minify Javascript for Production
 
-1. Add all javascripts files (in-order) to `workspace/scripts/build.xml`. If using CoffeeScript add the filename with a `.js` extension, all CoffeeScript files will be compiled before minification and concatenation.
+1. Add all javascripts files (in the order you want them referenced) to `workspace/scripts/build.xml`. If using CoffeeScript add the filename with a `.js` extension, all CoffeeScript files will be compiled before minification and concatenation.
 2. `cd workspace/scripts/build`
 3. `ant`
 4. Alter `master.xsl` to point to the production file `/workspace/scripts/production.min.js`.
 
 #### Notes
 
-The un-minified concatenated `production.js` file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in `.htaccess`
+The un-minified concatenated `production.js` file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in `.htaccess` or equivalent.
 
 ## Symphony CMS Overview
 
-Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as
-its core technologies. 
+Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as its core technologies. 
 
 * Visit the website at <http://getsymphony.com/>
 * Github Repository: <http://github.com/symphonycms/symphony-2/>

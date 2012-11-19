@@ -16,6 +16,7 @@
     All .coffee files are compiled first, see target#coffescript
 
     To include Bootstrap JS files, reference the bootstrap folder
+    relative to workspace/scripts/
       e.g. <file name="../bootstrap/js/bootstrap-alert.js"/>
   -->
   <filelist id="filelist" dir=".">
