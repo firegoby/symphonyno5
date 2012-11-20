@@ -4,6 +4,8 @@
   <xsl:include href="format-date.xsl"/>
   <xsl:include href="page-title.xsl"/>
   <xsl:include href="navigation.xsl"/>
+  <xsl:include href="kit/images.xsl"/>
+  <xsl:include href="kit/pagination.xsl"/>
 
   <xsl:variable name="jQueryVersion" select="'1.8.3'"/>
 

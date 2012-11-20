@@ -31,3 +31,6 @@
 [submodule "workspace/bootstrap"]
 	path = workspace/bootstrap
 	url = git://github.com/twitter/bootstrap.git
+[submodule "workspace/utilities/kit"]
+	path = workspace/utilities/kit
+	url = git://github.com/hananils/kit.git

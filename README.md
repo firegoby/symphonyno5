@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.5.2
-* Date: 19th November 2012
+* Version 0.5.3
+* Date: 20th November 2012
 
 ## Overview
 
@@ -21,6 +21,8 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ## Changelog
 
+* 0.5.3 - 20 Nov 12 -
+  * Added hana+nils' XSLT Kit for Symphony (github.com/hananils/kit)
 * 0.5.2 - 19 Nov 12 -
   * Upgraded to Symphony v2.3.1
   * Upgraded to JQuery v1.8.3
