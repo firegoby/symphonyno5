@@ -69,21 +69,20 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 7. Follow on-screen instructions from symphonyno5.sh
 
-8. After installation, clean install files: 
+8. After installation, cleanup install files and commit .htaccess and config.php to git
     
     `symphonyno5.sh postinstall`
 
-9. Set all directories under project root dir to 770 (user & group all, public none)
+9. Set the correct dir & file permissions
 
-    `find . -type d -exec chmod 770 {} \;`
+   **The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation**, by default `0755` and `0664`
 
-    **The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation**, possibly `755` (owner all, group & public read and execute)
+   `symphonyno5.sh fixperms 0775 0664`
 
-10. Set all files to 660 (user & group read-write, public none)
+   Once you've reviewed the permissions changes and are happy, commit them to git
 
-    `find . -type f -exec chmod 660 {} \;`
+   `git commit -am "Change dir & file permissions to 0775 0664"`
 
-    Files don't need the executable flag set, alternative permissions could be `644` (owner read/write, group & public read)
 
 ## Usage
 
