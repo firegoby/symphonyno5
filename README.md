@@ -28,31 +28,31 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ## Contents
 
-* [Installation](#installation)
+* [**Installation**](#installation)
   * [Quickstart](#quickstart)
   * [Detailed Installation Instructions](#detailed-installation-instructions)
-* [Usage](#usage)
+* [**Usage**](#usage)
   * [Frequently Asked Questions](#frequently-asked-questions)
   * [Less CSS Compilation](#less-css-compilation)
   * [Ant Build Script - Concatenate & Minify Javascript for Production](#ant-build-script--concatenate--minify-javascript-for-production)
-* [Changelog](#changelog)
-* [Symphony CMS Overview](#symphony-cms-overview)
+* [**Changelog**](#changelog)
+* [**Symphony CMS Overview**](#symphony-cms-overview)
   * [Symphony Server Requirements](#symphony-server-requirements)
   * [Non Symphony CMS Requirements](#non-symphony-cms-requirements)
-* [Licenses](#licenses)
+* [**Licenses**](#licenses)
 
 ## Installation
 
 ### Quickstart
 
-1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.git) to your $PATH
+1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) to your $PATH
 2. Setup Apache (or equivalent) web server to serve your domain
 3. Setup a MySQL database (recommend charset utf-8)
 4. `symphonyno5.sh new projectname`
 
 ### Detailed Installation Instructions
 
-1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.git) to your $PATH
+1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) to your $PATH
 
 2. Setup Apache to serve your domain
   * PHP 5.2 or above (PHP 5.3 recommended)
@@ -89,19 +89,19 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ### Frequently Asked Questions
 
-1. How do I enable Bootstrap?
+1. **How do I enable Bootstrap?**
 
    Uncomment the @import line(s) in `workspace/styles/main.less` and also any javascript imports you need in the end of `workspace/utilities/master.xsl`. If you're using the Ant build script to produce concatenated and minified javascript for production you'll also want to uncomment the relevant javascripts in the build script `workspace/scripts/build/build.xml`.
 
-2. I don't want Bootstrap! What do I do?
+2. **I don't want Bootstrap! What do I do?**
 
    As of version 0.5.2 Bootstrap is disabled by default so you don't need to do anything. If you want to remove all the Bootstrap files then remove the `workspace/bootstrap` git submodule, and delete the references to the javascripts in `workspace/utilities/master.xsl` and in the Ant build script `workspace/scripts/build/build.xml`.
 
-3. I don't want to use Coffeescript! What do I do?
+3. **I don't want to use Coffeescript! What do I do?**
 
    Simply delete `workspace/scripts/main.coffee` and write your javascript in `workspace/scripts/main.js` instead. The Ant build script (`workspace/scripts/build`) will continue to work fine.
 
-4. I don't want to use Less CSS! What do I do?
+4. **I don't want to use Less CSS! What do I do?**
 
    Just delete the .less files (or all the files in `workspace/styles`) and replace with your plain CSS, SASS, Stylus or whatever stylesheets instead.
 
@@ -124,12 +124,12 @@ The un-minified concatenated `production.js` file is left so that it can be exam
 ## Changelog
 
 * 0.6.0 - 21 Nov 12 -
-  * New command-line bash script for easy installation/admin [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh)
+  * New command-line bash script for easy installation/admin [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
   * Move extension/submodule control to `extensions.csv`
   * Move apple-touch-icon(s) out of root directory
   * Remove .htaccess - let Symphony create it as part of install
 * 0.5.3 - 20 Nov 12 -
-  * Added hana+nils' XSLT Kit for Symphony (github.com/hananils/kit)
+  * Added [hana+nils' XSLT Kit for Symphony](http://github.com/hananils/kit)
 * 0.5.2 - 19 Nov 12 -
   * Upgraded to Symphony v2.3.1
   * Upgraded to JQuery v1.8.3
@@ -215,8 +215,8 @@ The un-minified concatenated `production.js` file is left so that it can be exam
 
 Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as its core technologies. 
 
-* Visit the website at <http://getsymphony.com/>
-* Github Repository: <http://github.com/symphonycms/symphony-2/>
+* Visit the website at [http://getsymphony.com/](http://getsymphony.com/)
+* Github Repository: [http://github.com/symphonycms/symphony-2/](http://github.com/symphonycms/symphony-2)
 
 ### Symphony Server Requirements
 
