@@ -1,7 +1,6 @@
 ._*
 .Apple*
 .DS_Store
-*config.php
 manifest
 install-log.txt
 install/logs/
