@@ -26,6 +26,7 @@
         <meta http-equiv="cleartype" content="on"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
         <link rel="stylesheet" href="/workspace/styles/main.css"/>
+        <link rel="apple-touch-icon" href="/workspace/images/icons/apple-touch-icon.png"/>
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
         <script src="/workspace/scripts/vendor/modernizr-2.6.1.min.js"></script>
       </head>
