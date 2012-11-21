@@ -11,8 +11,8 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 * **HTML5** master.xsl XSLT template based on HTML5Boilerplate
 * Works with [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for easy command-line admin
-* `extensions.csv` list for Symphony Extensions (installed as git submodules)
-* Split Manifest directory structure for separate Development & Production environments
+* `extensions.csv` list for Symphony Extensions - installed as git submodules via [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
+* **Split Manifest directory structure** for separate Development & Production environments
 * **Less CSS** styles with: -
   * **Bootstrap** from Twitter
   * **Font Awesome** 
@@ -23,6 +23,8 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * Ant build script to **minify & concatenate javascripts** into a single production file
 * Ant build script compiles any **Coffeescript** files before concatenation 
 * Ant build script works from a explicit filelist to enable order-dependent concatenation
+* [hana+nils' XSLT Kit for Symphony](http://github.com/hananils/kit)
+* Repsonsive Design Test Page with common breakpoints (/responsive.html)
 
 ## Contents
 
@@ -89,19 +91,19 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 1. How do I enable Bootstrap?
 
-Uncomment the @import line(s) in `workspace/styles/main.less` and also any javascript imports you need in the end of `workspace/utilities/master.xsl`. If you're using the Ant build script to produce concatenated and minified javascript for production you'll also want to uncomment the relevant javascripts in the build script `workspace/scripts/build/build.xml`.
+   Uncomment the @import line(s) in `workspace/styles/main.less` and also any javascript imports you need in the end of `workspace/utilities/master.xsl`. If you're using the Ant build script to produce concatenated and minified javascript for production you'll also want to uncomment the relevant javascripts in the build script `workspace/scripts/build/build.xml`.
 
 2. I don't want Bootstrap! What do I do?
 
-As of version 0.5.2 Bootstrap is disabled by default so you don't need to do anything. If you want to remove all the Bootstrap files then remove the `workspace/bootstrap` git submodule, and delete the references to the javascripts in `workspace/utilities/master.xsl` and in the Ant build script `workspace/scripts/build/build.xml`.
+   As of version 0.5.2 Bootstrap is disabled by default so you don't need to do anything. If you want to remove all the Bootstrap files then remove the `workspace/bootstrap` git submodule, and delete the references to the javascripts in `workspace/utilities/master.xsl` and in the Ant build script `workspace/scripts/build/build.xml`.
 
 3. I don't want to use Coffeescript! What do I do?
 
-Simply delete `workspace/scripts/main.coffee` and write your javascript in `workspace/scripts/main.js` instead. The Ant build script (`workspace/scripts/build`) will continue to work fine.
+   Simply delete `workspace/scripts/main.coffee` and write your javascript in `workspace/scripts/main.js` instead. The Ant build script (`workspace/scripts/build`) will continue to work fine.
 
 4. I don't want to use Less CSS! What do I do?
 
-Just delete the .less files (or all the files in `workspace/styles`) and replace with your plain CSS, SASS, Stylus or whatever stylesheets instead.
+   Just delete the .less files (or all the files in `workspace/styles`) and replace with your plain CSS, SASS, Stylus or whatever stylesheets instead.
 
 
 ### Less CSS Compilation
