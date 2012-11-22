@@ -6,5 +6,6 @@ git://github.com/symphonycms/jit_image_manipulation.git,extensions/jit_image_man
 git://github.com/symphonycms/profiledevkit.git,extensions/profiledevkit
 git://github.com/symphonycms/debugdevkit.git,extensions/debugdevkit
 git://github.com/symphonycms/xssfilter.git,extensions/xssfilter
+git://github.com/firegoby/production_mode.git,extensions/production_mode
 git://github.com/twitter/bootstrap.git,workspace/bootstrap
 git://github.com/hananils/kit.git,workspace/utilities/kit

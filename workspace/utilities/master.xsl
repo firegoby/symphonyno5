@@ -46,24 +46,28 @@
         </div><!-- eo div.wrapper -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/{$jQueryVersion}/jquery.min.js"></script>
         <script><![CDATA[window.jQuery || document.write('<script src="/workspace/scripts/vendor/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
-        <!-- scripts concatenated and minified via ant build script in scripts/build -->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-transition.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-alert.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-modal.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-dropdown.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-scrollspy.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-tab.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-tooltip.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-popover.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-button.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-collapse.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-carousel.js"></script>-->
-        <!--<script src="/workspace/bootstrap/js/bootstrap-typeahead.js"></script>-->
-        <script src="/workspace/scripts/plugins.js"></script>
-        <script src="/workspace/scripts/main.js"></script>
-        <!-- replace lines above with single line below in production -->
-        <!--<script src="/workspace/scripts/production.min.js"></script>-->
-        <!-- end concatenated and minified scripts-->
+          <xsl:choose>
+            <xsl:when test="$production-mode='development'">
+              <!-- scripts concatenated and minified via ant build script in scripts/build/build.xml -->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-transition.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-alert.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-modal.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-dropdown.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-scrollspy.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-tab.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-tooltip.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-popover.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-button.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-collapse.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-carousel.js"></script>-->
+              <!--<script src="/workspace/bootstrap/js/bootstrap-typeahead.js"></script>-->
+              <script src="/workspace/scripts/plugins.js"></script>
+              <script src="/workspace/scripts/main.js"></script>
+            </xsl:when>
+            <xsl:when test="$production-mode='development'">
+              <script src="/workspace/scripts/production.min.js"></script>
+            </xsl:when>
+          </xsl:choose>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
