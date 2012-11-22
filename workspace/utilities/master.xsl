@@ -64,7 +64,7 @@
               <script src="/workspace/scripts/plugins.js"></script>
               <script src="/workspace/scripts/main.js"></script>
             </xsl:when>
-            <xsl:when test="$production-mode='development'">
+            <xsl:when test="$production-mode='production'">
               <script src="/workspace/scripts/production.min.js"></script>
             </xsl:when>
           </xsl:choose>
