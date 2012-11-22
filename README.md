@@ -50,6 +50,10 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 2. Setup Apache (or equivalent) web server to serve your domain
 3. Setup a MySQL database (recommend charset utf-8)
 4. `symphonyno5.sh new projectname`
+5. Install Symphony via `http://yourdomain.com/install`
+6. `symphonyno5 postinstall`
+7. `symphonyno5 fixperms 0775 0664` (*or custom dir & file permissions for your setup*)
+8. `git commit -am "Tighten file permissions after installation"`
 
 ### Detailed Installation Instructions
 
@@ -68,7 +72,7 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 6. `symphonyno5.sh new projectname`
 
-7. Follow on-screen instructions from symphonyno5.sh
+7. Install Symphony via `http://yourdomain.com/install`
 
 8. After installation, cleanup install files and commit .htaccess and config.php to git
     
@@ -76,7 +80,7 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 9. Set the correct dir & file permissions
 
-   **The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation**, by default `0755` and `0664`
+   **The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation**, by default `0775` and `0664`
 
    `symphonyno5.sh fixperms 0775 0664`
 
@@ -124,7 +128,7 @@ The un-minified concatenated `production.js` file is left so that it can be exam
 ## Changelog
 
 * 0.6.1 - 22 Nov 12 -
-  * Add [Production Mode](http://github.com/firegoby/production_mode.git) extension for automatic serving of minifies assets in production mode
+  * Add [Production Mode](http://github.com/firegoby/production_mode.git) extension for automatic serving of minified assets in production mode
 * 0.6.0 - 21 Nov 12 -
   * New command-line bash script for easy installation/admin [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
   * Move extension/submodule control to `extensions.csv`
@@ -170,11 +174,11 @@ The un-minified concatenated `production.js` file is left so that it can be exam
   * Upgraded Modernizr 2.5.3 -> 2.6.1
 * 0.3.1 - 7 May 12 -
   * Incorporated much of Andy Clarke's [**320andup**](http://github.com/malarkey/320andup), including: -
-    * - Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
-    * - [Selectivizr](http://selectivizr.com/)
-    * - Responsive design tester
-    * - LESS file setup, mixins and variables
-    * - Reference page
+     - Font-based icons from [Font Awesome](http://fortawesome.github.com/Font-Awesome)
+     - [Selectivizr](http://selectivizr.com/)
+     - Responsive design tester
+     - LESS file setup, mixins and variables
+     - Reference page
   * Merged all Less and CSS files under a single styles/ directory
   * Changed `js/` -> `scripts/`
   * Changed `js/libs/` -> `scripts/vendor/` (H5BP)
