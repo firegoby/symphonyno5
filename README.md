@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.6.0
-* Date: 21st November 2012
+* Version 0.6.1
+* Date: 22nd November 2012
 
 ## Overview
 
@@ -12,6 +12,7 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 * **HTML5** master.xsl XSLT template based on HTML5Boilerplate
 * Works with [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for easy command-line admin
 * `extensions.csv` list for Symphony Extensions - installed as git submodules via [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
+* Includes the [Production Mode](http://github.com/firegoby/production_mode.git) extension to automatically serve minified assets when in production mode
 * **Split Manifest directory structure** for separate Development & Production environments
 * **Less CSS** styles with: -
   * **Bootstrap** from Twitter
@@ -114,7 +115,7 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 1. Add all javascripts files (in the order you want them referenced) to `workspace/scripts/build.xml`. If using CoffeeScript add the filename with a `.js` extension, all CoffeeScript files will be compiled before minification and concatenation.
 2. `symphonyno5.sh compile scripts`
-3. Alter `master.xsl` to point to the production file `/workspace/scripts/production.min.js`.
+3. In Symphony admin **Preferences** enable **Production Mode**
 
 #### Note
 
@@ -122,6 +123,8 @@ The un-minified concatenated `production.js` file is left so that it can be exam
 
 ## Changelog
 
+* 0.6.1 - 22 Nov 12 -
+  * Add [Production Mode](http://github.com/firegoby/production_mode.git) extension for automatic serving of minifies assets in production mode
 * 0.6.0 - 21 Nov 12 -
   * New command-line bash script for easy installation/admin [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
   * Move extension/submodule control to `extensions.csv`
