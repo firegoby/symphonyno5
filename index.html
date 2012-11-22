@@ -33,8 +33,8 @@
         <h1>Symphony No.5</h1>
 
 <ul>
-<li>Version 0.6.0</li>
-<li>Date: 21st November 2012</li>
+<li>Version 0.6.1</li>
+<li>Date: 22nd November 2012</li>
 </ul><h2>Overview</h2>
 
 <p>Symphony No.5 is an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> for use with <a href="http://getsymphony.com/">Symphony CMS</a>, <a href="http://lesscss.org/">Less CSS</a> &amp; <a href="http://coffeescript.org/">Coffeescript</a> and featuring <a href="http://twitter.github.com/bootstrap/">Bootstrap, from Twitter</a> and some components from <a href="http://github.com/malarkey/320andup">320andup</a>. It works alongside <a href="http://github.com/firegoby/symphonyno5.sh.git">symphonyno5.sh</a> for command-line admin of your Symphony project. It also includes an Ant build script to compile, concatenate &amp; minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.</p>
@@ -48,6 +48,7 @@
 <li>
 <code>extensions.csv</code> list for Symphony Extensions - installed as git submodules via <a href="http://github.com/firegoby/symphonyno5.sh.git">symphonyno5.sh</a>
 </li>
+<li>Includes the <a href="http://github.com/firegoby/production_mode.git">Production Mode</a> extension to automatically serve minified assets when in production mode</li>
 <li>
 <strong>Split Manifest directory structure</strong> for separate Development &amp; Production environments</li>
 <li>
@@ -109,6 +110,12 @@
 <li>Setup Apache (or equivalent) web server to serve your domain</li>
 <li>Setup a MySQL database (recommend charset utf-8)</li>
 <li><code>symphonyno5.sh new projectname</code></li>
+<li>Install Symphony via <code>http://yourdomain.com/install</code>
+</li>
+<li><code>symphonyno5 postinstall</code></li>
+<li>
+<code>symphonyno5 fixperms 0775 0664</code> (*or custom dir &amp; file permissions for your setup*)</li>
+<li><code>git commit -am "Tighten file permissions after installation"</code></li>
 </ol><h3>Detailed Installation Instructions</h3>
 
 <ol>
@@ -126,7 +133,7 @@
 <li><p>Setup a MySQL user for database, take note of connection details</p></li>
 <li><p><code>cd</code> to parent directory that will hold your project (e.g. <code>cd ~/Sites</code>)</p></li>
 <li><p><code>symphonyno5.sh new projectname</code></p></li>
-<li><p>Follow on-screen instructions from symphonyno5.sh</p></li>
+<li><p>Install Symphony via <code>http://yourdomain.com/install</code></p></li>
 <li>
 <p>After installation, cleanup install files and commit .htaccess and config.php to git</p>
 
@@ -135,7 +142,7 @@
 <li>
 <p>Set the correct dir &amp; file permissions</p>
 
-<p><strong>The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation</strong>, by default <code>0755</code> and <code>0664</code></p>
+<p><strong>The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation</strong>, by default <code>0775</code> and <code>0664</code></p>
 
 <p><code>symphonyno5.sh fixperms 0775 0664</code></p>
 
@@ -178,7 +185,8 @@
 <ol>
 <li>Add all javascripts files (in the order you want them referenced) to <code>workspace/scripts/build.xml</code>. If using CoffeeScript add the filename with a <code>.js</code> extension, all CoffeeScript files will be compiled before minification and concatenation.</li>
 <li><code>symphonyno5.sh compile scripts</code></li>
-<li>Alter <code>master.xsl</code> to point to the production file <code>/workspace/scripts/production.min.js</code>.</li>
+<li>In Symphony admin <strong>Preferences</strong> enable <strong>Production Mode</strong>
+</li>
 </ol><h4>Note</h4>
 
 <p>The un-minified concatenated <code>production.js</code> file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in <code>.htaccess</code> or equivalent.</p>
@@ -186,6 +194,12 @@
 <h2>Changelog</h2>
 
 <ul>
+<li>0.6.1 - 22 Nov 12 -
+
+<ul>
+<li>Add <a href="http://github.com/firegoby/production_mode.git">Production Mode</a> extension for automatic serving of minified assets in production mode</li>
+</ul>
+</li>
 <li>0.6.0 - 21 Nov 12 -
 
 <ul>
@@ -264,14 +278,17 @@
 <li>0.3.1 - 7 May 12 -
 
 <ul>
-<li>Incorporated much of Andy Clarke's <a href="http://github.com/malarkey/320andup"><strong>320andup</strong></a>, including: -</li>
-<li>- Font-based icons from <a href="http://fortawesome.github.com/Font-Awesome">Font Awesome</a>
+<li>Incorporated much of Andy Clarke's <a href="http://github.com/malarkey/320andup"><strong>320andup</strong></a>, including: -
+
+<ul>
+<li>Font-based icons from <a href="http://fortawesome.github.com/Font-Awesome">Font Awesome</a>
 </li>
-<li>- <a href="http://selectivizr.com/">Selectivizr</a>
+<li><a href="http://selectivizr.com/">Selectivizr</a></li>
+<li>Responsive design tester</li>
+<li>LESS file setup, mixins and variables</li>
+<li>Reference page</li>
+</ul>
 </li>
-<li>- Responsive design tester</li>
-<li>- LESS file setup, mixins and variables</li>
-<li>- Reference page</li>
 <li>Merged all Less and CSS files under a single styles/ directory</li>
 <li>Changed <code>js/</code> -&gt; <code>scripts/</code>
 </li>
