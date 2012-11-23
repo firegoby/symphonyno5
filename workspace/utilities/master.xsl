@@ -32,35 +32,24 @@
       </head>
       <body class="{$current-page}">
         <xsl:comment><![CDATA[[if lt IE 8 ]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]]]></xsl:comment>
-        <div class="wrapper">
-          <header class="main masthead" role="banner">
-            <h1><a href="/"><xsl:value-of select="$website-name"/></a></h1>
-            <xsl:apply-templates select="data/navigation"/>
-          </header>
-          <div class="main content" role="main">
-            <xsl:apply-templates/>
-          </div>
-          <footer class="main" role="contentinfo">
-            <!-- footer content -->
-          </footer>
-        </div><!-- eo div.wrapper -->
+
+        <header class="main masthead" role="banner">
+          <!--<h1><a href="/"><xsl:value-of select="$website-name"/></a></h1>-->
+          <xsl:apply-templates select="data/navigation"/>
+        </header>
+
+        <div class="main content" role="main">
+          <xsl:apply-templates/>
+        </div>
+
+        <footer class="main" role="contentinfo">
+        </footer>
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/{$jQueryVersion}/jquery.min.js"></script>
         <script><![CDATA[window.jQuery || document.write('<script src="/workspace/scripts/vendor/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
           <xsl:choose>
             <xsl:when test="$production-mode='development'">
               <!-- scripts concatenated and minified via ant build script in scripts/build/build.xml -->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-transition.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-alert.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-modal.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-dropdown.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-scrollspy.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-tab.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-tooltip.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-popover.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-button.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-collapse.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-carousel.js"></script>-->
-              <!--<script src="/workspace/bootstrap/js/bootstrap-typeahead.js"></script>-->
               <script src="/workspace/scripts/plugins.js"></script>
               <script src="/workspace/scripts/main.js"></script>
             </xsl:when>
@@ -69,6 +58,7 @@
             </xsl:when>
           </xsl:choose>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
