@@ -4,8 +4,6 @@
   <xsl:include href="format-date.xsl"/>
   <xsl:include href="page-title.xsl"/>
   <xsl:include href="navigation.xsl"/>
-  <xsl:include href="kit/images.xsl"/>
-  <xsl:include href="kit/pagination.xsl"/>
 
   <xsl:variable name="jQueryVersion" select="'1.8.3'"/>
 
@@ -28,7 +26,7 @@
             <link rel="stylesheet" href="/workspace/styles/main.css"/>
           </xsl:when>
           <xsl:when test="$production-mode='production'">
-            <link rel="stylesheet" href="/workspace/styles/production-a1.min.css"/>
+            <link rel="stylesheet" href="/workspace/styles/production-8c1bc6a452.min.css"/>
           </xsl:when>
         </xsl:choose>
         <link rel="apple-touch-icon" href="/workspace/images/icons/apple-touch-icon.png"/>
@@ -59,7 +57,7 @@
               <script src="/workspace/scripts/main.js"></script>
             </xsl:when>
             <xsl:when test="$production-mode='production'">
-              <script src="/workspace/scripts/production-a1.min.js"></script>
+              <script src="/workspace/scripts/production-c414de358d.min.js"></script>
             </xsl:when>
           </xsl:choose>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
