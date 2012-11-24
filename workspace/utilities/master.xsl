@@ -25,7 +25,14 @@
         <meta name="MobileOptimized" content="320"/>
         <meta http-equiv="cleartype" content="on"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
-        <link rel="stylesheet" href="/workspace/styles/main.css"/>
+        <xsl:choose>
+          <xsl:when test="$production-mode='development'">
+            <link rel="stylesheet" href="/workspace/styles/main.css"/>
+          </xsl:when>
+          <xsl:when test="$production-mode='production'">
+            <link rel="stylesheet" href="/workspace/styles/production-a1.min.css"/>
+          </xsl:when>
+        </xsl:choose>
         <link rel="apple-touch-icon" href="/workspace/images/icons/apple-touch-icon.png"/>
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
         <script src="/workspace/scripts/vendor/modernizr-2.6.1.min.js"></script>
@@ -54,7 +61,7 @@
               <script src="/workspace/scripts/main.js"></script>
             </xsl:when>
             <xsl:when test="$production-mode='production'">
-              <script src="/workspace/scripts/production.min.js"></script>
+              <script src="/workspace/scripts/production-a1.min.js"></script>
             </xsl:when>
           </xsl:choose>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
