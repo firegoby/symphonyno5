@@ -22,8 +22,6 @@
         <meta name="description" content=""/>
         <meta name="author" content=""/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta name="MobileOptimized" content="320"/>
-        <meta http-equiv="cleartype" content="on"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
         <xsl:choose>
           <xsl:when test="$production-mode='development'">
