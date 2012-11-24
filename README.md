@@ -1,41 +1,35 @@
 # Symphony No.5
 
-* Version 0.6.1
-* Date: 22nd November 2012
+* Version 0.7.0
+* Date: 24th November 2012
 
 ## Overview
 
-Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for use with [Symphony CMS](http://getsymphony.com/), [Less CSS](http://lesscss.org/) & [Coffeescript](http://coffeescript.org/) and featuring [Bootstrap, from Twitter](http://twitter.github.com/bootstrap/) and some components from [320andup](http://github.com/malarkey/320andup). It works alongside [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for command-line admin of your Symphony project. It also includes an Ant build script to compile, concatenate & minify javasctipt for production. It aims to be a constantly evolving, pragmatic best practices starting point for new Symphony CMS projects.
+Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an adapted [HTML5Boilerplate](http://html5boilerplate.com/) `master.xsl` template. It works in tandem with [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for command-line admin of your Symphony project. It includes support for compiling minified production assets from CSS pre-processors (**Less**, **Sass** & **Stylus** support) as well as **Coffeescript** support.
 
 ## Features
 
 * **HTML5** master.xsl XSLT template based on HTML5Boilerplate
-* Works with [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for easy command-line admin
+* Works with [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for **easy command-line admin**
 * `extensions.csv` list for Symphony Extensions - installed as git submodules via [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
-* Includes the [Production Mode](http://github.com/firegoby/production_mode.git) extension to automatically serve minified assets when in production mode
+* Includes the [Production Mode](http://github.com/firegoby/production_mode.git) extension to **automatically serve minified assets when in production mode** (*set through the Symphony CMS Admin*)
 * **Split Manifest directory structure** for separate Development & Production environments
-* **Less CSS** styles with: -
-  * **Bootstrap** from Twitter
-  * **Font Awesome** 
-  * **CSS Reset**
-  * **box-sizing: border-box** for all elements
-  * Sensible default layout of stylesheets
-* All **stylesheets compile into a single (minified) main.css** file for production
-* Ant build script to **minify & concatenate javascripts** into a single production file
-* Ant build script compiles any **Coffeescript** files before concatenation 
-* Ant build script works from a explicit filelist to enable order-dependent concatenation
-* [hana+nils' XSLT Kit for Symphony](http://github.com/hananils/kit)
+* All **stylesheets compile into a single, minified `production-{SHAhash}.min.css`** file for production
+* Ant build script: -
+  * **minify & concatenate javascripts** into a single `production-{SHAhash}.min.js` file
+  * compiles any **Coffeescript** files before concatenation 
+  * script works from a explicit filelist to enable order-dependent concatenation
+* **Font Awesome** 
+* **CSS Reset** with `box-sizing: border-box` for all elements
 * Repsonsive Design Test Page with common breakpoints (/responsive.html)
 
 ## Contents
 
 * [**Installation**](#installation)
-  * [Quickstart](#quickstart)
-  * [Detailed Installation Instructions](#detailed-installation-instructions)
 * [**Usage**](#usage)
   * [Frequently Asked Questions](#frequently-asked-questions)
-  * [Less CSS Compilation](#less-css-compilation)
-  * [Ant Build Script - Concatenate & Minify Javascript for Production](#ant-build-script--concatenate--minify-javascript-for-production)
+  * [CSS Compilation](#css-compilation)
+  * [Concatenate & Minify Javascript for Production](#concatenate--minify-javascript-for-production)
 * [**Changelog**](#changelog)
 * [**Symphony CMS Overview**](#symphony-cms-overview)
   * [Symphony Server Requirements](#symphony-server-requirements)
@@ -44,81 +38,38 @@ Symphony No.5 is an adapted [HTML5Boilerplate](http://html5boilerplate.com/) for
 
 ## Installation
 
-### Quickstart
-
 1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) to your $PATH
 2. Setup Apache (or equivalent) web server to serve your domain
-3. Setup a MySQL database (recommend charset utf-8)
-4. `symphonyno5.sh new projectname`
-5. Install Symphony via `http://yourdomain.com/install`
-6. `symphonyno5 postinstall`
-7. `symphonyno5 fixperms 0775 0664` (*or custom dir & file permissions for your setup*)
-8. `git commit -am "Tighten file permissions after installation"`
-
-### Detailed Installation Instructions
-
-1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) to your $PATH
-
-2. Setup Apache to serve your domain
-  * PHP 5.2 or above (PHP 5.3 recommended)
-  * PHP's LibXML module, with the XSLT extension enabled (--with-xsl)
-  * Apache's mod_rewrite module or equivalent - see .htaccess for details
-
-3. Setup your MySQL database, recommend charset=`utf8`, collate=`utf8_unicode_ci`
-
-4. Setup a MySQL user for database, take note of connection details
-
-5. `cd` to parent directory that will hold your project (e.g. `cd ~/Sites`)
-
-6. `symphonyno5.sh new projectname`
-
-7. Install Symphony via `http://yourdomain.com/install`
-
-8. After installation, cleanup install files and commit .htaccess and config.php to git
-    
-    `symphonyno5.sh postinstall`
-
-9. Set the correct dir & file permissions
-
-   **The exact permissions needed will depend on your server configuration and should match those given during Symphony's installation**, by default `0775` and `0664`
-
-   `symphonyno5.sh fixperms 0775 0664`
-
-   Once you've reviewed the permissions changes and are happy, commit them to git
-
-   `git commit -am "Change dir & file permissions to 0775 0664"`
-
+3. Setup a MySQL database (recommend charset=`utf-8`, collate=`utf8_unicode_ci`)
+4. Setup a MySQL user for the database, taking note of connection details
+4. `symphonyno5.sh new projectname` and follow the instructions
 
 ## Usage
 
 ### Frequently Asked Questions
 
-1. **How do I enable Bootstrap?**
+1. **I don't want to use Coffeescript! What do I do?**
 
-   Uncomment the @import line(s) in `workspace/styles/main.less` and also any javascript imports you need in the end of `workspace/utilities/master.xsl`. If you're using the Ant build script to produce concatenated and minified javascript for production you'll also want to uncomment the relevant javascripts in the build script `workspace/scripts/build/build.xml`.
+   Simply delete `workspace/scripts/main.coffee` and write your javascript in `workspace/scripts/main.js` instead. The `symphonyno5 compile scripts` command will continue to work fine.
 
-2. **I don't want Bootstrap! What do I do?**
+2. **I don't want to use Less CSS! What do I do?**
 
-   As of version 0.5.2 Bootstrap is disabled by default so you don't need to do anything. If you want to remove all the Bootstrap files then remove the `workspace/bootstrap` git submodule, and delete the references to the javascripts in `workspace/utilities/master.xsl` and in the Ant build script `workspace/scripts/build/build.xml`.
+   Just delete the .less files in `workspace` styles and replace with your own `main.css`. If you want to use Sass or Stylus instead simple replace `main.less` with `main.sass`, `main.scss`, or `main.styl`. 
 
-3. **I don't want to use Coffeescript! What do I do?**
+### CSS Compilation
 
-   Simply delete `workspace/scripts/main.coffee` and write your javascript in `workspace/scripts/main.js` instead. The Ant build script (`workspace/scripts/build`) will continue to work fine.
+`workspace/styles/main.less` is the master stylesheet. Add all other stylesheets as `@import` directives within that files for easy concatenation of all stylesheets into a single production file.
 
-4. **I don't want to use Less CSS! What do I do?**
+If you want to use **Sass** or **Stylus** instead just replace the `main.less` with `main.sass`, `main.scss` or `main.styl` and make sure the command-line compiler for your chosen CSS pre-processor is available to your `$PATH
 
-   Just delete the .less files (or all the files in `workspace/styles`) and replace with your plain CSS, SASS, Stylus or whatever stylesheets instead.
+1. `symphonyno5 compile styles`
+2. In Symphony admin **Preferences** enable **Production Mode**
 
 
-### Less CSS Compilation
-
-`workspace/styles/main.less` is the master stylesheet. Add all other stylesheets as `@import` directives within that files for easy concatenation of all stylesheets into a single production file. If you want to minify the resulting CSS file do so in your LESS compiler, or from the command line (using symphonyno5.sh): -
-    `symphonyno5.sh compile styles`
-
-### Ant Build Script - Concatenate & Minify Javascript for Production
+### Concatenate & Minify Javascript for Production
 
 1. Add all javascripts files (in the order you want them referenced) to `workspace/scripts/build.xml`. If using CoffeeScript add the filename with a `.js` extension, all CoffeeScript files will be compiled before minification and concatenation.
-2. `symphonyno5.sh compile scripts`
+2. `symphonyno5 compile scripts`
 3. In Symphony admin **Preferences** enable **Production Mode**
 
 #### Note
@@ -127,6 +78,12 @@ The un-minified concatenated `production.js` file is left so that it can be exam
 
 ## Changelog
 
+* 0.7.0 - 24 Nov 12 -
+  * Add automated `production-{SHAhash}.min.ext` styles and scripts
+  * Updates to match improvements in [SymphonyNo5.sh](http://github.com/firegoby/symphonyno5.sh.git)
+  * Remove Bootstrap integration
+  * Remove hana+nils XSLT Kit for Symphony
+  * Remove use-case specific meta tags
 * 0.6.1 - 22 Nov 12 -
   * Add [Production Mode](http://github.com/firegoby/production_mode.git) extension for automatic serving of minified assets in production mode
 * 0.6.0 - 21 Nov 12 -
