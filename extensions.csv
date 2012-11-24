@@ -7,4 +7,3 @@ git://github.com/symphonycms/profiledevkit.git,extensions/profiledevkit
 git://github.com/symphonycms/debugdevkit.git,extensions/debugdevkit
 git://github.com/symphonycms/xssfilter.git,extensions/xssfilter
 git://github.com/firegoby/production_mode.git,extensions/production_mode
-git://github.com/hananils/kit.git,workspace/utilities/kit
