@@ -752,15 +752,3 @@ pre {
     page-break-after: avoid;
   }
 }
-/* Less Mixins
----------------------------------------------- */
-.amp {
-  font-family: 'Warnock Pro', 'Goudy Old Style', Palatino, 'Book Antiqua', serif;
-  font-size: 1.1em;
-  line-height: 0.91em;
-  font-style: italic;
-}
-body {
-  background: #ffffff;
-  color: #333333;
-}

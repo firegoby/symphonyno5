@@ -26,7 +26,7 @@
             <link rel="stylesheet" href="/workspace/styles/main.css"/>
           </xsl:when>
           <xsl:when test="$production-mode='production'">
-            <link rel="stylesheet" href="/workspace/styles/production-8c1bc6a452.min.css"/>
+            <link rel="stylesheet" href="/workspace/styles/production-7e74fbe7c9.min.css"/>
           </xsl:when>
         </xsl:choose>
         <link rel="apple-touch-icon" href="/workspace/images/icons/apple-touch-icon.png"/>
