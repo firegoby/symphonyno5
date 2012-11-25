@@ -52,16 +52,16 @@
         <script><![CDATA[window.jQuery || document.write('<script src="/workspace/scripts/vendor/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
           <xsl:choose>
             <xsl:when test="$production-mode='development'">
-              <!-- scripts concatenated and minified via ant build script in scripts/build/build.xml -->
+              <!-- CONCAT_JS_LIST_START -->
               <script src="/workspace/scripts/plugins.js"></script>
               <script src="/workspace/scripts/main.js"></script>
+              <!-- CONCAT_JS_LIST_END -->
             </xsl:when>
             <xsl:when test="$production-mode='production'">
               <script src="/workspace/scripts/production-c414de358d.min.js"></script>
             </xsl:when>
           </xsl:choose>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
