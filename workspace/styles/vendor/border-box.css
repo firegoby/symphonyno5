@@ -1,0 +1,4 @@
+/* border-box box sizing on everything */
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -marginoz-box-sizing: border-box;

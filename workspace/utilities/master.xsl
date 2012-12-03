@@ -14,6 +14,7 @@
     <xsl:comment><![CDATA[[if lt IE 8 ]><html class="no-js oldie" lang="en"><![endif]]]></xsl:comment>
     <xsl:comment><![CDATA[[if IE 8 ]><html class="no-js ie8" lang="en"><![endif]]]></xsl:comment>
     <xsl:comment><![CDATA[[if gt IE 8 ]><!]]></xsl:comment><html class="no-js" lang="en"><xsl:comment><![CDATA[<![endif]]]></xsl:comment>
+
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <title><xsl:call-template name="page-title"/></title>
@@ -21,18 +22,12 @@
         <meta name="author" content=""/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link type="text/plain" rel="author" href="/humans.txt" />
-        <xsl:choose>
-          <xsl:when test="$production-mode='development'">
-            <link rel="stylesheet" href="/workspace/styles/main.css"/>
-          </xsl:when>
-          <xsl:when test="$production-mode='production'">
-            <link rel="stylesheet" href="/workspace/styles/production-7e74fbe7c9.min.css"/>
-          </xsl:when>
-        </xsl:choose>
+        <link rel="stylesheet" data-compile="true" href="/workspace/styles/main.css"/>
         <link rel="apple-touch-icon" href="/workspace/images/icons/apple-touch-icon.png"/>
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
         <script src="/workspace/scripts/vendor/modernizr-2.6.1.min.js"></script>
       </head>
+
       <body class="{$current-page}">
         <xsl:comment><![CDATA[[if lt IE 8 ]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]]]></xsl:comment>
 
@@ -50,17 +45,9 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/{$jQueryVersion}/jquery.min.js"></script>
         <script><![CDATA[window.jQuery || document.write('<script src="/workspace/scripts/vendor/jquery-]]><xsl:value-of select="$jQueryVersion"/><![CDATA[.min.js">\x3C/script>')]]></script>
-          <xsl:choose>
-            <xsl:when test="$production-mode='development'">
-              <!-- CONCAT_JS_LIST_START -->
-              <script src="/workspace/scripts/plugins.js"></script>
-              <script src="/workspace/scripts/main.js"></script>
-              <!-- CONCAT_JS_LIST_END -->
-            </xsl:when>
-            <xsl:when test="$production-mode='production'">
-              <script src="/workspace/scripts/production-c414de358d.min.js"></script>
-            </xsl:when>
-          </xsl:choose>
+        <script data-compile="true" src="/workspace/scripts/plugins.js"></script>
+        <script data-compile="true" src="/workspace/scripts/main.js"></script>
+
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
@@ -69,6 +56,7 @@
             s.parentNode.insertBefore(g,s)}(document,'script'));
         </script>
       </body>
+
     </html>
   </xsl:template>
   <xsl:strip-space elements="*"/><!-- strip whitespace from output -->
