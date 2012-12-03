@@ -17,7 +17,7 @@
     <div class="wrapper">
       <header>
         <h1 class="header">Symphony No. 5</h1>
-        <p class="header">An adapted HTML5Boilerplate for use with Symphony CMS, Less CSS &amp; Coffeescript and including Bootstrap from Twitter and extras</p>
+        <p class="header">Symphony CMS meets HTML5Boilerplate. Also including Command-line Tool and more... </p>
 
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/firegoby/symphonyno5/zipball/master">Download ZIP</a></li>
@@ -33,11 +33,11 @@
         <h1>Symphony No.5</h1>
 
 <ul>
-<li>Version 0.7.0</li>
-<li>Date: 24th November 2012</li>
+<li>Version 0.8.0</li>
+<li>Date: 3rd December 2012</li>
 </ul><h2>Overview</h2>
 
-<p>Symphony No.5 is a <a href="http://getsymphony.com/">Symphony CMS</a> installation with an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> <code>master.xsl</code> template. It works in tandem with <a href="http://github.com/firegoby/symphonyno5.sh.git">symphonyno5.sh</a> for command-line admin of your Symphony project. It includes support for compiling minified production assets from CSS pre-processors (**Less**, <strong>Sass</strong> &amp; <strong>Stylus</strong> support) as well as Javascript, with <strong>Coffeescript</strong> support.</p>
+<p>Symphony No.5 is a <a href="http://getsymphony.com/">Symphony CMS</a> installation with an adapted <a href="http://html5boilerplate.com/">HTML5Boilerplate</a> <code>master.xsl</code> template. It works in tandem with <a href="http://github.com/firegoby/symphonyno5.sh.git">symphonyno5.sh</a> for command-line admin of your Symphony project.</p>
 
 <h2>Features</h2>
 
@@ -49,31 +49,27 @@
 <li>
 <code>extensions.csv</code> list for Symphony Extensions - installed as git submodules via <a href="http://github.com/firegoby/symphonyno5.sh.git">symphonyno5.sh</a>
 </li>
-<li>Includes the <a href="http://github.com/firegoby/production_mode.git">Production Mode</a> extension to <strong>automatically serve minified assets when in production mode</strong> (*set through the Symphony CMS Admin*)</li>
 <li>
 <strong>Split Manifest directory structure</strong> for separate Development &amp; Production environments</li>
-<li>All <strong>stylesheets compile into a single, minified <code>production-{SHA1hash}.min.css</code></strong>
-</li>
-<li>All <strong>javascripts compiled into a single, minified <code>production-{SHA1hash}.min.js</code></strong>
-</li>
+<li>Repsonsive Design Test Page with common breakpoints (/responsive.html)</li>
+<li>Selection of CSS resets/helpers available: -
+
+<ul>
+<li>
+<strong>HTML5Boilerplate</strong> default CSS</li>
+<li><strong>Normalize.css</strong></li>
+<li><strong>html5doctor.com CSS Reset</strong></li>
 <li>
 <strong>Font Awesome</strong> (font-based icons) </li>
 <li>
-<strong>html5doctor.com CSS Reset</strong> (with <code>box-sizing: border-box</code> for all elements)</li>
-<li>Repsonsive Design Test Page with common breakpoints (/responsive.html)</li>
+<strong>Universal Border Box</strong> Set <code>box-sizing: border-box</code> for all elements</li>
+</ul>
+</li>
 </ul><h2>Contents</h2>
 
 <ul>
 <li><a href="#installation"><strong>Installation</strong></a></li>
-<li>
-<a href="#usage"><strong>Usage</strong></a>
-
-<ul>
-<li><a href="#css-compilation">CSS Compilation</a></li>
-<li><a href="#concatenate--minify-javascript-for-production">Concatenate &amp; Minify Javascript for Production</a></li>
 <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
-</ul>
-</li>
 <li><a href="#changelog"><strong>Changelog</strong></a></li>
 <li>
 <a href="#symphony-cms-overview"><strong>Symphony CMS Overview</strong></a>
@@ -92,46 +88,27 @@
 <li>Setup a MySQL user for the database, taking note of connection details</li>
 <li>
 <code>symphonyno5.sh new projectname</code> and follow the instructions</li>
-</ol><h2>Usage</h2>
-
-<h3>CSS Compilation</h3>
-
-<p><code>workspace/styles/main.less</code> is the master stylesheet. Add all other stylesheets as <code>@import</code> directives within that files for easy concatenation of all stylesheets into a single production file.</p>
-
-<p>If you want to use <strong>Sass</strong> or <strong>Stylus</strong> instead just replace the <code>main.less</code> with <code>main.sass</code>, <code>main.scss</code> or <code>main.styl</code> and make sure the command-line compiler for your chosen CSS pre-processor is available to your <code>$PATH</code>.</p>
-
-<ol>
-<li><code>symphonyno5 compile styles</code></li>
-<li>In Symphony admin <strong>Preferences</strong> enable <strong>Production Mode</strong>
-</li>
-</ol><h3>Concatenate &amp; Minify Javascript for Production</h3>
-
-<ol>
-<li>Add any javascripts between the <code>&lt;!-- CONCAT_JS_LIST_START/END --&gt;</code> comments near the footer of <code>master.xsl</code>
-</li>
-<li><code>symphonyno5 compile scripts</code></li>
-<li>In Symphony admin <strong>Preferences</strong> enable <strong>Production Mode</strong>
-</li>
-</ol><h4>Note</h4>
-
-<p>The un-minified concatenated <code>production.js</code> file is left so that it can be examined in case of errors post-concatenation. If you're concerned about public access to the un-minified version of your scripts delete it before deployment, or block it in <code>.htaccess</code> or equivalent.</p>
-
-<h3>Frequently Asked Questions</h3>
+</ol><h3>Frequently Asked Questions</h3>
 
 <ol>
 <li>
-<p><strong>I don't want to use Coffeescript! What do I do?</strong></p>
+<p><strong>What happened to all the CSS &amp; Javascript minification stuff?</strong></p>
 
-<p>Simply delete <code>workspace/scripts/main.coffee</code> and write your javascript in <code>workspace/scripts/main.js</code> instead. The <code>symphonyno5 compile scripts</code> command will continue to work fine.</p>
-</li>
-<li>
-<p><strong>I don't want to use Less CSS! What do I do?</strong></p>
-
-<p>Just delete the .less files in <code>workspace</code> styles and replace with your own <code>main.css</code>. If you want to use Sass or Stylus instead simply replace <code>main.less</code> with <code>main.sass</code>, <code>main.scss</code>, or <code>main.styl</code>. </p>
+<p>In order to be more modular this functionality has been moved to a dedicated Symphony extension <a href="http://github.com/firegoby/asset_compiler">Asset Compiler</a> - check it out!</p>
 </li>
 </ol><h2>Changelog</h2>
 
 <ul>
+<li>0.8.0 - 3 Dec 12 -
+
+<ul>
+<li>Removed all asset minification support (moved to separate extension <a href="http://github.com/firegoby/asset_compiler">Asset Compiler</a>
+</li>
+<li>Removed CSS pre-processor defaults</li>
+<li>Added <code>normalize.css</code> as CSS library option</li>
+<li>Added H5BP's default <code>h5bp-main.css</code> as CSS library option</li>
+</ul>
+</li>
 <li>0.7.0 - 24 Nov 12 -
 
 <ul>
