@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.8.0
-* Date: 3rd December 2012
+* Version 0.9.0
+* Date: 9th August 2013
 
 ## Overview
 
@@ -36,7 +36,7 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 2. Setup Apache (or equivalent) web server to serve your domain
 3. Setup a MySQL database (recommend charset=`utf-8`, collate=`utf8_unicode_ci`)
 4. Setup a MySQL user for the database, taking note of connection details
-4. `symphonyno5.sh new projectname` and follow the instructions
+4. `symphonyno5 new projectname` and follow the instructions
 
 
 ### Frequently Asked Questions
@@ -48,6 +48,14 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 
 ## Changelog
 
+* 0.9.0 - 9 Aug 13 -
+  * Upgraded to Symphony v2.3.3
+  * Upgraded to JQuery v1.10.2
+  * Upgraded to HTML5Boilerplate v4.2.0
+  * Upgraded to Modernizr v2.6.2
+  * Upgraded to Normalize.css v2.1.2
+  * Upgraded to FontAwesome v3.2.1
+  * Removed HTML5Boilerplate separate print.css stylesheet
 * 0.8.0 - 3 Dec 12 -
   * Removed all asset minification support (moved to separate extension [Asset Compiler](http://github.com/firegoby/asset_compiler)
   * Removed CSS pre-processor defaults

@@ -5,7 +5,7 @@
   <xsl:include href="page-title.xsl"/>
   <xsl:include href="navigation.xsl"/>
 
-  <xsl:variable name="jQueryVersion" select="'1.8.3'"/>
+  <xsl:variable name="jQueryVersion" select="'1.10.2'"/>
 
   <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes" indent="no" media-type="text/html" />
 
@@ -25,7 +25,7 @@
         <link rel="stylesheet" data-compile="true" href="/workspace/styles/main.css"/>
         <link rel="apple-touch-icon" href="/workspace/images/icons/apple-touch-icon.png"/>
         <xsl:comment><![CDATA[[if (lt IE 9) & (!IEMobile) ]><script src="/workspace/scripts/vendor/selectivizr-min.js"></script><![endif]]]></xsl:comment>
-        <script src="/workspace/scripts/vendor/modernizr-2.6.1.min.js"></script>
+        <script src="/workspace/scripts/vendor/modernizr-2.6.2.min.js"></script>
       </head>
 
       <body class="{$current-page}">
@@ -52,7 +52,7 @@
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            g.src='//www.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
         </script>
       </body>
