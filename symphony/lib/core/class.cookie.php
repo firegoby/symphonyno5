@@ -62,12 +62,22 @@
 
 		/**
 		 * Determines whether this cookie can be read by Javascript or not, by default
-		 * this is set to false, meaning cookies written by Symphony can be read by
-		 * Javascript
+		 * this is set to true, meaning cookies written by Symphony cannot be read by Javascript
 		 *
 		 * @var boolean
 		 */
-		private $_httpOnly = false;
+		private $_httpOnly = true;
+
+		/**
+		 * Determines whether this cookie will be sent over a secure connection or not. If
+		 * true, this cookie will only be sent on a secure connection. Defaults to false
+		 * but will automatically be set if `__SECURE__` is true
+		 *
+		 * @since Symphony 2.3.3
+		 * @see boot
+		 * @var boolean
+		 */
+		private $_secure = false;
 
 		/**
 		 * Constructor for the Cookie class intialises all class variables with the
@@ -87,14 +97,16 @@
 		 *  The domain this cookie is valid for
 		 * @param boolean $httpOnly
 		 *  Whether this cookie can be read by Javascript. By default the cookie
-		 *  can be read using Javascript and PHP
+		 *  cannot be read by Javascript
 		 */
-		public function __construct($index, $timeout = 0, $path = '/', $domain = NULL, $httpOnly = false) {
+		public function __construct($index, $timeout = 0, $path = '/', $domain = NULL, $httpOnly = true) {
 			$this->_index = $index;
 			$this->_timeout = $timeout;
 			$this->_path = $path;
 			$this->_domain = $domain;
 			$this->_httpOnly = $httpOnly;
+			if(defined(__SECURE__)) $this->_secure = __SECURE__;
+
 			$this->_session = $this->__init();
 		}
 
@@ -104,7 +116,7 @@
 		 * @return Session
 		 */
 		private function __init() {
-			$this->_session = Session::start($this->_timeout, $this->_path, $this->_domain, $this->_httpOnly);
+			$this->_session = Session::start($this->_timeout, $this->_path, $this->_domain, $this->_httpOnly, $this->_secure);
 			if (!$this->_session) return false;
 
 			if (!isset($_SESSION[$this->_index])) $_SESSION[$this->_index] = array();
@@ -132,14 +144,20 @@
 		 * Accessor function for properties in the `$_SESSION` array
 		 *
 		 * @param string $name
-		 *  The name of the property to retrieve
+		 *  The name of the property to retrieve (optional)
 		 * @return string|null
-		 *  The value of the property, or null if it does not exist
+		 *  The value of the property, or null if it does not exist. If
+		 *  no `$name` is provided, return the entire Cookie.
 		 */
-		public function get($name) {
-			if (is_array($_SESSION[$this->_index]) && array_key_exists($name, $_SESSION[$this->_index])) {
+		public function get($name = null) {
+			if(is_null($name) && isset($_SESSION[$this->_index])) {
+				return $_SESSION[$this->_index];
+			}
+
+			if (isset($_SESSION[$this->_index]) && is_array($_SESSION[$this->_index]) && array_key_exists($name, $_SESSION[$this->_index])) {
 				return $_SESSION[$this->_index][$name];
 			}
+
 			return null;
 		}
 

@@ -27,7 +27,7 @@
 		}
 
 		static function getReleaseNotes(){
-			return 'http://symphony-cms.com/download/releases/version/2.2.2/';
+			return 'http://getsymphony.com/download/releases/version/2.2.2/';
 		}
 
 		static function upgrade(){
@@ -75,13 +75,13 @@
 			// 2.2.2
 			if(version_compare(self::$existing_version, '2.2.2', '<=')) {
 				Symphony::Configuration()->set('version', '2.2.2', 'symphony');
+			}
 
-				if(Symphony::Configuration()->write() === false) {
-					throw new Exception('Failed to write configuration file, please check the file permissions.');
-				}
-				else {
-					return true;
-				}
+			if(Symphony::Configuration()->write() === false) {
+				throw new Exception('Failed to write configuration file, please check the file permissions.');
+			}
+			else {
+				return true;
 			}
 		}
 

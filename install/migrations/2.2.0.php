@@ -27,7 +27,7 @@
 		}
 
 		static function getReleaseNotes(){
-			return 'http://symphony-cms.com/download/releases/version/2.2/';
+			return 'http://getsymphony.com/download/releases/version/2.2/';
 		}
 
 		static function upgrade(){
@@ -37,7 +37,7 @@
 				Symphony::Configuration()->set('version', '2.2dev', 'symphony');
 				if(Symphony::Database()->tableContainsField('tbl_sections_association', 'cascading_deletion')) {
 					Symphony::Database()->query(
-						'ALTER TABLE `tbl_sections_association` CHANGE  `cascading_deletion` `hide_association` enum("yes","no") COLLATE utf8_unicode_ci NOT NULL DEFAULT "no";'
+						'ALTER TABLE `tbl_sections_association` CHANGE	`cascading_deletion` `hide_association` enum("yes","no") COLLATE utf8_unicode_ci NOT NULL DEFAULT "no";'
 					);
 
 					// Update Select table to include the new association field
@@ -84,13 +84,13 @@
 					}
 					catch (Exception $ex) {}
 				}
+			}
 
-				if(Symphony::Configuration()->write() === false) {
-					throw new Exception('Failed to write configuration file, please check the file permissions.');
-				}
-				else {
-					return true;
-				}
+			if(Symphony::Configuration()->write() === false) {
+				throw new Exception('Failed to write configuration file, please check the file permissions.');
+			}
+			else {
+				return true;
 			}
 		}
 

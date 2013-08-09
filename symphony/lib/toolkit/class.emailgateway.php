@@ -26,7 +26,7 @@
 			// empty string.
 			$gateway_class = $trace[1]['class']?' (' . $trace[1]['class'] . ')':'';
 			Symphony::Log()->pushToLog(__('Email Gateway Error') . $gateway_class  . ': ' . $message, $code, true);
-			parent::__construct($message);
+			parent::__construct('<![CDATA[' . trim($message) . ']]>');
 		}
 	}
 
@@ -278,9 +278,9 @@
 		 *
 		 * @throws EmailValidationException
 		 * @param array $configuration
-		 * @since 2.3.1
+		 * @since Symphony 2.3.1
 		 *  All configuration entries stored in a single array. The array should have the format of the $_POST array created by the preferences HTML.
-		 * @return void
+		 * @return boolean
 		 */
 		public function setConfiguration($config){
 			return true;
@@ -510,7 +510,7 @@
 				),
 			);
 			$binary = array(
-				'Content-Type'				=> EmailHelper::getMimeType($file).'; name="'.(!is_null($filename)?$filename:basename($file)).'"',
+				'Content-Type'				=> General::getMimeType($file).'; name="'.(!is_null($filename)?$filename:basename($file)).'"',
 				'Content-Transfer-Encoding' => 'base64',
 				'Content-Disposition'		=> 'attachment; filename="' . (!is_null($filename)?$filename:basename($file)).'"',
 			);
@@ -636,7 +636,7 @@
 		private function __fromCamel($string){
 			$string[0] = strtolower($string[0]);
 			$func = create_function('$c', 'return "_" . strtolower($c[1]);');
-			return preg_replace_callback('/([A-Z])/', $func, $str);
+			return preg_replace_callback('/([A-Z])/', $func, $string);
 		}
 
 		public function __destruct(){

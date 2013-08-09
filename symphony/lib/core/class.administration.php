@@ -12,8 +12,6 @@
 	 */
 	require_once(CORE . '/class.symphony.php');
 	require_once(TOOLKIT . '/class.htmlpage.php');
-	require_once(TOOLKIT . '/class.ajaxpage.php');
-	require_once(TOOLKIT . '/class.sectionmanager.php');
 
 	Class Administration extends Symphony{
 
@@ -89,54 +87,6 @@
 		}
 
 		/**
-		 * Returns the most recent version found in the `/install/migrations` folder.
-		 * Returns a version string to be used in `version_compare()` if an updater
-		 * has been found. Returns `FALSE` otherwise.
-		 * 
-		 * @since Symphony 2.3.1
-		 * @return mixed
-		 */
-		public function getMigrationVersion(){
-			if($this->isInstallerAvailable()){
-				$migration_file = end(scandir(DOCROOT . '/install/migrations'));
-				include_once(DOCROOT . '/install/lib/class.migration.php');
-				include_once(DOCROOT . '/install/migrations/' . $migration_file);
-
-				$migration_class = 'migration_' . str_replace('.', '', substr($migration_file, 0, -4));
-				return call_user_func(array($migration_class, 'getVersion'));
-			}
-			else{
-				return FALSE;
-			}
-		}
-
-		/**
-		 * Checks if an update is available and applicable for the current installation.
-		 * 
-		 * @since Symphony 2.3.1
-		 * @return boolean
-		 */
-		public function isUpgradeAvailable(){
-			if($this->isInstallerAvailable()){
-				$migration_version = $this->getMigrationVersion();
-				$current_version = Symphony::Configuration()->get('version', 'symphony');
-				return version_compare($current_version, $migration_version, '<');
-			}
-			else{
-				return FALSE;
-			}
-		}
-
-		/**
-		 * Checks if the installer/upgrader is available.
-		 * 
-		 * @since Symphony 2.3.1
-		 * @return boolean
-		 */
-		public function isInstallerAvailable(){
-			return file_exists(DOCROOT . '/install/index.php');
-		}
-		/**
 		 * Given the URL path of a Symphony backend page, this function will
 		 * attempt to resolve the URL to a Symphony content page in the backend
 		 * or a page provided by an extension. This function checks to ensure a user
@@ -162,7 +112,9 @@
 
 					if(is_numeric($this->Author->get('default_area'))) {
 						$default_section = SectionManager::fetch($this->Author->get('default_area'));
-						$section_handle = $default_section->get('handle');
+						if($default_section instanceof Section) {
+							$section_handle = $default_section->get('handle');
+						}
 
 						if(!$section_handle){
 							$all_sections = SectionManager::fetch();
@@ -246,13 +198,15 @@
 								}
 								else if (isset($_POST['action']['rename'])) {
 									if(!@rename(EXTENSIONS . '/' . $_POST['existing-folder'], EXTENSIONS . '/' . $_POST['new-folder'])) {
-										throw new SymphonyErrorPage(
+										$this->throwCustomError(
 											__('Could not find extension %s at location %s.', array(
 												'<code>' . $ex->getAdditional()->name . '</code>',
 												'<code>' . $ex->getAdditional()->path . '</code>'
 											)),
-											'Symphony Extension Missing Error',
-											'missing_extension', array(
+											__('Symphony Extension Missing Error'),
+											Page::HTTP_STATUS_ERROR,
+											'missing_extension',
+											array(
 												'name' => $ex->getAdditional()->name,
 												'path' => $ex->getAdditional()->path,
 												'rename_failed' => true
@@ -268,7 +222,7 @@
 							}
 						}
 
-						if(in_array(EXTENSION_REQUIRES_UPDATE,$about['status'])) {
+						if(array_key_exists('status', $about) && in_array(EXTENSION_REQUIRES_UPDATE, $about['status'])) {
 							$this->Page->pageAlert(
 								__('An extension requires updating.') . ' <a href="' . SYMPHONY_URL . '/system/extensions/">' . __('View extensions') . '</a>'
 							);
@@ -283,7 +237,7 @@
 					try{
 						// The updater contains a version higher than the current Symphony version.
 						if($this->isUpgradeAvailable()) {
-							$message = __('An update has been found in your installation to upgrade Symphony to %s.', array($migration_version)) . ' <a href="' . URL . '/install/">' . __('View update.') . '</a>';
+							$message = __('An update has been found in your installation to upgrade Symphony to %s.', array($this->getMigrationVersion())) . ' <a href="' . URL . '/install/">' . __('View update.') . '</a>';
 						}
 						// The updater contains a version lower than the current Symphony version.
 						// The updater is the same version as the current Symphony install.
@@ -358,10 +312,20 @@
 
 			// Login page, /symphony/login/
 			if($bits[0] == 'login') {
+				if(isset($bits[1], $bits[2])) {
+					$context = preg_split('/\//', $bits[1] . '/' . $bits[2], -1, PREG_SPLIT_NO_EMPTY);
+				}
+				else if(isset($bits[1])) {
+					$context = preg_split('/\//', $bits[1], -1, PREG_SPLIT_NO_EMPTY);
+				}
+				else {
+					$context = array();
+				}
+				
 				$callback = array(
 					'driver' => 'login',
 					'driver_location' => CONTENT . '/content.login.php',
-					'context' => preg_split('/\//', $bits[1] . '/' . $bits[2], -1, PREG_SPLIT_NO_EMPTY),
+					'context' => $context,
 					'classname' => 'contentLogin',
 					'pageroot' => '/login/'
 				);
@@ -524,7 +488,11 @@
 		 * page not found template
 		 */
 		public function errorPageNotFound(){
-			$this->customError(__('Page Not Found'), __('The page you requested does not exist.'), 'generic', array('header' => 'HTTP/1.0 404 Not Found'));
+			$this->throwCustomError(
+				__('The page you requested does not exist.'),
+				__('Page Not Found'),
+				Page::HTTP_STATUS_NOT_FOUND
+			);
 		}
 
 		/**

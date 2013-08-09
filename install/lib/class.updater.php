@@ -35,15 +35,15 @@
 		 * Initialises the configuration object by loading the existing
 		 * website config file
 		 */
-		public function initialiseConfiguration(array $settings){
+		public function initialiseConfiguration(array $data = array()){
 			parent::initialiseConfiguration();
 		}
 
 		/**
 		 * Overrides the `initialiseLog()` method and writes
-		 * logs to logs/updater
+		 * logs to manifest/logs/update
 		 */
-		public function initialiseLog(){
+		public function initialiseLog($filename = null){
 			if(is_dir(INSTALL_LOGS) || General::realiseDirectory(INSTALL_LOGS, self::Configuration()->get('write_mode', 'directory'))) {
 				parent::initialiseLog(INSTALL_LOGS . '/update');
 			}
@@ -81,7 +81,7 @@
 
 		public function run() {
 			// Initialize log
-			if(is_null(Symphony::Log())){
+			if(is_null(Symphony::Log()) || !file_exists(Symphony::Log()->getLogPath())) {
 				self::__render(new UpdaterPage('missing-log'));
 			}
 

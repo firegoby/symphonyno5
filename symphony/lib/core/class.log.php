@@ -197,8 +197,9 @@
 				$message = DateTimeObj::get($this->_datetime_format) . ' > ' . $this->__defineNameString($type) . ': ' . $message;
 			}
 
-			if($writeToLog) $this->writeToLog($message, $addbreak);
-
+			if($writeToLog) {
+				return $this->writeToLog($message, $addbreak);
+			}
 		}
 
 		/**
@@ -214,13 +215,46 @@
 		 *  Returns true if the message was written successfully, false otherwise
 		 */
 		public function writeToLog($message, $addbreak=true){
-
 			if(file_exists($this->_log_path) && !is_writable($this->_log_path)){
 				$this->pushToLog('Could Not Write To Log. It is not readable.');
 				return false;
 			}
-			return file_put_contents($this->_log_path, $message . ($addbreak ? PHP_EOL : ''), FILE_APPEND);
 
+			$permissions = (is_null(Symphony::Configuration())) ? '0664' : Symphony::Configuration()->get('write_mode', 'file');
+			return General::writeFile($this->_log_path, $message . ($addbreak ? PHP_EOL : ''), $permissions, 'a+');
+		}
+
+		/**
+		 * Given an Exception, this function will add it to the internal `$_log`
+		 * so that it can be written to the Log.
+		 *
+		 * @since Symphony 2.3.2
+		 * @param Exception $exception
+		 * @param boolean $writeToLog
+		 *  If set to true, this message will be immediately written to the log. By default
+		 *  this is set to false, which means that it will only be added to the array ready
+		 *  for writing
+		 * @param boolean $addbreak
+		 *  To be used in conjunction with `$writeToLog`, this will add a line break
+		 *  before writing this message in the log file. Defaults to true.
+		 * @param boolean $append
+		 *  If set to true, the given `$message` will be append to the previous log
+		 *  message found in the `$_log` array
+		 * @return mixed
+		 *  If `$writeToLog` is passed, this function will return boolean, otherwise
+		 *  void
+		 */
+		public function pushExceptionToLog(Exception $exception, $writeToLog=false, $addbreak=true, $append=false) {
+			$message = sprintf(
+				'%s %s - %s on line %d of %s',
+				get_class($exception),
+				$exception->getCode(),
+				$exception->getMessage(),
+				$exception->getLine(),
+				$exception->getFile()
+			);
+
+			return $this->pushToLog($message, $exception->getCode(), $writeToLog, $addbreak, $append);
 		}
 
 		/**
@@ -253,7 +287,7 @@
 
 					if($this->_archive){
 						$this->close();
-						$file = LOGS . '/main.'.DateTimeObj::get('Ymdh').'.gz';
+						$file = $this->_log_path . DateTimeObj::get('Ymdh').'.gz';
 						$handle = gzopen($file,'w9');
 						gzwrite($handle, file_get_contents($this->_log_path));
 						gzclose($handle);
@@ -264,14 +298,14 @@
 
 			if($flag == self::OVERWRITE){
 				if(file_exists($this->_log_path) && is_writable($this->_log_path)){
-					unlink($this->_log_path);
+					General::deleteFile($this->_log_path);
 				}
 
 				$this->writeToLog('============================================', true);
 				$this->writeToLog('Log Created: ' . DateTimeObj::get('c'), true);
 				$this->writeToLog('============================================', true);
 
-				chmod($this->_log_path, intval($mode, 8));
+				@chmod($this->_log_path, intval($mode, 8));
 
 				return 1;
 			}

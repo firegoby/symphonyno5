@@ -52,6 +52,11 @@
 					$section->setSortingField($sort, false);
 					$section->setSortingOrder($order);
 
+					if ($params['filters']) {
+
+						$params['filters'] = '?' . trim($params['filters'], '&amp;');
+					}
+
 					redirect(Administration::instance()->getCurrentPageURL() . $params['filters']);
 				}
 			}
@@ -82,7 +87,11 @@
 
 		public function __viewIndex(){
 			if(!$section_id = SectionManager::fetchIDFromHandle($this->_context['section_handle'])) {
-				Administration::instance()->customError(__('Unknown Section'), __('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')));
+				Administration::instance()->throwCustomError(
+					__('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')),
+					__('Unknown Section'),
+					Page::HTTP_STATUS_NOT_FOUND
+				);
 			}
 
 			$section = SectionManager::fetch($section_id);
@@ -142,10 +151,26 @@
 
 			// Only show the Edit Section button if the Author is a developer. #938 ^BA
 			if(Administration::instance()->Author->isDeveloper()) {
-				array_unshift($subheading_buttons, Widget::Anchor(__('Edit Section'), SYMPHONY_URL . '/blueprints/sections/edit/' . $section_id, __('Edit Section Configuration'), 'button'));
+				array_unshift($subheading_buttons, Widget::Anchor(__('Edit Section'), SYMPHONY_URL . '/blueprints/sections/edit/' . $section_id . '/', __('Edit Section Configuration'), 'button'));
 			}
 
 			$this->appendSubheading($section->get('name'), $subheading_buttons);
+
+			/**
+			 * Allows adjustments to be made to the SQL where and joins statements
+			 * before they are used to fetch the entries for the page
+			 *
+			 * @delegate AdjustPublishFiltering
+			 * @since Symphony 2.3.3
+			 * @param string $context
+			 * '/publish/'
+			 * @param integer $section_id
+			 * An array of the current columns, passed by reference
+			 * @param string $where
+			 * The current where statement, or null if not set
+			 * @param string $joins
+			 */
+			Symphony::ExtensionManager()->notifyMembers('AdjustPublishFiltering', '/publish/', array('section-id' => $section_id, 'where' => &$where, 'joins' => &$joins));
 
 			// Check that the filtered query fails that the filter is dropped and an
 			// error is logged. #841 ^BA
@@ -239,7 +264,8 @@
 						$field_pool[$column->get('id')] = $column;
 					}
 				}
-				$link_column = end(array_reverse($visible_columns));
+				$link_column = array_reverse($visible_columns);
+				$link_column = end($link_column);
 				reset($visible_columns);
 
 				foreach($entries['records'] as $entry) {
@@ -303,7 +329,7 @@
 									Widget::Anchor(
 										sprintf('%d &rarr;', max(0, intval($associated_entry_count))),
 										sprintf(
-											'%s/publish/%s/?filter=%s:%s',
+											'%s/publish/%s/?filter[%s]=%s',
 											SYMPHONY_URL,
 											$as->get('handle'),
 											$field->get('element_name'),
@@ -371,21 +397,49 @@
 			$toggable_fields = $section->fetchToggleableFields();
 
 			if (is_array($toggable_fields) && !empty($toggable_fields)) {
+
 				$index = 2;
 
 				foreach ($toggable_fields as $field) {
-					$options[$index] = array('label' => __('Set %s', array($field->get('label'))), 'options' => array());
 
-					foreach ($field->getToggleStates() as $value => $state) {
-						$options[$index]['options'][] = array('toggle-' . $field->get('id') . '-' . $value, false, $state);
+					$toggle_states = $field->getToggleStates();
+
+					if (is_array($toggle_states)) {
+
+						$options[$index] = array('label' => __('Set %s', array($field->get('label'))), 'options' => array());
+
+						foreach ($toggle_states as $value => $state) {
+
+							$options[$index]['options'][] = array('toggle-' . $field->get('id') . '-' . $value, false, $state);
+						}
 					}
 
 					$index++;
 				}
 			}
 
-			$tableActions->appendChild(Widget::Apply($options));
-			$this->Form->appendChild($tableActions);
+			/**
+			 * Allows an extension to modify the existing options for this page's
+			 * With Selected menu. If the `$options` parameter is an empty array,
+			 * the 'With Selected' menu will not be rendered.
+			 *
+			 * @delegate AddCustomActions
+			 * @since Symphony 2.3.2
+			 * @param string $context
+			 * '/publish/'
+			 * @param array $options
+			 *  An array of arrays, where each child array represents an option
+			 *  in the With Selected menu. Options should follow the same format
+			 *  expected by `Widget::__SelectBuildOption`. Passed by reference.
+			 */
+			Symphony::ExtensionManager()->notifyMembers('AddCustomActions', '/publish/', array(
+				'options' => &$options
+			));
+
+			if(!empty($options)) {
+				$tableActions->appendChild(Widget::Apply($options));
+				$this->Form->appendChild($tableActions);
+			}
 
 			if($entries['total-pages'] > 1){
 				$ul = new XMLElement('ul');
@@ -439,14 +493,30 @@
 			}
 		}
 
-		public function __actionIndex(){
+		public function __actionIndex() {
 			$checked = (is_array($_POST['items'])) ? array_keys($_POST['items']) : null;
 
 			if(is_array($checked) && !empty($checked)){
+				/**
+				 * Extensions can listen for any custom actions that were added
+				 * through `AddCustomPreferenceFieldsets` or `AddCustomActions`
+				 * delegates.
+				 *
+				 * @delegate CustomActions
+				 * @since Symphony 2.3.2
+				 * @param string $context
+				 *  '/publish/'
+				 * @param array $checked
+				 *  An array of the selected rows. The value is usually the ID of the
+				 *  the associated object.
+				 */
+				Symphony::ExtensionManager()->notifyMembers('CustomActions', '/publish/', array(
+					'checked' => $checked
+				));
+
 				switch($_POST['with-selected']) {
 
 					case 'delete':
-
 						/**
 						 * Prior to deletion of entries. An array of Entry ID's is provided which
 						 * can be manipulated. This delegate was renamed from `Delete` to `EntryPreDelete`
@@ -539,7 +609,11 @@
 
 		public function __viewNew() {
 			if(!$section_id = SectionManager::fetchIDFromHandle($this->_context['section_handle'])) {
-				Administration::instance()->customError(__('Unknown Section'), __('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')));
+				Administration::instance()->throwCustomError(
+					__('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')),
+					__('Unknown Section'),
+					Page::HTTP_STATUS_NOT_FOUND
+				);
 			}
 
 			$section = SectionManager::fetch($section_id);
@@ -552,7 +626,7 @@
 			// Only show the Edit Section button if the Author is a developer. #938 ^BA
 			if(Administration::instance()->Author->isDeveloper()) {
 				$this->appendSubheading(__('Untitled'),
-					Widget::Anchor(__('Edit Section'), SYMPHONY_URL . '/blueprints/sections/edit/' . $section_id, __('Edit Section Configuration'), 'button')
+					Widget::Anchor(__('Edit Section'), SYMPHONY_URL . '/blueprints/sections/edit/' . $section_id . '/', __('Edit Section Configuration'), 'button')
 				);
 			}
 			else {
@@ -653,6 +727,9 @@
 				$div->appendChild(Widget::Input('action[save]', __('Create Entry'), 'submit', array('accesskey' => 's')));
 
 				$this->Form->appendChild($div);
+
+				// Create a Drawer for Associated Sections
+				$this->prepareAssociationsDrawer($section);
 			}
 		}
 
@@ -661,10 +738,14 @@
 				$section_id = SectionManager::fetchIDFromHandle($this->_context['section_handle']);
 
 				if(!$section = SectionManager::fetch($section_id)) {
-					Administration::instance()->customError(__('Unknown Section'), __('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')));
+					Administration::instance()->throwCustomError(
+						__('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')),
+						__('Unknown Section'),
+						Page::HTTP_STATUS_NOT_FOUND
+					);
 				}
 
-				$entry =& EntryManager::create();
+				$entry = EntryManager::create();
 				$entry->set('author_id', Administration::instance()->Author->get('id'));
 				$entry->set('section_id', $section_id);
 				$entry->set('creation_date', DateTimeObj::get('c'));
@@ -678,11 +759,11 @@
 
 					foreach($filedata as $handle => $data){
 						if(!isset($fields[$handle])) $fields[$handle] = $data;
-						elseif(isset($data['error']) && $data['error'] == 4) $fields['handle'] = NULL;
+						elseif(isset($data['error']) && $data['error'] == UPLOAD_ERR_NO_FILE) $fields[$handle] = NULL;
 						else{
 
 							foreach($data as $ii => $d){
-								if(isset($d['error']) && $d['error'] == 4) $fields[$handle][$ii] = NULL;
+								if(isset($d['error']) && $d['error'] == UPLOAD_ERR_NO_FILE) $fields[$handle][$ii] = NULL;
 								elseif(is_array($d) && !empty($d)){
 
 									foreach($d as $key => $val)
@@ -760,17 +841,27 @@
 
 		public function __viewEdit() {
 			if(!$section_id = SectionManager::fetchIDFromHandle($this->_context['section_handle'])) {
-				Administration::instance()->customError(__('Unknown Section'), __('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')));
+				Administration::instance()->throwCustomError(
+					__('The Section, %s, could not be found.', array('<code>' . $this->_context['section_handle'] . '</code>')),
+					__('Unknown Section'),
+					Page::HTTP_STATUS_NOT_FOUND
+				);
 			}
 
 			$section = SectionManager::fetch($section_id);
 			$entry_id = intval($this->_context['entry_id']);
 			$base = '/publish/'.$this->_context['section_handle'] . '/';
+			$new_link = $base . 'new/';
+			$filter_link = $base;
 
 			EntryManager::setFetchSorting('id', 'DESC');
 
 			if(!$existingEntry = EntryManager::fetch($entry_id)) {
-				Administration::instance()->customError(__('Unknown Entry'), __('The Entry, %s, could not be found.', array($entry_id)));
+				Administration::instance()->throwCustomError(
+					__('Unknown Entry'),
+					__('The Entry, %s, could not be found.', array($entry_id)),
+					Page::HTTP_STATUS_NOT_FOUND
+				);
 			}
 			$existingEntry = $existingEntry[0];
 
@@ -778,7 +869,7 @@
 			if (isset($_POST['fields'])) {
 				$fields = $_POST['fields'];
 
-				$entry =& EntryManager::create();
+				$entry = EntryManager::create();
 				$entry->set('id', $entry_id);
 				$entry->set('author_id', $existingEntry->get('author_id'));
 				$entry->set('section_id', $existingEntry->get('section_id'));
@@ -790,6 +881,7 @@
 			// Editing an entry, so need to create some various objects
 			else {
 				$entry = $existingEntry;
+				$fields = array();
 
 				if (!$section) {
 					$section = SectionManager::fetch($entry->get('section_id'));
@@ -812,27 +904,26 @@
 				'fields' => $fields
 			));
 
-			if(isset($this->_context['flag'])) {
-				$new_link = $base . 'new/';
-				$filter_link = $base;
-
-				list($flag, $field_id, $value) = preg_split('/:/i', $this->_context['flag'], 3);
-
-				if(isset($_REQUEST['prepopulate'])){
-					$new_link .= '?';
-					$filter_link .= '?';
-					foreach($_REQUEST['prepopulate'] as $field_id => $value) {
-						$new_link .= "prepopulate[$field_id]=$value&amp;";
-						$field_name = FieldManager::fetchHandleFromID($field_id);
-						$filter_link .= "filter[$field_name]=$value&amp;";
-					}
-					$new_link = preg_replace("/&amp;$/", '', $new_link);
-					$filter_link = preg_replace("/&amp;$/", '', $filter_link);
+			// Iterate over the `prepopulate` parameters to build a URL
+			// to remember this state for Create New, View all Entries and
+			// Breadcrumb links. If `prepopulate` doesn't exist, this will
+			// just use the standard pages (ie. no filtering)
+			if(isset($_REQUEST['prepopulate'])){
+				$new_link .= '?';
+				$filter_link .= '?';
+				foreach($_REQUEST['prepopulate'] as $field_id => $value) {
+					$new_link .= "prepopulate[$field_id]=$value&amp;";
+					$field_name = FieldManager::fetchHandleFromID($field_id);
+					$filter_link .= "filter[$field_name]=$value&amp;";
 				}
+				$new_link = preg_replace("/&amp;$/", '', $new_link);
+				$filter_link = preg_replace("/&amp;$/", '', $filter_link);
+			}
 
+			if(isset($this->_context['flag'])) {
 				// These flags are only relevant if there are no errors
 				if(empty($this->_errors)) {
-					switch($flag){
+					switch($this->_context['flag']) {
 						case 'saved':
 							$this->pageAlert(
 								__('Entry updated at %s.', array(DateTimeObj::getTimeAgo()))
@@ -860,9 +951,16 @@
 
 			// Determine the page title
 			$field_id = Symphony::Database()->fetchVar('id', 0, "SELECT `id` FROM `tbl_fields` WHERE `parent_section` = '".$section->get('id')."' ORDER BY `sortorder` LIMIT 1");
-			$field = FieldManager::fetch($field_id);
+			if(!is_null($field_id)) {
+				$field = FieldManager::fetch($field_id);
+			}
 
-			$title = trim(strip_tags($field->prepareTableValue($existingEntry->getData($field->get('id')), NULL, $entry_id)));
+			if($field) {
+				$title = trim(strip_tags($field->prepareTableValue($existingEntry->getData($field->get('id')), NULL, $entry_id)));
+			}
+			else {
+				$title = '';
+			}
 
 			if (trim($title) == '') {
 				$title = __('Untitled');
@@ -887,7 +985,7 @@
 			// Only show the Edit Section button if the Author is a developer. #938 ^BA
 			if(Administration::instance()->Author->isDeveloper()) {
 				$this->appendSubheading($title,
-					Widget::Anchor(__('Edit Section'), SYMPHONY_URL . '/blueprints/sections/edit/' . $section_id, __('Edit Section Configuration'), 'button')
+					Widget::Anchor(__('Edit Section'), SYMPHONY_URL . '/blueprints/sections/edit/' . $section_id . '/', __('Edit Section Configuration'), 'button')
 				);
 			}
 			else {
@@ -948,6 +1046,9 @@
 				$div->appendChild($button);
 
 				$this->Form->appendChild($div);
+
+				// Create a Drawer for Associated Sections
+				$this->prepareAssociationsDrawer($section);
 			}
 		}
 
@@ -957,7 +1058,11 @@
 
 			if(@array_key_exists('save', $_POST['action']) || @array_key_exists("done", $_POST['action'])){
 				if(!$ret = EntryManager::fetch($entry_id)) {
-					Administration::instance()->customError(__('Unknown Entry'), __('The Entry, %s, could not be found.', array($entry_id)));
+					Administration::instance()->throwCustomError(
+						__('The Entry, %s, could not be found.', array($entry_id)),
+						__('Unknown Entry'),
+						Page::HTTP_STATUS_NOT_FOUND
+					);
 				}
 				$entry = $ret[0];
 
@@ -1062,7 +1167,6 @@
 
 				redirect(SYMPHONY_URL . '/publish/'.$this->_context['section_handle'].'/');
 			}
-
 		}
 
 		/**
@@ -1076,13 +1180,284 @@
 		 * @return XMLElement
 		 */
 		private function __wrapFieldWithDiv(Field $field, Entry $entry){
-			$div = new XMLElement('div', NULL, array('id' => 'field-' . $field->get('id'), 'class' => 'field field-'.$field->handle().($field->get('required') == 'yes' ? ' required' : '')));
+			$is_hidden = $this->isFieldHidden($field);
+			$div = new XMLElement('div', NULL, array('id' => 'field-' . $field->get('id'), 'class' => 'field field-'.$field->handle().($field->get('required') == 'yes' ? ' required' : '').($is_hidden == true ? ' irrelevant' : '')));
 			$field->displayPublishPanel(
 				$div, $entry->getData($field->get('id')),
 				(isset($this->_errors[$field->get('id')]) ? $this->_errors[$field->get('id')] : NULL),
 				null, null, (is_numeric($entry->get('id')) ? $entry->get('id') : NULL)
 			);
 			return $div;
+		}
+
+		/**
+		 * Check whether a field is a Select Box Link and is hidden
+		 *
+		 * @param  Field  $field
+		 * @return String
+		 */
+		public function isFieldHidden(Field $field) {
+			if($field->get('hide_when_prepopulated') == 'yes') {
+				if (isset($_REQUEST['prepopulate'])) foreach($_REQUEST['prepopulate'] as $field_id => $value) {
+					if($field_id == $field->get('id')) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		 * Prepare a Drawer to visualize section associations
+		 *
+		 * @param  Section $section The current Section object
+		 */
+		private function prepareAssociationsDrawer($section){
+			$entry_id = (!is_null($this->_context['entry_id'])) ? $this->_context['entry_id'] : null;
+			$show_entries = Symphony::Configuration()->get('association_maximum_rows', 'symphony');
+
+			if(is_null($entry_id) && !isset($_GET['prepopulate']) || is_null($show_entries) || $show_entries == 0) return;
+
+			$parent_associations = SectionManager::fetchParentAssociations($section->get('id'), true);
+			$child_associations = SectionManager::fetchChildAssociations($section->get('id'), true);
+			$content = null;
+			$drawer_position = 'vertical-right';
+
+			/**
+			 * Prepare Associations Drawer from an Extension
+			 *
+			 * @since Symphony 2.3.3
+			 * @delegate PrepareAssociationsDrawer
+			 * @param string $context
+			 * '/publish/'
+			 * @param integer $entry_id
+			 *  The entry ID or null
+			 * @param array $parent_associations
+			 *  Array of Sections
+			 * @param array $child_associations
+			 *  Array of Sections
+			 * @param string $drawer_position
+			 *  The position of the Drawer, defaults to `vertical-right`. Available
+			 *  values of `vertical-left, `vertical-right` and `horizontal`
+			 */
+			Symphony::ExtensionManager()->notifyMembers('PrepareAssociationsDrawer', '/publish/', array(
+				'entry_id' => $entry_id,
+				'parent_associations' => &$parent_associations,
+				'child_associations' => &$child_associations,
+				'content' => &$content,
+				'drawer-position' => &$drawer_position
+			));
+
+			// If there are no associations, return now.
+			if(
+				(is_null($parent_associations) || empty($parent_associations))
+				&&
+				(is_null($child_associations) || empty($child_associations))
+			) {
+				return;
+			}
+
+			if(!($content instanceof XMLElement)) {
+				$content = new XMLElement('div', null, array('class' => 'content'));
+				$content->setSelfClosingTag(false);
+
+				// Process Parent Associations
+				if(!is_null($parent_associations) && !empty($parent_associations)) foreach($parent_associations as $as){
+					if ($field = FieldManager::fetch($as['parent_section_field_id'])) {
+						if(isset($_GET['prepopulate'])) {
+							$prepopulate_field = key($_GET['prepopulate']);
+						}
+
+						// get associated entries if entry exists,
+						if($entry_id) {
+							$entry_ids = $this->findParentRelatedEntries($as['child_section_field_id'], $entry_id);
+						}
+						// get prepopulated entry otherwise
+						else if(isset($_GET['prepopulate'])) {
+							$entry_ids = array(intval(current($_GET['prepopulate'])));
+						}
+						else {
+							$entry_ids = array();
+						}
+
+						// Use $schema for perf reasons
+						$schema = array($field->get('element_name'));
+						$where = (!empty($entry_ids)) ? sprintf(' AND `e`.`id` IN (%s)', implode(', ', $entry_ids)) : null;
+						$entries = (!empty($entry_ids) || isset($_GET['prepopulate']) && $field->get('id') === $prepopulate_field)
+							? EntryManager::fetchByPage(1, $as['parent_section_id'], $show_entries, $where, null, false, false, true, $schema)
+							: array();
+						$has_entries = !empty($entries) && $entries['total-entries'] != 0;
+
+						if($has_entries) {
+							$element = new XMLElement('section', null, array('class' => 'association parent'));
+							$header = new XMLElement('header');
+							$header->appendChild(new XMLElement('p', __('Linked to %s in', array('<a class="association-section" href="' . SYMPHONY_URL . '/publish/' . $as['handle'] . '/">' . $as['name'] . '</a>'))));
+							$element->appendChild($header);
+
+							$ul = new XMLElement('ul', null, array(
+								'class' => 'association-links',
+								'data-section-id' => $as['child_section_id'],
+								'data-association-ids' => implode(', ', $entry_ids)
+							));
+
+							foreach($entries['records'] as $e) {
+								$value = $field->prepareTableValue($e->getData($field->get('id')), null, $e->get('id'));
+								$li = new XMLElement('li');
+								$a = new XMLElement('a', strip_tags($value));
+								$a->setAttribute('href', SYMPHONY_URL . '/publish/' . $as['handle'] . '/edit/' . $e->get('id') . '/');
+								$li->appendChild($a);
+								$ul->appendChild($li);
+							}
+
+							$element->appendChild($ul);
+							$content->appendChild($element);
+						}
+					}
+				}
+
+				// Process Child Associations
+				if(!is_null($child_associations) && !empty($child_associations)) foreach($child_associations as $as){
+					// Get the related section
+					$child_section = SectionManager::fetch($as['child_section_id']);
+					if(!($child_section instanceof Section)) continue;
+
+					// Get the visible field instance (using the sorting field, this is more flexible than visibleColumns())
+					// Get the link field instance
+					$visible_field   = current($child_section->fetchVisibleColumns());
+					$relation_field  = FieldManager::fetch($as['child_section_field_id']);
+
+					// Get entries, using $schema for performance reasons.
+					$entry_ids = $this->findRelatedEntries($as['child_section_field_id'], $entry_id);
+					$schema = $visible_field ? array($visible_field->get('element_name')) : array();
+					$where = sprintf(' AND `e`.`id` IN (%s)', implode(', ', $entry_ids));
+
+					$entries = (!empty($entry_ids))
+						? EntryManager::fetchByPage(1, $as['child_section_id'], $show_entries, $where, null, false, false, true, $schema)
+						: array();
+					$has_entries = !empty($entries) && $entries['total-entries'] != 0;
+
+					// Build the HTML of the relationship
+					$element = new XMLElement('section', null, array('class' => 'association child'));
+					$header = new XMLElement('header');
+					$filter = '?filter[' . $relation_field->get('element_name') . ']=' . $entry_id;
+					$prepopulate = '?prepopulate[' . $as['child_section_field_id'] . ']=' . $entry_id;
+
+					// Create link with filter or prepopulate
+					$link = SYMPHONY_URL . '/publish/' . $as['handle'] . '/' . $filter;
+					$a = new XMLElement('a', $as['name'], array(
+						'class' => 'association-section',
+						'href' => $link
+					));
+
+					// Create new entries
+					$create = new XMLElement('a', __('Create New'), array(
+						'class' => 'button association-new',
+						'href' => SYMPHONY_URL . '/publish/' . $as['handle'] . '/new/' . $prepopulate
+					));
+
+					// Display existing entries
+					if($has_entries) {
+						$header->appendChild(new XMLElement('p', __('Links in %s', array($a->generate()))));
+
+						$ul = new XMLElement('ul', null, array(
+							'class' => 'association-links',
+							'data-section-id' => $as['child_section_id'],
+							'data-association-ids' => implode(', ', $entry_ids)
+						));
+
+						foreach($entries['records'] as $key => $e) {
+							$value = $visible_field ?
+							         $visible_field->prepareTableValue($e->getData($visible_field->get('id')), null, $e->get('id')) :
+							         $e->get('id');
+							$li = new XMLElement('li');
+							$a = new XMLElement('a', strip_tags($value));
+							$a->setAttribute('href', SYMPHONY_URL . '/publish/' . $as['handle'] . '/edit/' . $e->get('id') . '/' . $prepopulate);
+							$li->appendChild($a);
+							$ul->appendChild($li);
+						}
+
+						$element->appendChild($ul);
+
+						// If we are only showing 'some' of the entries, then show this on the UI
+						if($entries['total-entries'] > $show_entries) {
+							$total_entries = new XMLElement('a', __('%d entries', array($entries['total-entries'])), array(
+								'href' => $link,
+							));
+							$pagination = new XMLElement('li', null, array(
+								'class' => 'association-more',
+								'data-current-page' => '1',
+								'data-total-pages' => ceil($entries['total-entries'] / $show_entries)
+							));
+							$counts = new XMLElement('a', __('Show more entries'), array(
+								'href' => $link
+							));
+
+							$pagination->appendChild($counts);
+							$ul->appendChild($pagination);
+						}
+					}
+
+					// No entries
+					else {
+						$element->setAttribute('class', 'association child empty');
+						$header->appendChild(new XMLElement('p', __('No links in %s', array($a->generate()))));
+					}
+
+					$header->appendChild($create);
+					$element->prependChild($header);
+					$content->appendChild($element);
+				}
+			}
+
+			$drawer = Widget::Drawer('section-associations', __('Show Associations'), $content);
+			$this->insertDrawer($drawer, $drawer_position, 'prepend');
+		}
+
+		/**
+		 * Find related entries from a linking field's data table. Requires the
+		 * column names to be `entry_id` and `relation_id` as with the Select Box Link
+		 * @param  integer $field_id
+		 * @param  integer $entry_id
+		 * @return array
+		 */
+		public function findRelatedEntries($field_id = null, $entry_id) {
+			try {
+				$ids = Symphony::Database()->fetchCol('entry_id', sprintf("
+					SELECT `entry_id`
+					FROM `tbl_entries_data_%d`
+					WHERE `relation_id` = %d
+					AND `entry_id` IS NOT NULL
+				", $field_id, $entry_id));
+			}
+			catch(Exception $e){
+				return array();
+			}
+
+			return $ids;
+		}
+
+		/**
+		 * Find related entries for the current field. Requires the column names
+		 * to be `entry_id` and `relation_id` as with the Select Box Link
+		 * @param  integer $field_id
+		 * @param  integer $entry_id
+		 * @return array
+		 */
+		public function findParentRelatedEntries($field_id = null, $entry_id) {
+			try {
+				$ids = Symphony::Database()->fetchCol('relation_id', sprintf("
+					SELECT `relation_id`
+					FROM `tbl_entries_data_%d`
+					WHERE `entry_id` = %d
+					AND `relation_id` IS NOT NULL
+				", $field_id, $entry_id));
+			}
+			catch(Exception $e){
+				return array();
+			}
+
+			return $ids;
 		}
 
 	}

@@ -42,7 +42,7 @@
 			return $states;
 		}
 
-		public function toggleFieldData($data, $newState){
+		public function toggleFieldData(array $data, $newState, $entry_id=null){
 			$data['author_id'] = $newState;
 			return $data;
 		}
@@ -112,7 +112,7 @@
 
 		public function findDefaults(array &$settings){
 			if(!isset($settings['allow_multiple_selection'])) $settings['allow_multiple_selection'] = 'no';
-			if(!isset($settings['author_types'])) $settings['author_types'] = array('developer', 'author');
+			if(!isset($settings['author_types'])) $settings['author_types'] = array('developer', 'manager', 'author');
 		}
 
 		public function displaySettingsPanel(XMLElement &$wrapper, $errors = null) {
@@ -125,6 +125,7 @@
 			$types = $this->get('author_types');
 			$options = array(
 				array('author', empty($types) ? true : in_array('author', $types), __('Author')),
+                array('manager', empty($types) ? true : in_array('manager', $types), __('Manager')),
 				array('developer', empty($types) ? true : in_array('developer', $types), __('Developer'))
 			);
 			$label->appendChild(
@@ -287,7 +288,7 @@
 			return parent::prepareTableValue(array('value' => General::sanitize(implode(', ', $value))), $link, $entry_id);
 		}
 
-		public function getParameterPoolValue($data, $entry_id = null) {
+		public function getParameterPoolValue(array $data, $entry_id = null) {
 			return $this->prepareExportValue($data, ExportableField::LIST_OF + ExportableField::AUTHOR, $entry_id);
 		}
 
@@ -360,7 +361,7 @@
 				}
 
 				else if ($mode === $modes->listAuthorToValue) {
-					$items[$author_id] = $author->getFullName();
+					$items[$data['author_id']] = $author->getFullName();
 				}
 			}
 

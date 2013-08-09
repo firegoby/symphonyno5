@@ -4,7 +4,7 @@
 	 * @package toolkit
 	 */
 	/**
-	 * The EntryManager is responsible for all Entry objects in Symphony.
+	 * The `EntryManager` is responsible for all `Entry` objects in Symphony.
 	 * Entries are stored in the database in a cluster of tables. There is a
 	 * parent entry row stored in `tbl_entries` and then each field's data is
 	 * stored in a separate table, `tbl_entries_data_{field_id}`. Where Field ID
@@ -12,9 +12,7 @@
 	 * add, edit, delete and fetching methods for Entries.
 	 */
 
-	include_once(TOOLKIT . '/class.sectionmanager.php');
-	include_once(TOOLKIT . '/class.textformattermanager.php');
-	include_once(TOOLKIT . '/class.entry.php');
+	require_once(TOOLKIT . '/class.entry.php');
 
 	Class EntryManager {
 
@@ -255,6 +253,7 @@
 						// Handles the case where `section_id` was not provided
 						if(is_null($section_id)) {
 							$e = self::fetch($id);
+							if(!is_array($e)) continue;
 							$e = current($e);
 							if(!$e instanceof Entry) continue;
 						}
@@ -342,7 +341,7 @@
 				$sort = 'ORDER BY RAND() ';
 			}
 
-			else if (self::$_fetchSortField === 'date' || self::$_fetchSortField === 'system:creation-date') {
+			else if (self::$_fetchSortField === 'system:creation-date' || self::$_fetchSortField === 'date') {
 				$sort = 'ORDER BY `e`.`creation_date_gmt` ' . self::$_fetchSortDirection;
 			}
 
@@ -350,7 +349,7 @@
 				$sort = 'ORDER BY `e`.`modification_date_gmt` ' . self::$_fetchSortDirection;
 			}
 
-			else if (self::$_fetchSortField == 'id') {
+			else if (self::$_fetchSortField == 'system:id' || self::$_fetchSortField == 'id') {
 				$sort = 'ORDER BY `e`.`id`' . self::$_fetchSortDirection;
 			}
 

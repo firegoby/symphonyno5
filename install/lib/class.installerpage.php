@@ -23,20 +23,25 @@
 			$this->_page_title = __('Install Symphony');
 		}
 
-		public function generate(){
+		public function generate($page = null) {
 			$this->Html->setDTD('<!DOCTYPE html>');
 			$this->Html->setAttribute('lang', Lang::get());
+
+			$this->addHeaderToPage('Cache-Control', 'no-cache, must-revalidate, max-age=0');
+			$this->addHeaderToPage('Expires', 'Mon, 12 Dec 1982 06:14:00 GMT');
+			$this->addHeaderToPage('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT');
+			$this->addHeaderToPage('Pragma', 'no-cache');
 
 			$this->setTitle($this->_page_title);
 			$this->addElementToHead(new XMLElement('meta', NULL, array('charset' => 'UTF-8')), 1);
 
-			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/css/symphony.css', 'screen', 30);
-			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/css/symphony.grids.css', 'screen', 31);
-			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/css/symphony.forms.css', 'screen', 32);
-			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/css/symphony.frames.css', 'screen', 33);
-			$this->addStylesheetToHead(SYMPHONY_URL . '/assets/css/installer.css', 'screen', 40);
+			$this->addStylesheetToHead(APPLICATION_URL . '/assets/css/symphony.css', 'screen', 30);
+			$this->addStylesheetToHead(APPLICATION_URL . '/assets/css/symphony.grids.css', 'screen', 31);
+			$this->addStylesheetToHead(APPLICATION_URL . '/assets/css/symphony.forms.css', 'screen', 32);
+			$this->addStylesheetToHead(APPLICATION_URL . '/assets/css/symphony.frames.css', 'screen', 33);
+			$this->addStylesheetToHead(APPLICATION_URL . '/assets/css/installer.css', 'screen', 40);
 
-			return parent::generate();
+			return parent::generate($page);
 		}
 
 		protected function __build($version = VERSION, XMLElement $extra = null) {
@@ -73,7 +78,7 @@
 					'li',
 					Widget::Anchor(
 						__('Symphony is also available in other languages'),
-						'http://symphony-cms.com/download/extensions/translations/'
+						'http://getsymphony.com/download/extensions/translations/'
 					),
 					array('class' => 'more')
 				));
@@ -89,7 +94,20 @@
 
 		protected function viewMissinglog() {
 			$h2 = new XMLElement('h2', __('Missing log file'));
-			$p = new XMLElement('p', __('Symphony tried to create a log file and failed. Make sure the %s folder is writable.', array('<code>' . basename(INSTALL) . '</code>')));
+
+			// What folder wasn't writable? The docroot or the logs folder?
+			// RE: #1706
+			if(is_writeable(DOCROOT) === false) {
+				$folder = DOCROOT;
+			}
+			else if(is_writeable(MANIFEST) === false) {
+				$folder = MANIFEST;
+			}
+			else if(is_writeable(INSTALL_LOGS) === false) {
+				$folder = INSTALL_LOGS;
+			}
+
+			$p = new XMLElement('p', __('Symphony tried to create a log file and failed. Make sure the %s folder is writable.', array('<code>' . $folder . '</code>')));
 
 			$this->Form->appendChild($h2);
 			$this->Form->appendChild($p);
@@ -136,10 +154,16 @@
 
 		protected function viewFailure() {
 			$h2 = new XMLElement('h2', __('Installation Failure'));
-			$p = new XMLElement('p', __('An error occurred during installation.') . ' ' . __('View the %s for more details', array('<a href="' . INSTALL_URL . '/logs/install">log</a>')));
+			$p = new XMLElement('p', __('An error occurred during installation.'));
+			
+			$log = file_get_contents(INSTALL_LOGS . '/install');
+			$code = new XMLElement('code', $log);
 
 			$this->Form->appendChild($h2);
 			$this->Form->appendChild($p);
+			$this->Form->appendChild(
+				new XMLElement('pre', $code)
+			);
 		}
 
 		protected function viewSuccess() {
