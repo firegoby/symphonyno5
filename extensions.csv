@@ -6,3 +6,4 @@ git://github.com/symphonycms/jit_image_manipulation.git,extensions/jit_image_man
 git://github.com/symphonycms/profiledevkit.git,extensions/profiledevkit
 git://github.com/symphonycms/debugdevkit.git,extensions/debugdevkit
 git://github.com/symphonycms/xssfilter.git,extensions/xssfilter
+git://github.com/nils-werner/xslresourceloader.git,extensions/xslresourceloader

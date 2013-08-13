@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.9.0
-* Date: 9th August 2013
+* Version 0.9.1
+* Date: 13th August 2013
 
 ## Overview
 
@@ -14,6 +14,8 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 * `extensions.csv` list for Symphony Extensions - installed as git submodules via [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
 * **Split Manifest directory structure** for separate Development & Production environments
 * Repsonsive Design Test Page with common breakpoints (/responsive.html)
+* `sections` folder in `workspace` for modular structuring of XSLT ([more](http://www.getsymphony.com/discuss/thread/96648/))
+* **XSLResourceLoader** extension for loading of DataSources & Events within XSLT ([more](http://www.getsymphony.com/discuss/thread/90092/))
 * Selection of CSS resets/helpers available: -
   * **HTML5Boilerplate** default CSS
   * **Normalize.css**
@@ -38,16 +40,24 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 4. Setup a MySQL user for the database, taking note of connection details
 4. `symphonyno5 new projectname` and follow the instructions
 
-
 ### Frequently Asked Questions
 
 1. **What happened to all the CSS & Javascript minification stuff?**
   
   In order to be more modular this functionality has been moved to a dedicated Symphony extension [Asset Compiler](http://github.com/firegoby/asset_compiler) - check it out!
 
+2. **Why have you included a non-core extension? (XSLResourceLoader)**
+
+  I don't want to start adding lots of default extensions but **XSLResourceLoader** allows a much greater degree of flexibility by removing data-source and event dependency listings from the database and putting them in files under version control. Until pages are stored as XML (coming in Symphony 2.4) this is the next best approach and thus I feel worthy of inclusion as a default. 
+
+3. **I don't like Feature X, can you remove it?**
+
+  I try to keep this fairly unopinionated but in order for it to be useful some choices have to made. If it diverges too much from what you need you can always just fork the project and tailor it to your exact needs. Updating the repository URLs in the [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) command-line script would even allow you to install your custom version from the command line.
 
 ## Changelog
-
+* 0.9.1 - 13 Aug 13
+  * Added `sections` folder in `workspace` for modular structuring of XSLT ([more](http://www.getsymphony.com/discuss/thread/96648/))
+  * Added `XSLResourceLoader` extension for loading of DataSources & Events within XSLT ([more](http://www.getsymphony.com/discuss/thread/90092/))
 * 0.9.0 - 9 Aug 13 -
   * Upgraded to Symphony v2.3.3
   * Upgraded to JQuery v1.10.2
