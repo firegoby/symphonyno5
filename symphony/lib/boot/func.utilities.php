@@ -1,202 +1,249 @@
 <?php
 
-	/**
-	 * @package boot
-	 */
+/**
+ * @package boot
+ */
 
-	/**
-	 * Redirects the browser to a specified location. Safer than using a
-	 * direct header() call
-	 *
-	 *	@param string $url
-	 */
-	function redirect ($url){
-		// Just make sure.
-		$url = str_replace('Location:', null, $url);
+/**
+ * Redirects the browser to a specified location. Safer than using a
+ * direct header() call
+ *
+ *  @param string $url
+ */
+function redirect ($url)
+{
+    // Just make sure.
+    $url = str_replace('Location:', null, $url);
 
-		if(headers_sent($filename, $line)){
-			echo "<h1>Error: Cannot redirect to <a href=\"$url\">$url</a></h1><p>Output has already started in $filename on line $line</p>";
-			exit;
-		}
+    if (headers_sent($filename, $line)) {
+        echo "<h1>Error: Cannot redirect to <a href=\"$url\">$url</a></h1><p>Output has already started in $filename on line $line</p>";
+        exit;
+    }
 
-		header('Expires: Mon, 12 Dec 1982 06:00:00 GMT');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-		header('Cache-Control: no-cache, must-revalidate, max-age=0');
-		header('Pragma: no-cache');
-		header("Location: $url");
-		exit;
-	}
+    // convert idn back to ascii for redirect
 
-	/**
-	 * Returns the current working directory, replacing any \
-	 *	with /. Use for Windows compatibility.
-	 *
-	 *	@return string
-	 */
-	function getcwd_safe(){
-		return str_replace('\\', '/', getcwd());
-	}
+    if (function_exists('idn_to_ascii')) {
+        $root = parse_url(URL);
+        $host = $root['host'];
+        $url  = str_replace($host, idn_to_ascii($host), $url);
+    }
 
-	/**
-	 * Checks that a constant has not been defined before defining
-	 * it. If the constant is already defined, this function will do
-	 * nothing, otherwise, it will set the constant
-	 *
-	 * @param string $name
-	 *	The name of the constant to set
-	 * @param string $value
-	 *	The value of the desired constant
-	 */
-	function define_safe($name, $value){
-		if(!defined($name)) define($name, $value);
-	}
+    header('Expires: Mon, 12 Dec 1982 06:00:00 GMT');
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+    header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header("Location: $url");
 
-	/**
-	 * Returns the current URL string from within the Administration
-	 * context. It omits the Symphony directory from the current URL.
-	 *
-	 *	@return string
-	 */
-	function getCurrentPage() {
-		if(!isset($_GET['symphony-page'])) return null;
+    exit;
+}
 
-		return '/' . filter_var(trim($_GET['symphony-page'], '/'), FILTER_SANITIZE_STRING) . '/';
-	}
+/**
+ * Returns the current working directory, replacing any \
+ *  with /. Use for Windows compatibility.
+ *
+ *  @return string
+ */
+function getcwd_safe()
+{
+    return str_replace('\\', '/', getcwd());
+}
 
-	/**
-	 * Used as a basic stopwatch for profiling. The default `$action`
-	 * starts the timer. Setting `$action` to 'stop' and passing the
-	 * start time returns the difference between now and that time.
-	 *
-	 *	@param string $action (optional)
-	 *	@param integer $start_time (optional)
-	 *	@return integer
-	 */
-	function precision_timer($action = 'start', $start_time = null){
-		$currtime = microtime(true);
+/**
+ * Checks that a constant has not been defined before defining
+ * it. If the constant is already defined, this function will do
+ * nothing, otherwise, it will set the constant
+ *
+ * @param string $name
+ *  The name of the constant to set
+ * @param string $value
+ *  The value of the desired constant
+ */
+function define_safe($name, $value)
+{
+    if (!defined($name)) {
+        define($name, $value);
+    }
+}
 
-		if($action == 'stop')
-			return $currtime - $start_time;
+/**
+ * Returns the current URL string from within the Administration
+ * context. It omits the Symphony directory from the current URL.
+ *
+ *  @return string
+ */
+function getCurrentPage()
+{
+    if (!isset($_GET['symphony-page'])) {
+        return null;
+    }
 
-		return $currtime;
-	}
+    return '/' . filter_var(trim($_GET['symphony-page'], '/'), FILTER_SANITIZE_STRING) . '/';
+}
 
-	/**
-	 * Convert php.ini size format to bytes
-	 *
-	 *	@param string $val (optional)
-	 *	@return integer
-	 */
-	function ini_size_to_bytes($val) {
-		$val = trim($val);
-		$last = strtolower($val[strlen($val)-1]);
+/**
+ * Used as a basic stopwatch for profiling. The default `$action`
+ * starts the timer. Setting `$action` to 'stop' and passing the
+ * start time returns the difference between now and that time.
+ *
+ *  @param string $action (optional)
+ *  @param integer $start_time (optional)
+ *  @return integer
+ */
+function precision_timer($action = 'start', $start_time = null)
+{
+    $currtime = microtime(true);
 
-		switch($last) {
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
-		}
+    if ($action == 'stop') {
+        return $currtime - $start_time;
+    }
 
-		return $val;
-	}
+    return $currtime;
+}
 
-	/**
-	 * This function, give two DateTime objects, will return the
-	 * difference between the two in hours and minutes, in a format
-	 * suitable for MySQL.
-	 *
-	 * This function does not provide full date_diff functionality,
-	 * it's a stopgap for PHP5.2 support.
-	 *
-	 * @since Symphony 2.3.3
-	 * @deprecated Do not use, it will be removed in the next
-	 *  major version of Symphony when PHP5.2 support is dropped
-	 * @param DateTime $date_1
-	 * @param DateTime $date_2
-	 * @return string
-	 *  A string representing the difference between the dates, eg.
-	 *  +05:00 or -10:00 or +09:30
-	 */
-	function mysql_date_diff(DateTime $date_1, DateTime $date_2) {
-		$date_1_seconds = $date_1->format('U');
-		$date_2_seconds = $date_2->format('U');
+/**
+ * Convert php.ini size format to bytes
+ *
+ *  @param string $val (optional)
+ *  @return integer
+ */
+function ini_size_to_bytes($val)
+{
+    $val = trim($val);
+    $last = strtolower($val[strlen($val)-1]);
 
-		// In hours
-		$offset = ($date_1_seconds - $date_2_seconds) / 60 / 60;
+    switch ($last) {
+        case 'g':
+            $val *= 1024;
+        case 'm':
+            $val *= 1024;
+        case 'k':
+            $val *= 1024;
+    }
 
-		// Deal with x.5 (:30 minutes)
-		$minutes = (fmod($offset, 1) === 0.5) ? ":30" : ":00";
+    return $val;
+}
 
-		// Is this +/- GMT?
-		$op = ($offset > 0) ? '+' : '-';
+/**
+ * Cleans up Session Cookies. When there is no data in the session the cookie will be unset.
+ * If there is data, the cookie will be renewed, expiring it in two weeks from now.
+ * This will improve the interoperability with caches like Varnish and Squid.
+ *
+ * @since 2.3.3
+ * @author creativedutchmen (Huib Keemink)
+ * @return void
+ */
+function cleanup_session_cookies()
+{
+    /*
+    Unfortunately there is no way to delete a specific previously set cookie from PHP.
+    The only way seems to be the method employed here: store all the cookie we need to keep, then delete every cookie and add the stored cookies again.
+    Luckily we can just store the raw header and output them again, so we do not need to actively parse the header string.
+    */
+    $cookie_params = session_get_cookie_params();
+    $list = headers_list();
+    $custom_cookies = array();
 
-		// Return difference, +05:00, -10:00, +09:30
-		$difference = $op . str_pad(abs(floor($offset)), 2, '0', STR_PAD_LEFT) . $minutes;
+    foreach ($list as $hdr) {
+        if ((stripos($hdr, 'Set-Cookie') !== false) && (stripos($hdr, session_id()) === false)) {
+            $custom_cookies[] = $hdr;
+        }
+    }
 
-		return $difference;
-	}
+    header_remove('Set-Cookie');
 
-	/**
-	 * Cleans up Session Cookies. When there is no data in the session the cookie will be unset.
-	 * If there is data, the cookie will be renewed, expiring it in two weeks from now.
-	 * This will improve the interoperability with caches like Varnish and Squid.
-	 *
-	 * @since 2.3.3
-	 * @author creativedutchmen (Huib Keemink)
-	 * @return void
-	 */
-	function cleanup_session_cookies()
-	{
+    foreach ($custom_cookies as $custom_cookie) {
+        header($custom_cookie);
+    }
 
-		/*
-		Unfortunately there is no way to delete a specific previously set cookie from PHP.
-		The only way seems to be the method employed here: store all the cookie we need to keep, then delete every cookie and add the stored cookies again.
-		Luckily we can just store the raw header and output them again, so we do not need to actively parse the header string.
-		*/
+    $session_is_empty = is_session_empty();
 
-		$cookie_params = session_get_cookie_params();
-		$list = headers_list();
-		$custom_cookies = array();
+    if ($session_is_empty && !empty($_COOKIE[session_name()])) {
+        setcookie(
+            session_name(),
+            session_id(),
+            time() - 3600,
+            $cookie_params['path'],
+            $cookie_params['domain'],
+            $cookie_params['secure'],
+            $cookie_params['httponly']
+        );
+    } elseif (!$session_is_empty) {
+        setcookie(
+            session_name(),
+            session_id(),
+            time() + TWO_WEEKS,
+            $cookie_params['path'],
+            $cookie_params['domain'],
+            $cookie_params['secure'],
+            $cookie_params['httponly']
+        );
+    }
+}
 
-		foreach ($list as $hdr) {
-			if ((stripos($hdr, 'Set-Cookie') !== FALSE) && (stripos($hdr, session_id()) === FALSE)) {
-				$custom_cookies[] = $hdr;
-			}
-		}
-		header_remove('Set-Cookie');
-		foreach ($custom_cookies as $custom_cookie) {
-			header($custom_cookie);
-		}
+/**
+ * Function will loop over the $_SESSION and find out if it is empty or not
+ *
+ * @since Symphony 2.4
+ * @return boolean
+ */
+function is_session_empty()
+{
+    $session_is_empty = true;
+    foreach ($_SESSION as $contents) {
+        if (!empty($contents)) {
+            $session_is_empty = false;
+        }
+    }
 
-		$session_is_empty = true;
-		foreach ($_SESSION as $contents) {
-			if (!empty($contents)) {
-				$session_is_empty = false;
-			}
-		}
-		if ($session_is_empty && !empty($_COOKIE[session_name()])) {
-			setcookie(
-				session_name(),
-				session_id(),
-				time() - 3600,
-				$cookie_params['path'],
-				$cookie_params['domain'],
-				$cookie_params['secure'],
-				$cookie_params['httponly']
-			);
-		}
-		elseif(!$session_is_empty) {
-			setcookie(
-				session_name(),
-				session_id(),
-				time() + TWO_WEEKS,
-				$cookie_params['path'],
-				$cookie_params['domain'],
-				$cookie_params['secure'],
-				$cookie_params['httponly']
-			);
-		}
-	}
+    return $session_is_empty;
+}
+
+/**
+ * Responsible for picking the launcher function and starting it.
+ */
+function symphony($mode) 
+{
+    $launcher = SYMPHONY_LAUNCHER;
+    $launcher($mode);
+}
+
+/**
+ * Responsible for launching a standard symphony instance and
+ * sending output to the browser.
+ *
+ *  @param string $val (optional)
+ *  @return integer
+ */
+function symphony_launcher($mode)
+{
+    if (strtolower($mode) == 'administration') {
+        require_once CORE . "/class.administration.php";
+
+        $renderer = Administration::instance();
+    }
+
+    else {
+        require_once CORE . "/class.frontend.php";
+
+        $renderer = Frontend::instance();
+    }
+
+    $output = $renderer->display(getCurrentPage());
+
+    // #1808
+    if (isset($_SERVER['HTTP_MOD_REWRITE'])) 
+    {
+        $output = file_get_contents(GenericExceptionHandler::getTemplate('fatalerror.rewrite'));
+        $output = str_replace('{APPLICATION_URL}', APPLICATION_URL, $output);
+        $output = str_replace('{SYMPHONY_URL}', SYMPHONY_URL, $output);
+        $output = str_replace('{URL}', URL, $output);
+        echo $output;
+        exit;
+    }
+
+    cleanup_session_cookies();
+
+    echo $output;
+
+    return $renderer;
+}

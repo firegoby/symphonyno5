@@ -14,6 +14,9 @@
 		 * normal accessors.
 		 */
 		protected function __construct() {
+			self::$Profiler = Profiler::instance();
+			self::$Profiler->sample('Engine Initialisation');
+
 			if(get_magic_quotes_gpc()) {
 				General::cleanArray($_SERVER);
 				General::cleanArray($_COOKIE);
@@ -23,7 +26,7 @@
 
 			// Include the default Config for installation.
 			include(INSTALL . '/includes/config_default.php');
-			$this->initialiseConfiguration($settings);
+			static::initialiseConfiguration($settings);
 
 			// Initialize date/time
 			define_safe('__SYM_DATE_FORMAT__', self::Configuration()->get('date_format', 'region'));
@@ -31,14 +34,10 @@
 			define_safe('__SYM_DATETIME_FORMAT__', __SYM_DATE_FORMAT__ . self::Configuration()->get('datetime_separator', 'region') . __SYM_TIME_FORMAT__);
 			DateTimeObj::setSettings(self::Configuration()->get('region'));
 
-			// Initialize language
-			$this->initialiseLang();
-
-			// Initialize logs
-			$this->initialiseLog(INSTALL_LOGS . '/install');
-
-			// Initialize database
-			$this->initialiseDatabase();
+			// Initialize Language, Logs and Database
+			static::initialiseLang();
+			static::initialiseLog(INSTALL_LOGS . '/install');
+			static::initialiseDatabase();
 
 			// Initialize error handlers
 			GenericExceptionHandler::initialise(Symphony::Log());
@@ -64,7 +63,7 @@
 		 * Initialises the language by looking at the `lang` key,
 		 * passed via GET or POST
 		 */
-		public function initialiseLang(){
+		public static function initialiseLang(){
 			$lang = !empty($_REQUEST['lang']) ? preg_replace('/[^a-zA-Z\-]/', NULL, $_REQUEST['lang']) : 'en';
 			Lang::initialize();
 			Lang::set($lang, false);
@@ -74,7 +73,7 @@
 		 * Overrides the default `initialiseLog()` method and writes
 		 * logs to manifest/logs/install
 		 */
-		public function initialiseLog($filename = null){
+		public static function initialiseLog($filename = null){
 			if(is_dir(INSTALL_LOGS) || General::realiseDirectory(INSTALL_LOGS, self::Configuration()->get('write_mode', 'directory'))) {
 				parent::initialiseLog($filename);
 			}
@@ -84,8 +83,8 @@
 		 * Overrides the default `initialiseDatabase()` method
 		 * This allows us to still use the normal accessor
 		 */
-		public function initialiseDatabase(){
-			$this->setDatabase();
+		public static function initialiseDatabase(){
+			self::setDatabase();
 		}
 
 		public function run() {
@@ -257,7 +256,8 @@
 					$fields['database']['host'],
 					$fields['database']['user'],
 					$fields['database']['password'],
-					$fields['database']['port']
+					$fields['database']['port'],
+					$fields['database']['db']
 				);
 			}
 			catch(DatabaseException $e){
@@ -279,10 +279,15 @@
 			}
 
 			try{
-				if(Symphony::Database()->isConnected()) {
-					// Looking for the given database name
-					Symphony::Database()->select($fields['database']['db']);
-
+				// Check the database table prefix is legal. #1815
+				if(!preg_match('/^[0-9a-zA-Z\$_]*$/', $fields['database']['tbl_prefix'])) {
+					$errors['database-table-prefix']  = array(
+						'msg' => 'Invalid database table prefix: ‘' . $fields['database']['tbl_prefix'] . '’',
+						'details' =>  __('The table prefix %s is invalid. The table prefix must only contain numbers, letters or underscore characters.', array('<code>' . $fields['database']['tbl_prefix'] . '</code>'))
+					);
+				}
+				// Check the database credentials
+				else if(Symphony::Database()->isConnected()) {
 					// Incorrect MySQL version
 					$version = Symphony::Database()->fetchVar('version', 0, "SELECT VERSION() AS `version`;");
 					if(version_compare($version, '5.0', '<')){
@@ -296,12 +301,12 @@
 						// Existing table prefix
 						$tables = Symphony::Database()->fetch(sprintf(
 							"SHOW TABLES FROM `%s` LIKE '%s'",
-							mysql_real_escape_string($fields['database']['db'], Symphony::Database()->getConnectionResource()),
-							mysql_real_escape_string($fields['database']['tbl_prefix'], Symphony::Database()->getConnectionResource()) . '%'
+							mysqli_real_escape_string(Symphony::Database()->getConnectionResource(), $fields['database']['db']),
+							mysqli_real_escape_string(Symphony::Database()->getConnectionResource(), $fields['database']['tbl_prefix']) . '%'
 						));
 
 						if(is_array($tables) && !empty($tables)) {
-							$errors['database-table-clash']  = array(
+							$errors['database-table-prefix']  = array(
 								'msg' => 'Database table prefix clash with ‘' . $fields['database']['db'] . '’',
 								'details' =>  __('The table prefix %s is already in use. Please choose a different prefix to use with Symphony.', array('<code>' . $fields['database']['tbl_prefix'] . '</code>'))
 							);
@@ -364,6 +369,14 @@
 				);
 			}
 
+			// Admin path not entered
+			if(trim($fields['symphony']['admin-path']) == ''){
+				$errors['no-symphony-path']  = array(
+					'msg' => 'No Symphony path entered.',
+					'details' => __('You must enter a path for accessing Symphony, or leave the default. This will be used to access Symphony\'s backend.')
+				);
+			}
+
 			return $errors;
 		}
 
@@ -373,14 +386,16 @@
 		 * @todo: Resume installation after an error has been fixed.
 		 */
 		protected static function __abort($message, $start){
-			Symphony::Log()->pushToLog($message, E_ERROR, true);
+			$result = Symphony::Log()->pushToLog($message, E_ERROR, true);
 
-			Symphony::Log()->writeToLog(        '============================================', true);
-			Symphony::Log()->writeToLog(sprintf('INSTALLATION ABORTED: Execution Time - %d sec (%s)',
-				max(1, time() - $start),
-				date('d.m.y H:i:s')
-			), true);
-			Symphony::Log()->writeToLog(        '============================================' . PHP_EOL . PHP_EOL . PHP_EOL, true);
+			if($result) {
+				Symphony::Log()->writeToLog(        '============================================', true);
+				Symphony::Log()->writeToLog(sprintf('INSTALLATION ABORTED: Execution Time - %d sec (%s)',
+					max(1, time() - $start),
+					date('d.m.y H:i:s')
+				), true);
+				Symphony::Log()->writeToLog(        '============================================' . PHP_EOL . PHP_EOL . PHP_EOL, true);
+			}
 
 			self::__render(new InstallerPage('failure'));
 		}

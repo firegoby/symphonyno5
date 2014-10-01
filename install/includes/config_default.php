@@ -11,13 +11,16 @@
 
 		###### SYMPHONY ######
 		'symphony' => array(
+			'admin-path' => 'symphony',
 			'pagination_maximum_rows' => '20',
-            'association_maximum_rows' => '5',
+			'association_maximum_rows' => '5',
 			'lang' => 'en',
 			'pages_table_nest_children' => 'no',
 			'version' => VERSION,
 			'cookie_prefix' => 'sym-',
 			'session_gc_divisor' => '10',
+			'cell_truncation_length' => '75',
+			'enable_xsrf' => 'yes',
 		),
 		########
 
@@ -52,6 +55,7 @@
 		###### GENERAL ######
 		'general' => array(
 			'sitename' => 'Symphony CMS',
+			'useragent' => 'Symphony/' . VERSION,
 		),
 		########
 
@@ -80,10 +84,9 @@
 		########
 
 
-		###### IMAGE ######
-		'image' => array(
-			'cache' => '1',
-			'quality' => '90',
+		###### CACHE ######
+		'cache_driver' => array(
+			'default' => 'database',
 		),
 		########
 	);

@@ -2,26 +2,6 @@
 
 	Class migration_230 extends Migration{
 
-		static function run($function, $existing_version = null) {
-			self::$existing_version = $existing_version;
-
-			try{
-				$canProceed = self::$function();
-
-				return ($canProceed === false) ? false : true;
-			}
-			catch(DatabaseException $e) {
-				Symphony::Log()->writeToLog('Could not complete upgrading. MySQL returned: ' . $e->getDatabaseErrorCode() . ': ' . $e->getMessage(), E_ERROR, true);
-
-				return false;
-			}
-			catch(Exception $e){
-				Symphony::Log()->writeToLog('Could not complete upgrading because of the following error: ' . $e->getMessage(), E_ERROR, true);
-
-				return false;
-			}
-		}
-
 		static function getVersion(){
 			return '2.3';
 		}
@@ -162,11 +142,12 @@
 				}
 
 				// Move section sorting data from the database to the filesystem. #977
-				$sections = Symphony::Database()->fetch("SELECT `handle`, `entry_order`, `entry_order_direction` FROM `tbl_sections`");
-
-				foreach($sections as $s) {
-					Symphony::Configuration()->set('section_' . $s['handle'] . '_sortby', $s['entry_order'], 'sorting');
-					Symphony::Configuration()->set('section_' . $s['handle'] . '_order', $s['entry_order_direction'], 'sorting');
+				if(Symphony::Database()->tableContainsField('tbl_sections', 'entry_order')) {
+					$sections = Symphony::Database()->fetch("SELECT `handle`, `entry_order`, `entry_order_direction` FROM `tbl_sections`");
+					foreach($sections as $s) {
+						Symphony::Configuration()->set('section_' . $s['handle'] . '_sortby', $s['entry_order'], 'sorting');
+						Symphony::Configuration()->set('section_' . $s['handle'] . '_order', $s['entry_order_direction'], 'sorting');
+					}
 				}
 
 				// Drop `local`/`gmt` from Date fields, add `date` column. #693
@@ -201,15 +182,7 @@
 			}
 
 			// Update the version information
-			Symphony::Configuration()->set('version', self::getVersion(), 'symphony');
-			Symphony::Configuration()->set('useragent', 'Symphony/' . self::getVersion(), 'general');
-
-			if(Symphony::Configuration()->write() === false) {
-				throw new Exception('Failed to write configuration file, please check the file permissions.');
-			}
-			else {
-				return true;
-			}
+			return parent::upgrade();
 		}
 
 		static function preUpdateNotes(){

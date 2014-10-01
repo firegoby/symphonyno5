@@ -1,7 +1,7 @@
 # Symphony No.5
 
-* Version 0.9.1
-* Date: 13th August 2013
+* Version 0.10.0
+* Date: 1st October 2014
 
 ## Overview
 
@@ -9,19 +9,14 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 
 ## Features
 
-* **HTML5** master.xsl XSLT template based on HTML5Boilerplate
+* **HTML5** master.xsl XSLT template based on the best of HTML5Boilerplate
 * Works with [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) for **easy command-line admin**
 * `extensions.csv` list for Symphony Extensions - installed as git submodules via [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git)
 * **Split Manifest directory structure** for separate Development & Production environments
 * Repsonsive Design Test Page with common breakpoints (/responsive.html)
 * `sections` folder in `workspace` for modular structuring of XSLT ([more](http://www.getsymphony.com/discuss/thread/96648/))
 * **XSLResourceLoader** extension for loading of DataSources & Events within XSLT ([more](http://www.getsymphony.com/discuss/thread/90092/))
-* Selection of CSS resets/helpers available: -
-  * **HTML5Boilerplate** default CSS
-  * **Normalize.css**
-  * **html5doctor.com CSS Reset**
-  * **Font Awesome** (font-based icons) 
-  * **Universal Border Box** Set `box-sizing: border-box` for all elements
+* **Symphony-Pimms** ready - easy installation of Gulp-based build system [Symphony-Pimms](https://github.com/firegoby/symphony-pimms) with a great selection of features!
 
 ## Contents
 
@@ -34,7 +29,7 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 
 ## Installation
 
-1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) to your $PATH
+1. Install [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) to your $PATH (or local to your project)
 2. Setup Apache (or equivalent) web server to serve your domain
 3. Setup a MySQL database (recommend charset=`utf-8`, collate=`utf8_unicode_ci`)
 4. Setup a MySQL user for the database, taking note of connection details
@@ -43,18 +38,25 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 ### Frequently Asked Questions
 
 1. **What happened to all the CSS & Javascript minification stuff?**
-  
-  In order to be more modular this functionality has been moved to a dedicated Symphony extension [Asset Compiler](http://github.com/firegoby/asset_compiler) - check it out!
+
+  In order to be more modular this functionality has been moved to a dedicated Gulp build system [Symphony-Pimms](https://github.com/firegoby/symphony-pimms)- check it out!
 
 2. **Why have you included a non-core extension? (XSLResourceLoader)**
 
-  I don't want to start adding lots of default extensions but **XSLResourceLoader** allows a much greater degree of flexibility by removing data-source and event dependency listings from the database and putting them in files under version control. Until pages are stored as XML (coming in Symphony 2.4) this is the next best approach and thus I feel worthy of inclusion as a default. 
+  I don't want to start adding lots of default extensions but **XSLResourceLoader** allows a much greater degree of flexibility by removing data-source and event dependency listings from the database and putting them in files under version control. Until pages are stored as XML (coming in Symphony 2.x?) this is the next best approach and thus I feel worthy of inclusion as a default.
 
 3. **I don't like Feature X, can you remove it?**
 
   I try to keep this fairly unopinionated but in order for it to be useful some choices have to made. If it diverges too much from what you need you can always just fork the project and tailor it to your exact needs. Updating the repository URLs in the [symphonyno5.sh](http://github.com/firegoby/symphonyno5.sh.git) command-line script would even allow you to install your custom version from the command line.
 
 ## Changelog
+* 0.10.0 - 1 Oct 14
+  * Updated to Symphony v2.5.1
+  * Updated to jQuery v2.1.1
+  * Removed last vestiges of default CSS & Javascript, super seceded by Gulp build system [Symphony-Pimms](https://github.com/firegoby/symphony-pimms)
+  * Removed IE conditional comments - develop for the modern '[Evergreen](https://support.google.com/a/answer/33864?hl=en)' browsers unless there's specific reason not to.
+  * Removed FontAwesome - use SVGs, much better sub-pixel antialiasing
+  * Removed Modernizr - add a custom version as/when it's needed
 * 0.9.1 - 13 Aug 13
   * Added `sections` folder in `workspace` for modular structuring of XSLT ([more](http://www.getsymphony.com/discuss/thread/96648/))
   * Added `XSLResourceLoader` extension for loading of DataSources & Events within XSLT ([more](http://www.getsymphony.com/discuss/thread/90092/))
@@ -153,7 +155,7 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 * 0.2.1 - 23 Oct 11 - Updated to Symphony 2.2.4
 * 0.2.0 - 22 Aug 11 - Updating to H5BP 2.0, fix for build script & misc bug fixes
 * 0.1.8 - 10 Jun 11 - Reverting closing tag of fallback JQuery, XSLT doesn't like it
-* 0.1.7 - 10 Jun 11 - 
+* 0.1.7 - 10 Jun 11 -
   * Added installation gudie
   * Upgraded to JQuery 1.6.1
   * Upgraded to Modernizr 2.0
@@ -164,14 +166,14 @@ Symphony No.5 is a [Symphony CMS](http://getsymphony.com/) installation with an 
 * 0.1.6 - 21 May 11 - Stripped out personalisation of humans.txt
 * 0.1.5 - 20 May 11 - Updating to new .oldie class for IE compatibility (from HTML5Bolierplate)
 * 0.1.4 - 17 May 11 - Added Coffeescript support to the Ant build script (Coffeescript required)
-* 0.1.3 - 16 May 11 - Fixed bug in the JQuery local fallback script closing tag 
+* 0.1.3 - 16 May 11 - Fixed bug in the JQuery local fallback script closing tag
 * 0.1.2 - 13 May 11 - Fixed bug in the IE9/non-IE conditional comment CDATA
 * 0.1.1 - 28 Apr 11 - Updated to Symphony 2.2.1
-* 0.1.0 - 31 Mar 11 - Initial version 
+* 0.1.0 - 31 Mar 11 - Initial version
 
 ## Symphony CMS Overview
 
-Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as its core technologies. 
+Symphony is a `PHP` & `MySQL` based CMS that utilises `XML` and `XSLT` as its core technologies.
 
 * Visit the website at [http://getsymphony.com/](http://getsymphony.com/)
 * Github Repository: [http://github.com/symphonycms/symphony-2/](http://github.com/symphonycms/symphony-2)
